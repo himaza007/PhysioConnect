@@ -14,10 +14,8 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 500),
-    );
+    _controller =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
   }
 
   @override
@@ -131,10 +129,9 @@ class _HomeScreenState extends State<HomeScreen>
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: textColor,
-                ),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: textColor),
               ),
             ],
           ),
