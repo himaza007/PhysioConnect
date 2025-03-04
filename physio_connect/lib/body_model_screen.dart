@@ -23,8 +23,7 @@ class _BodyModelScreenState extends State<BodyModelScreen> {
     "assets/images/7.png"
   ];
 
-  // Define pain area positions as fractions (0.0 - 1.0)
-  // These fractions represent the relative position on the model image.
+  // Pain area positions as fractions (0.0 - 1.0) of the image's dimensions.
   final Map<String, Offset> painAreaPositions = {
     "Head": Offset(0.5, 0.1),
     "Shoulder": Offset(0.5, 0.3),
@@ -33,27 +32,27 @@ class _BodyModelScreenState extends State<BodyModelScreen> {
     "Ankle": Offset(0.35, 0.95),
   };
 
+  // NEW: A set to hold multiple selected pain areas.
+  Set<String> selectedPainPoints = {};
+
   @override
   Widget build(BuildContext context) {
     final List<String> images = widget.gender == "Male" ? maleImages : femaleImages;
     final screenWidth = MediaQuery.of(context).size.width;
-    // Let the model image occupy 90% of screen width.
     final modelWidth = screenWidth * 0.9;
-    // Assume an aspect ratio for the image (e.g., 3:5)
-    final modelHeight = modelWidth * (5 / 3);
+    final modelHeight = modelWidth * (5 / 3); // Adjust the aspect ratio as needed.
 
     return Scaffold(
       appBar: AppBar(
         title: Text("${widget.gender} Body Model"),
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         elevation: 0,
       ),
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Background image for overall theme
           Image.asset("assets/images/bg.jpg", fit: BoxFit.cover),
-          Container(color: Colors.black.withOpacity(0.4)),
+          Container(color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.4)),
           Column(
             children: [
               const SizedBox(height: 20),
@@ -66,41 +65,41 @@ class _BodyModelScreenState extends State<BodyModelScreen> {
                       child: Container(
                         width: modelWidth,
                         height: modelHeight,
-                        // Use LayoutBuilder to determine container size for dot placement.
                         child: LayoutBuilder(
                           builder: (context, constraints) {
                             final containerWidth = constraints.maxWidth;
                             final containerHeight = constraints.maxHeight;
                             return Stack(
                               children: [
-                                // The model image
+                                // The model image.
                                 Image.asset(
                                   images[index],
                                   width: containerWidth,
                                   height: containerHeight,
                                   fit: BoxFit.contain,
                                 ),
-                                // Overlay smaller red dots on the model image.
+                                // NEW: Overlay multiple tappable dots.
                                 for (var entry in painAreaPositions.entries)
                                   Positioned(
                                     left: entry.value.dx * containerWidth - 7.5,
                                     top: entry.value.dy * containerHeight - 7.5,
                                     child: GestureDetector(
                                       onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => MuscleSelectionScreen(
-                                              selectedAreas: [entry.key],
-                                            ),
-                                          ),
-                                        );
+                                        setState(() {
+                                          if (selectedPainPoints.contains(entry.key)) {
+                                            selectedPainPoints.remove(entry.key);
+                                          } else {
+                                            selectedPainPoints.add(entry.key);
+                                          }
+                                        });
                                       },
                                       child: Container(
                                         width: 15,
                                         height: 15,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.red,
+                                        decoration: BoxDecoration(
+                                          color: selectedPainPoints.contains(entry.key)
+                                              ? const Color.fromARGB(255, 5, 78, 23)  // Indicates selection.
+                                              : const Color.fromARGB(255, 146, 29, 29),
                                           shape: BoxShape.circle,
                                         ),
                                       ),
@@ -113,6 +112,25 @@ class _BodyModelScreenState extends State<BodyModelScreen> {
                       ),
                     );
                   },
+                ),
+              ),
+              // NEW: "Continue" button to navigate with selected pain areas.
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ElevatedButton(
+                  onPressed: selectedPainPoints.isEmpty
+                      ? null
+                      : () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MuscleSelectionScreen(
+                                selectedAreas: selectedPainPoints.toList(),
+                              ),
+                            ),
+                          );
+                        },
+                  child: const Text("Continue"),
                 ),
               ),
             ],
