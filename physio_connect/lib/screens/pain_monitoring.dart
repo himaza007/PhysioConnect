@@ -12,6 +12,10 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
   String _painLocation = '';
   List<Map<String, dynamic>> _painHistory = [];
 
+  final Map<int, String> painReliefSuggestions = {
+    1: "Minimal discomfort, rest well! 💆‍♂️",
+    3: "Try gentle stretching & hydration. 💧",
+
 
   @override
   void initState() {
