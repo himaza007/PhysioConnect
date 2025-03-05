@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../utils/storage_helper.dart';
 
 class PainMonitoringPage extends StatefulWidget {
@@ -35,7 +34,10 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
   Future<void> _savePainEntry() async {
     if (_painLocation.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please enter pain location!")),
+        SnackBar(
+          content: Text("Please enter pain location!"),
+          backgroundColor: Colors.redAccent,
+        ),
       );
       return;
     }
@@ -51,39 +53,54 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
     setState(() {});
   }
 
-   void _showPainLogDialog() {
+  void _showPainLogDialog() {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          title: Text(
-            'Pain Log History',
-            style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          title: Row(
+            children: [
+              Icon(Icons.history, color: Colors.teal),
+              SizedBox(width: 10),
+              Text('Pain Log History',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ],
           ),
           content: Container(
-            height: 200,
-            child: ListView.builder(
-              itemCount: _painHistory.length,
-              itemBuilder: (context, index) {
-                final entry = _painHistory[index];
-                return ListTile(
-                  title: Text(
-                    "Pain Level: ${entry['painLevel']}",
-                    style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+            height: 250,
+            child: _painHistory.isEmpty
+                ? Center(
+                    child: Text("No records found.",
+                        style: TextStyle(color: Colors.grey)))
+                : ListView.builder(
+                    itemCount: _painHistory.length,
+                    itemBuilder: (context, index) {
+                      final entry = _painHistory[index];
+                      return Card(
+                        elevation: 3,
+                        margin: EdgeInsets.symmetric(vertical: 5),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        child: ListTile(
+                          leading: Icon(Icons.local_hospital,
+                              color: Colors.redAccent),
+                          title: Text("Pain Level: ${entry['painLevel']}"),
+                          subtitle: Text(
+                              "Location: ${entry['painLocation']} - ${entry['date']}"),
+                        ),
+                      );
+                    },
                   ),
-                  subtitle: Text(
-                    "Location: ${entry['painLocation']} - ${entry['date']}",
-                    style: GoogleFonts.poppins(),
-                  ),
-                );
-              },
-            ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Close', style: GoogleFonts.poppins(color: Colors.teal)),
+              child: Text('Close',
+                  style: TextStyle(
+                      color: Colors.teal, fontWeight: FontWeight.bold)),
             ),
           ],
         );
@@ -91,13 +108,13 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white, // White Background
       appBar: AppBar(
-        title: Text('Pain Monitoring', style: GoogleFonts.poppins()),
+        title: Text('Pain Monitoring',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Color(0xFF33724B),
         centerTitle: true,
       ),
@@ -106,7 +123,8 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text("Select Pain Level:", style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600)),
+            Text("Pain Level",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
 
             // ✅ Circular Pain Indicator
@@ -114,23 +132,30 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
               alignment: Alignment.center,
               children: [
                 SizedBox(
-                  width: 120,
-                  height: 120,
+                  width: 140,
+                  height: 140,
                   child: CircularProgressIndicator(
                     value: _painLevel / 10,
-                    backgroundColor: Colors.grey.shade200,
+                    backgroundColor: Colors.grey.shade300,
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
-                    strokeWidth: 8,
+                    strokeWidth: 10,
                   ),
                 ),
-                Text(
-                  "$_painLevel",
-                  style: GoogleFonts.poppins(fontSize: 28, fontWeight: FontWeight.bold),
+                Column(
+                  children: [
+                    Icon(Icons.favorite, color: Colors.redAccent, size: 30),
+                    SizedBox(height: 5),
+                    Text(
+                      "$_painLevel",
+                      style:
+                          TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
               ],
             ),
 
-            SizedBox(height: 10),
+            SizedBox(height: 15),
 
             // ✅ Slider for Pain Level
             Slider(
@@ -147,56 +172,86 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
               },
             ),
 
-            // ✅ Smart Pain Relief Suggestion
+            // ✅ Smart Pain Relief Suggestion with Icon
             Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
-              child: Text(
-                painReliefSuggestions.entries
-                    .firstWhere((entry) => _painLevel <= entry.key,
-                        orElse: () => MapEntry(10, "Please seek professional help."))
-                    .value,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(fontSize: 14, color: Colors.teal, fontWeight: FontWeight.w600),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.info, color: Colors.teal),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      painReliefSuggestions.entries
+                          .firstWhere((entry) => _painLevel <= entry.key,
+                              orElse: () => MapEntry(
+                                  10, "Please seek professional help."))
+                          .value,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.teal,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
               ),
             ),
+
             // ✅ Pain Location Input
             TextField(
               decoration: InputDecoration(
                 labelText: "Pain Location",
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 filled: true,
-                fillColor: Colors.grey.shade100,
+                fillColor: Colors.grey.shade200,
               ),
               onChanged: (value) => _painLocation = value,
             ),
 
-            SizedBox(height: 10),
+            SizedBox(height: 15),
 
-            // ✅ Save Entry Button
-            ElevatedButton(
-              onPressed: _savePainEntry,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF33724B),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-              child: Text('Save Entry', style: GoogleFonts.poppins(color: Colors.white)),
-            ),
-
-            // ✅ View Log & Back to Menu
+            // ✅ Buttons Section
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                TextButton(
-                  onPressed: _showPainLogDialog,
-                  child: Text('View Pain Log', style: GoogleFonts.poppins(color: Colors.teal)),
+                ElevatedButton.icon(
+                  onPressed: _savePainEntry,
+                  icon: Icon(Icons.save, color: Colors.white),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF33724B),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  label:
+                      Text('Save Entry', style: TextStyle(color: Colors.white)),
                 ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text("Back to Menu", style: GoogleFonts.poppins(color: Colors.redAccent)),
+                ElevatedButton.icon(
+                  onPressed: _showPainLogDialog,
+                  icon: Icon(Icons.history, color: Colors.white),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueAccent,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  label:
+                      Text('View Log', style: TextStyle(color: Colors.white)),
                 ),
               ],
+            ),
+
+            SizedBox(height: 10),
+
+            // ✅ Back to Menu Button
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                "Back to Menu",
+                style: TextStyle(
+                    color: Colors.redAccent, fontWeight: FontWeight.bold),
+              ),
             ),
           ],
         ),
