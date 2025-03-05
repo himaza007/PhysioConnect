@@ -109,3 +109,26 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
             Text("Select Pain Level:", style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600)),
             SizedBox(height: 10),
 
+            // ✅ Circular Pain Indicator
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  width: 120,
+                  height: 120,
+                  child: CircularProgressIndicator(
+                    value: _painLevel / 10,
+                    backgroundColor: Colors.grey.shade200,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
+                    strokeWidth: 8,
+                  ),
+                ),
+                Text(
+                  "$_painLevel",
+                  style: GoogleFonts.poppins(fontSize: 28, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+
+            SizedBox(height: 10),
+
