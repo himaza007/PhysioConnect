@@ -9,3 +9,10 @@ class StorageHelper {
         ? List<Map<String, dynamic>>.from(json.decode(storedData))
         : [];
   }
+
+  static Future<void> savePainHistory(
+      List<Map<String, dynamic>> history) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('painHistory', json.encode(history));
+  }
+}
