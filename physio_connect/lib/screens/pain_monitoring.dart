@@ -159,3 +159,18 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
                 style: GoogleFonts.poppins(fontSize: 14, color: Colors.teal, fontWeight: FontWeight.w600),
               ),
             ),
+            // ✅ Pain Location Input
+            TextField(
+              decoration: InputDecoration(
+                labelText: "Pain Location",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                filled: true,
+                fillColor: Colors.grey.shade100,
+              ),
+              onChanged: (value) => _painLocation = value,
+            ),
+
+            SizedBox(height: 10),
+
