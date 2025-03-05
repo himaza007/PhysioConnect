@@ -132,3 +132,17 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
 
             SizedBox(height: 10),
 
+            // ✅ Slider for Pain Level
+            Slider(
+              value: _painLevel.toDouble(),
+              min: 1,
+              max: 10,
+              divisions: 9,
+              label: _painLevel.toString(),
+              activeColor: Colors.redAccent,
+              onChanged: (value) {
+                setState(() {
+                  _painLevel = value.toInt();
+                });
+              },
+            ),
