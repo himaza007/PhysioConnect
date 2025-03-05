@@ -146,3 +146,16 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
                 });
               },
             ),
+
+            // ✅ Smart Pain Relief Suggestion
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Text(
+                painReliefSuggestions.entries
+                    .firstWhere((entry) => _painLevel <= entry.key,
+                        orElse: () => MapEntry(10, "Please seek professional help."))
+                    .value,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(fontSize: 14, color: Colors.teal, fontWeight: FontWeight.w600),
+              ),
+            ),
