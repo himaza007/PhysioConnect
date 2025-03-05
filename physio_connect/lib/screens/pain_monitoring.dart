@@ -174,3 +174,33 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
 
             SizedBox(height: 10),
 
+            // ✅ Save Entry Button
+            ElevatedButton(
+              onPressed: _savePainEntry,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF33724B),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              child: Text('Save Entry', style: GoogleFonts.poppins(color: Colors.white)),
+            ),
+
+            // ✅ View Log & Back to Menu
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: _showPainLogDialog,
+                  child: Text('View Pain Log', style: GoogleFonts.poppins(color: Colors.teal)),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Back to Menu", style: GoogleFonts.poppins(color: Colors.redAccent)),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
