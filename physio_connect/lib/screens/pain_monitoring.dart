@@ -34,9 +34,9 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
 
   Future<void> _savePainEntry() async {
     if (_painLocation.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Please enter pain location!")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please enter pain location!")),
+      );
       return;
     }
 
@@ -45,6 +45,7 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
       'painLevel': _painLevel,
       'painLocation': _painLocation,
     };
+
 
     _painHistory.insert(0, newEntry);
     await StorageHelper.savePainHistory(_painHistory);
