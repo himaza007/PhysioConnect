@@ -91,48 +91,21 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Pain Monitoring')),
+      backgroundColor: Colors.white, // White Background
+      appBar: AppBar(
+        title: Text('Pain Monitoring', style: GoogleFonts.poppins()),
+        backgroundColor: Color(0xFF33724B),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: EdgeInsets.all(20.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text("Select Pain Level:", style: TextStyle(fontSize: 16)),
-            Slider(
-              value: _painLevel.toDouble(),
-              min: 1,
-              max: 10,
-              divisions: 9,
-              label: _painLevel.toString(),
-              onChanged: (value) {
-                setState(() {
-                  _painLevel = value.toInt();
-                });
-              },
-            ),
-            LinearProgressIndicator(value: _painLevel / 10, color: Colors.red),
-            TextField(
-              decoration: InputDecoration(labelText: "Pain Location"),
-              onChanged: (value) => _painLocation = value,
-            ),
+            Text("Select Pain Level:", style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600)),
             SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _savePainEntry,
-              child: Text('Save Entry'),
-            ),
-            TextButton(
-              onPressed: _showPainLogDialog,
-              child: Text('View Pain Log'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text("Back to Menu"),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+
