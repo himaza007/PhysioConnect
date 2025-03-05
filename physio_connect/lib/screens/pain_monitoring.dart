@@ -46,18 +46,21 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
       'painLocation': _painLocation,
     };
 
-
     _painHistory.insert(0, newEntry);
     await StorageHelper.savePainHistory(_painHistory);
     setState(() {});
   }
 
-  void _showPainLogDialog() {
+   void _showPainLogDialog() {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Pain Log History'),
+          backgroundColor: Colors.white,
+          title: Text(
+            'Pain Log History',
+            style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+          ),
           content: Container(
             height: 200,
             child: ListView.builder(
@@ -65,9 +68,13 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
               itemBuilder: (context, index) {
                 final entry = _painHistory[index];
                 return ListTile(
-                  title: Text("Pain Level: ${entry['painLevel']}"),
+                  title: Text(
+                    "Pain Level: ${entry['painLevel']}",
+                    style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                  ),
                   subtitle: Text(
                     "Location: ${entry['painLocation']} - ${entry['date']}",
+                    style: GoogleFonts.poppins(),
                   ),
                 );
               },
@@ -76,7 +83,7 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Close'),
+              child: Text('Close', style: GoogleFonts.poppins(color: Colors.teal)),
             ),
           ],
         );
