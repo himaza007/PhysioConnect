@@ -15,7 +15,11 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
   final Map<int, String> painReliefSuggestions = {
     1: "Minimal discomfort, rest well! 💆‍♂️",
     3: "Try gentle stretching & hydration. 💧",
-
+    5: "Apply an ice pack and do light movements. ❄️",
+    7: "Use heat therapy & consider physiotherapy. 🔥",
+    9: "Seek medical advice for persistent pain. 🏥",
+    10: "Severe pain detected! Consult a doctor immediately. 🚨",
+  };
 
   @override
   void initState() {
