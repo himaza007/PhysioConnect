@@ -14,7 +14,6 @@ class _TutorialScreenState extends State<TutorialScreen> {
       "instructions":
           "Stand straight and raise your arms in a circular motion. Hold for 10 seconds."
     },
-  
     {
       "title": "Lower Back Stretch",
       "videoId": "9PXYGBdMsa4", // Replace with actual YouTube Video ID
