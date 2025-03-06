@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'nearby_facilities.dart';
-import 'custom_exercise_plans.dart'; // Import the file where CustomExercisePlansScreen is defined
 
 void main() {
   runApp(const MyApp());
