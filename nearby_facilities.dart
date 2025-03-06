@@ -193,15 +193,24 @@ class _NearbyFacilitiesScreenState extends State<NearbyFacilitiesScreen>
           tabs: const [
             Tab(
               icon: Icon(Icons.local_hospital, color: Colors.white),
-              child: Text("Hospitals", style: TextStyle(color: Colors.black)),
+              child: Text(
+                "Hospitals",
+                style: TextStyle(color: Colors.black, fontSize: 13),
+              ),
             ),
             Tab(
               icon: Icon(Icons.medical_services, color: Colors.white),
-              text: "Doctors",
+              child: Text(
+                "Dcotors",
+                style: TextStyle(color: Colors.black, fontSize: 13),
+              ),
             ),
             Tab(
               icon: Icon(Icons.healing, color: Colors.white),
-              text: "Physiotherapists",
+              child: Text(
+                "Physiotherapists",
+                style: TextStyle(color: Colors.black, fontSize: 13),
+              ),
             ),
           ],
         ),
