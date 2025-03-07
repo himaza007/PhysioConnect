@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../models/therapist.dart';
+import 'therapist.dart';
 import 'booking_screen.dart';
 import 'support_chat_screen.dart';
-import '../widgets/therapist_card.dart';
+import 'therapist_card.dart';
 
 class TherapistSelectionScreen extends StatelessWidget {
   final List<Therapist> therapists = [
@@ -28,7 +28,7 @@ class TherapistSelectionScreen extends StatelessWidget {
       rating: 4.9,
     ),
     Therapist(
-      name: 'Dr. Alex Brown'
+      name: 'Dr. Alex Brown',
       specialty: 'Orthopedic',
       available: true,
       image: '',
@@ -58,7 +58,7 @@ class TherapistSelectionScreen extends StatelessWidget {
     Therapist(
       name: 'Dr. Lisa Wilson',
       specialty: 'Sports Rehabilitation',
-      available:true,
+      available: true,
       image: '',
       rating: 4.9,
     ),
