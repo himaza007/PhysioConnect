@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'support_chat_screen.dart';
+import 'dart:async';
 
 class EmergencySessionScreen extends StatefulWidget {
   @override
@@ -8,6 +9,18 @@ class EmergencySessionScreen extends StatefulWidget {
 
 class _EmergencySessionScreenState extends State<EmergencySessionScreen> {
   bool isConnecting = true;
+  bool isVideoOff = false;
+  bool isMicMuted = false;
+  bool isChatOpen = false;
+  late Timer sessionTimer;
+  int secondsElapsed = 0;
+  String sessionTime = "00:00:00";
+
+  CameraController? cameraController;
+  List<CameraDescription>? cameras;
+  String chatMessage = "";
+  List<Map<String, dynamic>> chatMessages = [];
+  bool isCameraInitialized = false;
 
   @override
   void initState() {
