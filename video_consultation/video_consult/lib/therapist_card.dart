@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/therapist.dart';
+import 'therapist.dart';
 
 class TherapistCard extends StatelessWidget {
   final Therapist therapist;
