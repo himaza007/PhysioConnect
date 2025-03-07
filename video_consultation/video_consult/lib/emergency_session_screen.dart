@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'support_chat_screen.dart';
 import 'dart:async';
@@ -588,4 +589,8 @@ Widget build(BuildContext context) {
       tooltip: 'Contact Support',
     ),
   );
+}
+
+extension on CameraController {
+  void setAudioMode(bool bool) {}
 }
