@@ -35,6 +35,117 @@ class _EmergencySessionScreenState extends State<EmergencySessionScreen> {
     });
   }
 
+  void startSessionTimer() {
+    sessionTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (mounted) {
+        setState(() {
+          secondsElapsed++;
+          int hours = secondsElapsed ~/ 3600;
+          int minutes = (secondsElapsed % 3600) ~/ 60;
+          int seconds = secondsElapsed % 60;
+          sessionTime =
+              "${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
+        });
+      }
+    });
+  }
+
+  Future<void> initCamera() async {
+    try {
+      cameras = await availableCameras();
+      if (cameras != null && cameras!.isNotEmpty) {
+        // Try to get front camera, but fall back to first camera if not available
+        final frontCameras = cameras!
+            .where(
+                (camera) => camera.lensDirection == CameraLensDirection.front)
+            .toList();
+
+        final CameraDescription selectedCamera =
+            frontCameras.isNotEmpty ? frontCameras.first : cameras!.first;
+
+        cameraController = CameraController(
+          selectedCamera,
+          ResolutionPreset.medium,
+          enableAudio: true,
+        );
+
+        await cameraController!.initialize();
+
+        if (mounted) {
+          setState(() {
+            isCameraInitialized = true;
+          });
+        }
+      }
+    } catch (e) {
+      print('Error initializing camera: $e');
+    }
+  }
+
+  void toggleMic() {
+    setState(() {
+      isMicMuted = !isMicMuted;
+    });
+    // In a real app, you would implement actual mic muting here
+    if (cameraController != null && cameraController!.value.isInitialized) {
+      cameraController!.setAudioMode(!isMicMuted);
+    }
+  }
+
+  void toggleVideo() {
+    setState(() {
+      isVideoOff = !isVideoOff;
+    });
+    // In a real app, you would implement actual video toggling here
+    if (cameraController != null && cameraController!.value.isInitialized) {
+      if (isVideoOff) {
+        cameraController!.pausePreview();
+      } else {
+        cameraController!.resumePreview();
+      }
+    }
+  }
+
+  void toggleChat() {
+    setState(() {
+      isChatOpen = !isChatOpen;
+    });
+  }
+
+  void sendMessage() {
+    if (chatMessage.trim().isNotEmpty) {
+      setState(() {
+        chatMessages.add({
+          'isUser': true,
+          'message': chatMessage,
+          'time': DateTime.now(),
+        });
+        chatMessage = "";
+      });
+
+      // Simulate therapist response after 2 seconds
+      Future.delayed(Duration(seconds: 2), () {
+        if (mounted) {
+          setState(() {
+            chatMessages.add({
+              'isUser': false,
+              'message':
+                  "I understand you're going through a difficult time. Let's focus on your immediate feelings.",
+              'time': DateTime.now(),
+            });
+          });
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    sessionTimer.cancel();
+    cameraController?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,9 +223,6 @@ class _EmergencySessionScreenState extends State<EmergencySessionScreen> {
       ),
     );
   }
-  //   // Existing connecting screen implementation
-  //   // ...
-  // }
 
   Widget _buildCallScreen() {
     return Stack(
@@ -217,6 +325,31 @@ class _EmergencySessionScreenState extends State<EmergencySessionScreen> {
                       ),
                     ),
                   ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        // Session time
+        Positioned(
+          top: 120,
+          left: 16,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.black54,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.timer, color: Colors.white, size: 16),
+                SizedBox(width: 4),
+                Text(
+                  sessionTime,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
