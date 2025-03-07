@@ -356,6 +356,157 @@ class _EmergencySessionScreenState extends State<EmergencySessionScreen> {
           ),
         ),
 
+        // Chat panel if open
+        if (isChatOpen)
+          Positioned(
+            bottom: 100,
+            right: 20,
+            width: MediaQuery.of(context).size.width * 0.7,
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 10,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade700,
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(12)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Emergency Chat',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.close, color: Colors.white),
+                          onPressed: toggleChat,
+                          padding: EdgeInsets.zero,
+                          constraints: BoxConstraints(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: chatMessages.isEmpty
+                        ? Center(
+                            child: Text(
+                              'Your messages will appear here',
+                              style: TextStyle(color: Colors.grey.shade600),
+                            ),
+                          )
+                        : ListView.builder(
+                            padding: EdgeInsets.all(12),
+                            itemCount: chatMessages.length,
+                            itemBuilder: (context, index) {
+                              final message = chatMessages[index];
+                              return Align(
+                                alignment: message['isUser']
+                                    ? Alignment.centerRight
+                                    : Alignment.centerLeft,
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: 8,
+                                    left: message['isUser'] ? 50 : 0,
+                                    right: message['isUser'] ? 0 : 50,
+                                  ),
+                                  padding: EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: message['isUser']
+                                        ? Colors.blue.shade100
+                                        : Colors.grey.shade100,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        message['message'],
+                                        style: TextStyle(
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                      SizedBox(height: 4),
+                                      Text(
+                                        '${message['time'].hour.toString().padLeft(2, '0')}:${message['time'].minute.toString().padLeft(2, '0')}',
+                                        style: TextStyle(
+                                          color: Colors.grey.shade600,
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius:
+                          BorderRadius.vertical(bottom: Radius.circular(12)),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Type your message...',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: BorderSide.none,
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                            ),
+                            onChanged: (value) {
+                              chatMessage = value;
+                            },
+                            onSubmitted: (value) {
+                              sendMessage();
+                            },
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        CircleAvatar(
+                          backgroundColor: Colors.red.shade700,
+                          child: IconButton(
+                            icon:
+                                Icon(Icons.send, color: Colors.white, size: 18),
+                            onPressed: sendMessage,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
         // Call controls
         Positioned(
           bottom: 40,
