@@ -516,13 +516,28 @@ class _EmergencySessionScreenState extends State<EmergencySessionScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildCallControlButton(Icons.videocam_off, Colors.grey.shade800),
-              _buildCallControlButton(Icons.mic_off, Colors.grey.shade800),
-              _buildCallControlButton(Icons.chat, Colors.grey.shade800),
-              _buildCallControlButton(Icons.call_end, Colors.red,
-                  onPressed: () {
-                Navigator.of(context).pop();
-              }),
+              _buildCallControlButton(
+                isVideoOff ? Icons.videocam : Icons.videocam_off,
+                isVideoOff ? Colors.red.shade700 : Colors.grey.shade800,
+                onPressed: toggleVideo,
+              ),
+              _buildCallControlButton(
+                isMicMuted ? Icons.mic : Icons.mic_off,
+                isMicMuted ? Colors.red.shade700 : Colors.grey.shade800,
+                onPressed: toggleMic,
+              ),
+              _buildCallControlButton(
+                Icons.chat,
+                isChatOpen ? Colors.green.shade700 : Colors.grey.shade800,
+                onPressed: toggleChat,
+              ),
+              _buildCallControlButton(
+                Icons.call_end,
+                Colors.red.shade700,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
             ],
           ),
         ),
@@ -542,7 +557,7 @@ class _EmergencySessionScreenState extends State<EmergencySessionScreen> {
                 Icon(Icons.timer, color: Colors.white, size: 16),
                 SizedBox(width: 4),
                 Text(
-                  '00:02:18',
+                  sessionTime,
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
