@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:video_consult/home_screen.dart';
+import 'package:video_consult/messaging_screen.dart';
 import 'therapist.dart';
 import 'booking_screen.dart';
 import 'support_chat_screen.dart';
@@ -121,19 +123,6 @@ class TherapistSelectionScreen extends StatelessWidget {
         child: Icon(Icons.support_agent),
         tooltip: 'Contact Support',
       ),
-    );
-  }
-}
-
-class MessagingScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Support & Chat'),
-        backgroundColor: Colors.green.shade700,
-      ),
-      body: Center(child: Text('Messaging Feature Coming Soon...')),
     );
   }
 }
