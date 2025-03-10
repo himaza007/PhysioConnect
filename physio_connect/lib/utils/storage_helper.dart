@@ -24,3 +24,38 @@ class StorageHelper {
       return [];
     }
   }
+
+  /// ✅ Saves pain history into SharedPreferences.
+  static Future<void> savePainHistory(
+      List<Map<String, dynamic>> history) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final String encodedData = json.encode(history);
+      await prefs.setString(_keyPainHistory, encodedData);
+    } catch (e) {
+      print("⚠ Error saving pain history: $e");
+    }
+  }
+
+  /// ✅ Clears all stored pain history.
+  static Future<void> clearPainHistory() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_keyPainHistory);
+      print("✅ Pain history cleared.");
+    } catch (e) {
+      print("⚠ Error clearing pain history: $e");
+    }
+  }
+
+  /// ✅ Adds a new entry to the pain history.
+  static Future<void> addPainEntry(Map<String, dynamic> newEntry) async {
+    try {
+      List<Map<String, dynamic>> history = await loadPainHistory();
+      history.insert(0, newEntry); // Add new entry to the beginning
+      await savePainHistory(history);
+    } catch (e) {
+      print("⚠ Error adding pain entry: $e");
+    }
+  }
+}
