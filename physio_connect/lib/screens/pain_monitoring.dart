@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../utils/storage_helper.dart';
 
 class PainMonitoringPage extends StatefulWidget {
@@ -19,9 +20,6 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
     9: "Seek medical advice for persistent pain. 🏥",
     10: "Severe pain detected! Consult a doctor immediately. 🚨",
   };
-
-
-
 
   @override
   void initState() {
@@ -46,7 +44,7 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
     }
 
     Map<String, dynamic> newEntry = {
-      'date': DateTime.now().toString().substring(0, 16),
+      'date': DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
       'painLevel': _painLevel,
       'painLocation': _painLocation,
     };
@@ -68,31 +66,44 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
             children: [
               Icon(Icons.history, color: Colors.teal),
               SizedBox(width: 10),
-              Text('Pain Log History',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Text(
+                'Pain Log History',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              ),
             ],
           ),
           content: Container(
             height: 250,
             child: _painHistory.isEmpty
                 ? Center(
-                    child: Text("No records found.",
-                        style: TextStyle(color: Colors.grey)))
+                    child: Text(
+                      "No records found.",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  )
                 : ListView.builder(
                     itemCount: _painHistory.length,
                     itemBuilder: (context, index) {
                       final entry = _painHistory[index];
                       return Card(
-                        elevation: 3,
+                        elevation: 4,
                         margin: EdgeInsets.symmetric(vertical: 5),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                         child: ListTile(
                           leading: Icon(Icons.local_hospital,
                               color: Colors.redAccent),
-                          title: Text("Pain Level: ${entry['painLevel']}"),
+                          title: Text(
+                            "Pain Level: ${entry['painLevel']}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                          ),
                           subtitle: Text(
-                              "Location: ${entry['painLocation']} - ${entry['date']}"),
+                            "Location: ${entry['painLocation']} - ${entry['date']}",
+                            style: TextStyle(color: Colors.grey),
+                          ),
                         ),
                       );
                     },
@@ -101,9 +112,11 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Close',
-                  style: TextStyle(
-                      color: Colors.teal, fontWeight: FontWeight.bold)),
+              child: Text(
+                'Close',
+                style:
+                    TextStyle(color: Colors.teal, fontWeight: FontWeight.bold),
+              ),
             ),
           ],
         );
@@ -114,10 +127,10 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // White Background
+      backgroundColor: Colors.white, // ✅ White Background
       appBar: AppBar(
         title: Text('Pain Monitoring',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
         backgroundColor: Color(0xFF33724B),
         centerTitle: true,
       ),
@@ -126,36 +139,45 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text("Pain Level",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
+            Text(
+              "Pain Level",
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+            SizedBox(height: 15),
 
-            // ✅ Circular Pain Indicator
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                SizedBox(
-                  width: 140,
-                  height: 140,
-                  child: CircularProgressIndicator(
-                    value: _painLevel / 10,
-                    backgroundColor: Colors.grey.shade300,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
-                    strokeWidth: 10,
-                  ),
-                ),
-                Column(
+            // ✅ Pain Level Circular Indicator
+            Container(
+              height: 130,
+              width: 130,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.teal.shade50,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      blurRadius: 8,
+                      offset: Offset(2, 4)),
+                ],
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.favorite, color: Colors.redAccent, size: 30),
+                    Icon(Icons.favorite, color: Colors.redAccent, size: 35),
                     SizedBox(height: 5),
                     Text(
                       "$_painLevel",
-                      style:
-                          TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
 
             SizedBox(height: 15),
@@ -167,7 +189,7 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
               max: 10,
               divisions: 9,
               label: _painLevel.toString(),
-              activeColor: Colors.redAccent,
+              activeColor: Color(0xFF1F6662),
               onChanged: (value) {
                 setState(() {
                   _painLevel = value.toInt();
@@ -181,7 +203,7 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.info, color: Colors.teal),
+                  Icon(Icons.info, color: Color(0xFF33724B)),
                   SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -193,7 +215,7 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 14,
-                          color: Colors.teal,
+                          color: Color(0xFF33724B),
                           fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -205,11 +227,10 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
             TextField(
               decoration: InputDecoration(
                 labelText: "Pain Location",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                 filled: true,
-                fillColor: Colors.grey.shade200,
+                fillColor: Color(0xFFE3F3F3),
               ),
               onChanged: (value) => _painLocation = value,
             ),
@@ -235,7 +256,7 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
                   onPressed: _showPainLogDialog,
                   icon: Icon(Icons.history, color: Colors.white),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
+                    backgroundColor: Color(0xFF1F6662),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                   ),
@@ -243,18 +264,6 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
                       Text('View Log', style: TextStyle(color: Colors.white)),
                 ),
               ],
-            ),
-
-            SizedBox(height: 10),
-
-            // ✅ Back to Menu Button
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                "Back to Menu",
-                style: TextStyle(
-                    color: Colors.redAccent, fontWeight: FontWeight.bold),
-              ),
             ),
           ],
         ),
