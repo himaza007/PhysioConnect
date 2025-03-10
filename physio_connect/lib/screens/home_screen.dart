@@ -45,6 +45,34 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           // ✅ Animated Wave Background (from wave_background.dart)
           Positioned.fill(child: WaveBackground()),
 
+          // ✅ App Logo Positioned at the Top with a Professional Look
+          Positioned(
+            top: 40,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.8),
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 8,
+                      offset: Offset(2, 3),
+                    ),
+                  ],
+                ),
+                child: Image.asset(
+                  "lib/assets/images/app_logo.png",
+                  height: 30, // ✅ Adjusted Size for Professional Look
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+
           // ✅ Subtle Glowing Effect Centered to Physio Animation
           Positioned(
             top: MediaQuery.of(context).size.height * 0.22, // Centered Effect
