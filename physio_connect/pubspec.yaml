@@ -8,19 +8,28 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # ✅ WebView for External Resources
+  flutter_inappwebview: ^6.1.5
+
   # ✅ Date & Time Formatting
-  intl: ^0.18.0
+  intl: ^0.20.2
 
   # ✅ State Management & Data Persistence
-  provider: ^6.0.5
-  shared_preferences: ^2.2.1
+  provider: ^6.1.2
+  shared_preferences: ^2.5.2
 
   # ✅ UI Enhancements & Animations
-  lottie: ^2.6.0
+  lottie: ^3.3.1
+  flutter_animate: ^4.5.0  # Smooth UI transitions & effects
 
   # ✅ Multimedia & Notifications
-  youtube_player_flutter: ^8.1.0
-  flutter_local_notifications: ^16.1.0
+  youtube_player_flutter: ^9.1.1
+  flutter_local_notifications: ^18.0.1
+  audioplayers: ^5.2.0  # Sound effects for UI feedback
+
+  # ✅ App Styling & Fonts
+  flutter_lints: ^5.0.0
+  google_fonts: ^6.1.0  # Google Fonts for modern typography
 
 dev_dependencies:
   flutter_test:
@@ -31,7 +40,11 @@ flutter:
 
   # ✅ Linking Assets (Fixed Paths)
   assets:
+    # ✅ Animations
     - lib/assets/animations/physio_animation.json
     - lib/assets/animations/transition_effect.json
-    - lib/assets/animations/bubble_animation.json
+    - lib/assets/animations/intro_loading.json
+    - lib/assets/animations/waves_background.json
+    - lib/assets/animations/glowing_effect.json
     - lib/assets/images/app_logo.png
+
