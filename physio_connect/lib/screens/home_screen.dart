@@ -178,3 +178,45 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
                 ),
               ),
             ),
+             SizedBox(height: 15),
+
+            // ✅ Slider for Pain Level
+            Slider(
+              value: _painLevel.toDouble(),
+              min: 1,
+              max: 10,
+              divisions: 9,
+              label: _painLevel.toString(),
+              activeColor: Color(0xFF1F6662),
+              onChanged: (value) {
+                setState(() {
+                  _painLevel = value.toInt();
+                });
+              },
+            ),
+
+            // ✅ Smart Pain Relief Suggestion with Icon
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.info, color: Color(0xFF33724B)),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      painReliefSuggestions.entries
+                          .firstWhere((entry) => _painLevel <= entry.key,
+                              orElse: () => MapEntry(
+                                  10, "Please seek professional help."))
+                          .value,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF33724B),
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+            ),
