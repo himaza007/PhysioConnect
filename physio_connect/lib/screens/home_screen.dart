@@ -131,3 +131,54 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
     );
   }
+
+  // ✅ Animated Button Widget
+  Widget _buildAnimatedButton({
+    required String label,
+    required IconData icon,
+    required Color color,
+    required Color textColor,
+    required String route,
+  }) {
+    return MouseRegion(
+      onEnter: (_) => _animateButton(true),
+      onExit: (_) => _animateButton(false),
+      child: GestureDetector(
+        onTap: () => Navigator.pushNamed(context, route),
+        child: ScaleTransition(
+          scale: _scaleAnimation,
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 18, horizontal: 24),
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10,
+                  offset: Offset(2, 6),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, size: 30, color: textColor),
+                SizedBox(width: 10),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: textColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
