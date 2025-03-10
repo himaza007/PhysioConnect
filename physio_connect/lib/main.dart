@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 import 'screens/pain_monitoring.dart';
-import 'screens/tutorial_screen.dart';
+import 'screens/first_aid_tutorial.dart';
 
 void main() {
   runApp(PhysioConnectApp());
