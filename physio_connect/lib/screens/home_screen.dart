@@ -53,3 +53,58 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
     await StorageHelper.savePainHistory(_painHistory);
     setState(() {});
   }
+   void _showPainLogDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          title: Row(
+            children: [
+              Icon(Icons.history, color: Colors.teal),
+              SizedBox(width: 10),
+              Text(
+                'Pain Log History',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+            ],
+          ),
+          content: Container(
+            height: 250,
+            child: _painHistory.isEmpty
+                ? Center(
+                    child: Text(
+                      "No records found.",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: _painHistory.length,
+                    itemBuilder: (context, index) {
+                      final entry = _painHistory[index];
+                      return Card(
+                        elevation: 4,
+                        margin: EdgeInsets.symmetric(vertical: 5),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        child: ListTile(
+                          leading: Icon(Icons.local_hospital,
+                              color: Colors.redAccent),
+                          title: Text(
+                            "Pain Level: ${entry['painLevel']}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                          ),
+                          subtitle: Text(
+                            "Location: ${entry['painLocation']} - ${entry['date']}",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
