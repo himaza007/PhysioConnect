@@ -51,3 +51,29 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
             ),
           ),
+
+          // ✅ Animated Overlays
+          Positioned(
+            top: -100,
+            left: -50,
+            child: Opacity(
+              opacity: 0.3,
+              child: Lottie.asset(
+                "lib/assets/animations/bubble_animation.json",
+                height: 400,
+                repeat: true,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -100,
+            right: -50,
+            child: Opacity(
+              opacity: 0.3,
+              child: Lottie.asset(
+                "lib/assets/animations/bubble_animation.json",
+                height: 400,
+                repeat: true,
+              ),
+            ),
+          ),
