@@ -27,3 +27,52 @@ class FirstAidDetailsScreen extends StatelessWidget {
       "✔ Continue until the object is **expelled**."
     ],
   };
+   @override
+  Widget build(BuildContext context) {
+    final List<String> steps =
+        firstAidSteps[title] ?? ["⚠ No instructions available."];
+
+    return Scaffold(
+      backgroundColor: Colors.white, // ✅ Clean White Background
+      body: SafeArea(
+        child: Column(
+          children: [
+            // ✅ Custom AppBar with Animated Back Button
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 300),
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.redAccent,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 6,
+                            offset: Offset(2, 3),
+                          ),
+                        ],
+                      ),
+                      child: Icon(Icons.arrow_back, color: Colors.white),
+                    ),
+                  ),
+                  SizedBox(width: 15),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.teal.shade800,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
