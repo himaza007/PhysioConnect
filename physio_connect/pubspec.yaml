@@ -1,15 +1,37 @@
 name: physioconnect
-description: A physiotherapy application with pain monitoring and emergency features.
+description: A physiotherapy application with pain monitoring and first aid tutorials.
 
 environment:
-  sdk: ">=3.6.0 <4.0.0" # Dart SDK constraint
+  sdk: ">=3.6.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  provider: ^6.0.5 # State management
-  shared_preferences: ^2.2.1 # Local storage for pain history
-  url_launcher: ^6.1.11 # For emergency calls and messages
-  flutter_local_notifications: ^16.1.0 # Use the latest stable version
+
+  # ✅ Date & Time Formatting
+  intl: ^0.18.0
+
+  # ✅ State Management & Data Persistence
+  provider: ^6.0.5
+  shared_preferences: ^2.2.1
+
+  # ✅ UI Enhancements & Animations
   lottie: ^2.6.0
+
+  # ✅ Multimedia & Notifications
   youtube_player_flutter: ^8.1.0
+  flutter_local_notifications: ^16.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  # ✅ Linking Assets (Fixed Paths)
+  assets:
+    - lib/assets/animations/physio_animation.json
+    - lib/assets/animations/transition_effect.json
+    - lib/assets/animations/bubble_animation.json
+    - lib/assets/images/app_logo.png
