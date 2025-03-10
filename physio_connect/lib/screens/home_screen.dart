@@ -77,3 +77,31 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
             ),
           ),
+
+          // ✅ Main Content
+          SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // ✅ Lottie Animation (Header)
+                Lottie.asset(
+                  "lib/assets/animations/physio_animation.json",
+                  height: 150,
+                  fit: BoxFit.cover,
+                ),
+
+                SizedBox(height: 20),
+
+                // ✅ Title
+                Text(
+                  "Welcome to PhysioConnect",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    letterSpacing: 1.2,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+
+                SizedBox(height: 40),
