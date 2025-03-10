@@ -1,40 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
+import 'package:intl/intl.dart';
+import '../utils/storage_helper.dart';
 
-class HomeScreen extends StatefulWidget {
+class PainMonitoringPage extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _PainMonitoringPageState createState() => _PainMonitoringPageState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
+class _PainMonitoringPageState extends State<PainMonitoringPage> {
+  int _painLevel = 5;
+  String _painLocation = '';
+  List<Map<String, dynamic>> _painHistory = [];
 
-  @override
-  void initState() {
-    super.initState();
+  final Map<int, String> painReliefSuggestions = {
+    1: "Minimal discomfort, rest well! 💆‍♂️",
+    3: "Try gentle stretching & hydration. 💧",
+    5: "Apply an ice pack and do light movements. ❄️",
+    7: "Use heat therapy & consider physiotherapy. 🔥",
+    9: "Seek medical advice for persistent pain. 🏥",
+    10: "Severe pain detected! Consult a doctor immediately. 🚨",
+  };
 
-    // ✅ Smooth Button Scale Animation
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-    _scaleAnimation =
-        Tween<double>(begin: 1.0, end: 1.05).animate(_animationController);
-  }
 
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  void _animateButton(bool isHovered) {
-    if (isHovered) {
-      _animationController.forward();
-    } else {
-      _animationController.reverse();
-    }
-  }
-
+// pass on
   @override
   Widget build(BuildContext context) {
     return Scaffold(
