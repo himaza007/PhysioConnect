@@ -118,3 +118,39 @@ class FirstAidDetailsScreen extends StatelessWidget {
     );
   }
 
+  // ✅ Reusable Step Card with Hover Effect
+  Widget _buildStepCard(String step) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12),
+      child: Container(
+        padding: EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.teal.shade50,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 5,
+              offset: Offset(2, 3),
+            ),
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(Icons.check_circle, color: Colors.green, size: 24),
+            SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                step,
+                style: TextStyle(fontSize: 16, height: 1.5),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
