@@ -3,7 +3,7 @@
   "packages": [
     {
       "name": "archive",
-      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/archive-3.6.1",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/archive-4.0.4",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -18,6 +18,48 @@
       "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/async-2.12.0",
       "packageUri": "lib/",
       "languageVersion": "3.4"
+    },
+    {
+      "name": "audioplayers",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/audioplayers-5.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "audioplayers_android",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/audioplayers_android-4.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "audioplayers_darwin",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/audioplayers_darwin-5.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "audioplayers_linux",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/audioplayers_linux-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "audioplayers_platform_interface",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/audioplayers_platform_interface-6.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "audioplayers_web",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/audioplayers_web-4.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "audioplayers_windows",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/audioplayers_windows-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "boolean_selector",
@@ -74,34 +116,100 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "fixnum",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/fixnum-1.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
       "name": "flutter",
       "rootUri": "file:///Users/sachiradelankawala/flutter/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
     {
-      "name": "flutter_inappwebview",
-      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_inappwebview-5.8.0",
+      "name": "flutter_animate",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_animate-4.5.2",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_inappwebview",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_inappwebview-6.1.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "flutter_inappwebview_android",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_inappwebview_android-1.1.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "flutter_inappwebview_internal_annotations",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_inappwebview_internal_annotations-1.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_inappwebview_ios",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_inappwebview_ios-1.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "flutter_inappwebview_macos",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_inappwebview_macos-1.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "flutter_inappwebview_platform_interface",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_inappwebview_platform_interface-1.3.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "flutter_inappwebview_web",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_inappwebview_web-1.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "flutter_inappwebview_windows",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_inappwebview_windows-0.6.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "flutter_lints",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_lints-5.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
     },
     {
       "name": "flutter_local_notifications",
-      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_local_notifications-16.3.3",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_local_notifications-18.0.1",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.1"
     },
     {
       "name": "flutter_local_notifications_linux",
-      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_local_notifications_linux-4.0.1",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_local_notifications_linux-5.0.0",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.1"
     },
     {
       "name": "flutter_local_notifications_platform_interface",
-      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_local_notifications_platform_interface-7.2.0",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_local_notifications_platform_interface-8.0.0",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "flutter_shaders",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_shaders-0.1.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
     },
     {
       "name": "flutter_test",
@@ -116,10 +224,34 @@
       "languageVersion": "3.7"
     },
     {
-      "name": "intl",
-      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/intl-0.18.1",
+      "name": "google_fonts",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/google_fonts-6.2.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "http",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/http-1.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "http_parser",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/http_parser-4.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "intl",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/intl-0.20.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "js",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/js-0.6.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
     },
     {
       "name": "leak_tracker",
@@ -140,10 +272,16 @@
       "languageVersion": "3.2"
     },
     {
-      "name": "lottie",
-      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/lottie-2.7.0",
+      "name": "lints",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/lints-5.1.1",
       "packageUri": "lib/",
-      "languageVersion": "3.1"
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "lottie",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/lottie-3.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
     },
     {
       "name": "matcher",
@@ -174,6 +312,24 @@
       "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/path-1.9.1",
       "packageUri": "lib/",
       "languageVersion": "3.4"
+    },
+    {
+      "name": "path_provider",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/path_provider-2.1.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "path_provider_android",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/path_provider_android-2.2.16",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "path_provider_foundation",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/path_provider_foundation-2.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
     },
     {
       "name": "path_provider_linux",
@@ -208,6 +364,12 @@
     {
       "name": "plugin_platform_interface",
       "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.8",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "posix",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/posix-6.0.1",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -272,6 +434,12 @@
       "languageVersion": "3.1"
     },
     {
+      "name": "sprintf",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/sprintf-7.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "stack_trace",
       "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/stack_trace-1.12.1",
       "packageUri": "lib/",
@@ -288,6 +456,12 @@
       "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/string_scanner-1.4.1",
       "packageUri": "lib/",
       "languageVersion": "3.1"
+    },
+    {
+      "name": "synchronized",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/synchronized-3.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.7"
     },
     {
       "name": "term_glyph",
@@ -312,6 +486,12 @@
       "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/typed_data-1.4.0",
       "packageUri": "lib/",
       "languageVersion": "3.5"
+    },
+    {
+      "name": "uuid",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/uuid-4.5.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "vector_math",
@@ -345,9 +525,9 @@
     },
     {
       "name": "youtube_player_flutter",
-      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/youtube_player_flutter-8.1.2",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/youtube_player_flutter-9.1.1",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.5"
     },
     {
       "name": "physioconnect",
@@ -356,7 +536,7 @@
       "languageVersion": "3.6"
     }
   ],
-  "generated": "2025-03-10T16:01:22.052893Z",
+  "generated": "2025-03-10T21:11:01.863392Z",
   "generator": "pub",
   "generatorVersion": "3.7.0",
   "flutterRoot": "file:///Users/sachiradelankawala/flutter",
