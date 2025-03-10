@@ -108,3 +108,17 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
                     },
                   ),
           ),
+                actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Close',
+                style:
+                    TextStyle(color: Colors.teal, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
