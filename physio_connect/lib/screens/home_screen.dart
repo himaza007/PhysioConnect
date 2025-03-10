@@ -17,8 +17,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     // ✅ Smooth Button Scale Animation
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-    _scaleAnimation =
-        Tween<double>(begin: 1.0, end: 1.05).animate(_animationController);
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.08).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
   }
 
   @override
@@ -38,10 +42,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // ✅ Full-Screen Background
       body: Stack(
+        alignment: Alignment.center,
         children: [
-          // ✅ Gradient Background
+          // ✅ Gradient Background for Elegant UI
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -52,61 +56,41 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
           ),
 
-          // ✅ Animated Overlays
-          Positioned(
-            top: -100,
-            left: -50,
-            child: Opacity(
-              opacity: 0.3,
-              child: Lottie.asset(
-                "lib/assets/animations/bubble_animation.json",
-                height: 400,
-                repeat: true,
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -100,
-            right: -50,
-            child: Opacity(
-              opacity: 0.3,
-              child: Lottie.asset(
-                "lib/assets/animations/bubble_animation.json",
-                height: 400,
-                repeat: true,
-              ),
-            ),
-          ),
-
-          // ✅ Main Content
           SafeArea(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // ✅ Lottie Animation (Header)
+                // ✅ Centered Lottie Animation (Header)
                 Lottie.asset(
                   "lib/assets/animations/physio_animation.json",
-                  height: 150,
+                  height: 180,
                   fit: BoxFit.cover,
                 ),
 
-                SizedBox(height: 20),
+                SizedBox(height: 30),
 
-                // ✅ Title
+                // ✅ Elegant Welcome Text
                 Text(
                   "Welcome to PhysioConnect",
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 26,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                     letterSpacing: 1.2,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black38,
+                        blurRadius: 4,
+                        offset: Offset(2, 2),
+                      ),
+                    ],
                   ),
                   textAlign: TextAlign.center,
                 ),
 
-                SizedBox(height: 40),
+                SizedBox(height: 50),
 
-                // ✅ Interactive Buttons
+                // ✅ Interactive Buttons (Centered)
                 _buildAnimatedButton(
                   label: "Pain Monitoring",
                   icon: Icons.favorite,
@@ -132,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  // ✅ Animated Button Widget
+  // ✅ Enhanced Animated Button with Smooth Scaling
   Widget _buildAnimatedButton({
     required String label,
     required IconData icon,
@@ -147,16 +131,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         onTap: () => Navigator.pushNamed(context, route),
         child: ScaleTransition(
           scale: _scaleAnimation,
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 18, horizontal: 24),
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 250),
+            padding: EdgeInsets.symmetric(vertical: 18, horizontal: 30),
             decoration: BoxDecoration(
               color: color,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black26,
-                  blurRadius: 10,
-                  offset: Offset(2, 6),
+                  blurRadius: 12,
+                  offset: Offset(3, 6),
                 ),
               ],
             ),
@@ -168,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 Text(
                   label,
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 19,
                     fontWeight: FontWeight.bold,
                     color: textColor,
                   ),
