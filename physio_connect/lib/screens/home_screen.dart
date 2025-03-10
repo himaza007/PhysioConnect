@@ -1,272 +1,183 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import '../utils/storage_helper.dart';
+import 'package:lottie/lottie.dart';
 
-class PainMonitoringPage extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   @override
-  _PainMonitoringPageState createState() => _PainMonitoringPageState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _PainMonitoringPageState extends State<PainMonitoringPage> {
-  int _painLevel = 5;
-  String _painLocation = '';
-  List<Map<String, dynamic>> _painHistory = [];
-
-  final Map<int, String> painReliefSuggestions = {
-    1: "Minimal discomfort, rest well! 💆‍♂️",
-    3: "Try gentle stretching & hydration. 💧",
-    5: "Apply an ice pack and do light movements. ❄️",
-    7: "Use heat therapy & consider physiotherapy. 🔥",
-    9: "Seek medical advice for persistent pain. 🏥",
-    10: "Severe pain detected! Consult a doctor immediately. 🚨",
-  };
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
     super.initState();
-    _loadPainHistory();
+
+    // ✅ Smooth Button Scale Animation
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _scaleAnimation =
+        Tween<double>(begin: 1.0, end: 1.05).animate(_animationController);
   }
 
-  Future<void> _loadPainHistory() async {
-    _painHistory = await StorageHelper.loadPainHistory();
-    setState(() {});
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
-  Future<void> _savePainEntry() async {
-    if (_painLocation.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Please enter pain location!"),
-          backgroundColor: Colors.redAccent,
-        ),
-      );
-      return;
+  void _animateButton(bool isHovered) {
+    if (isHovered) {
+      _animationController.forward();
+    } else {
+      _animationController.reverse();
     }
-
-    Map<String, dynamic> newEntry = {
-      'date': DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
-      'painLevel': _painLevel,
-      'painLocation': _painLocation,
-    };
-
-    _painHistory.insert(0, newEntry);
-    await StorageHelper.savePainHistory(_painHistory);
-    setState(() {});
-  }
-   void _showPainLogDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          title: Row(
-            children: [
-              Icon(Icons.history, color: Colors.teal),
-              SizedBox(width: 10),
-              Text(
-                'Pain Log History',
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-              ),
-            ],
-          ),
-          content: Container(
-            height: 250,
-            child: _painHistory.isEmpty
-                ? Center(
-                    child: Text(
-                      "No records found.",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: _painHistory.length,
-                    itemBuilder: (context, index) {
-                      final entry = _painHistory[index];
-                      return Card(
-                        elevation: 4,
-                        margin: EdgeInsets.symmetric(vertical: 5),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        child: ListTile(
-                          leading: Icon(Icons.local_hospital,
-                              color: Colors.redAccent),
-                          title: Text(
-                            "Pain Level: ${entry['painLevel']}",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                          ),
-                          subtitle: Text(
-                            "Location: ${entry['painLocation']} - ${entry['date']}",
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-          ),
-                actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                'Close',
-                style:
-                    TextStyle(color: Colors.teal, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // ✅ White Background
-      appBar: AppBar(
-        title: Text('Pain Monitoring',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: Color(0xFF33724B),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "Pain Level",
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-            ),
-            SizedBox(height: 15),
-
-            // ✅ Pain Level Circular Indicator
-            Container(
-              height: 130,
-              width: 130,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.teal.shade50,
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      blurRadius: 8,
-                      offset: Offset(2, 4)),
-                ],
-              ),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.favorite, color: Colors.redAccent, size: 35),
-                    SizedBox(height: 5),
-                    Text(
-                      "$_painLevel",
-                      style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ),
-                  ],
-                ),
+      // ✅ Full-Screen Background
+      body: Stack(
+        children: [
+          // ✅ Gradient Background
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF33724B), Color(0xFFEAF7FF)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
             ),
-             SizedBox(height: 15),
+          ),
 
-            // ✅ Slider for Pain Level
-            Slider(
-              value: _painLevel.toDouble(),
-              min: 1,
-              max: 10,
-              divisions: 9,
-              label: _painLevel.toString(),
-              activeColor: Color(0xFF1F6662),
-              onChanged: (value) {
-                setState(() {
-                  _painLevel = value.toInt();
-                });
-              },
-            ),
-
-            // ✅ Smart Pain Relief Suggestion with Icon
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.info, color: Color(0xFF33724B)),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      painReliefSuggestions.entries
-                          .firstWhere((entry) => _painLevel <= entry.key,
-                              orElse: () => MapEntry(
-                                  10, "Please seek professional help."))
-                          .value,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFF33724B),
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
+          // ✅ Animated Overlays
+          Positioned(
+            top: -100,
+            left: -50,
+            child: Opacity(
+              opacity: 0.3,
+              child: Lottie.asset(
+                "lib/assets/animations/bubble_animation.json",
+                height: 400,
+                repeat: true,
               ),
             ),
-
-            // ✅ Pain Location Input
-            TextField(
-              decoration: InputDecoration(
-                labelText: "Pain Location",
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                filled: true,
-                fillColor: Color(0xFFE3F3F3),
+          ),
+          Positioned(
+            bottom: -100,
+            right: -50,
+            child: Opacity(
+              opacity: 0.3,
+              child: Lottie.asset(
+                "lib/assets/animations/bubble_animation.json",
+                height: 400,
+                repeat: true,
               ),
-              onChanged: (value) => _painLocation = value,
             ),
+          ),
 
-            SizedBox(height: 15),
-
-            // ✅ Buttons Section
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          // ✅ Main Content
+          SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton.icon(
-                  onPressed: _savePainEntry,
-                  icon: Icon(Icons.save, color: Colors.white),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF33724B),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
-                  label:
-                      Text('Save Entry', style: TextStyle(color: Colors.white)),
+                // ✅ Lottie Animation (Header)
+                Lottie.asset(
+                  "lib/assets/animations/physio_animation.json",
+                  height: 150,
+                  fit: BoxFit.cover,
                 ),
-                ElevatedButton.icon(
-                  onPressed: _showPainLogDialog,
-                  icon: Icon(Icons.history, color: Colors.white),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF1F6662),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+
+                SizedBox(height: 20),
+
+                // ✅ Title
+                Text(
+                  "Welcome to PhysioConnect",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    letterSpacing: 1.2,
                   ),
-                  label:
-                      Text('View Log', style: TextStyle(color: Colors.white)),
+                  textAlign: TextAlign.center,
+                ),
+
+                SizedBox(height: 40),
+
+                // ✅ Interactive Buttons
+                _buildAnimatedButton(
+                  label: "Pain Monitoring",
+                  icon: Icons.favorite,
+                  color: Colors.redAccent,
+                  textColor: Colors.white,
+                  route: "/pain-monitoring",
+                ),
+
+                SizedBox(height: 20),
+
+                _buildAnimatedButton(
+                  label: "First Aid Tutorials",
+                  icon: Icons.local_hospital,
+                  color: Colors.blueAccent,
+                  textColor: Colors.white,
+                  route: "/first-aid-tutorials",
                 ),
               ],
             ),
-          ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ✅ Animated Button Widget
+  Widget _buildAnimatedButton({
+    required String label,
+    required IconData icon,
+    required Color color,
+    required Color textColor,
+    required String route,
+  }) {
+    return MouseRegion(
+      onEnter: (_) => _animateButton(true),
+      onExit: (_) => _animateButton(false),
+      child: GestureDetector(
+        onTap: () => Navigator.pushNamed(context, route),
+        child: ScaleTransition(
+          scale: _scaleAnimation,
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 18, horizontal: 24),
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10,
+                  offset: Offset(2, 6),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, size: 30, color: textColor),
+                SizedBox(width: 10),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: textColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 }
-
