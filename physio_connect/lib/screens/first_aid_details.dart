@@ -27,7 +27,7 @@ class FirstAidDetailsScreen extends StatelessWidget {
       "✔ Continue until the object is **expelled**."
     ],
   };
-   @override
+  @override
   Widget build(BuildContext context) {
     final List<String> steps =
         firstAidSteps[title] ?? ["⚠ No instructions available."];
@@ -152,5 +152,3 @@ class FirstAidDetailsScreen extends StatelessWidget {
     );
   }
 }
-
-
