@@ -220,3 +220,53 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
                 ],
               ),
             ),
+
+            // ✅ Pain Location Input
+            TextField(
+              decoration: InputDecoration(
+                labelText: "Pain Location",
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                filled: true,
+                fillColor: Color(0xFFE3F3F3),
+              ),
+              onChanged: (value) => _painLocation = value,
+            ),
+
+            SizedBox(height: 15),
+
+            // ✅ Buttons Section
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: _savePainEntry,
+                  icon: Icon(Icons.save, color: Colors.white),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF33724B),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  label:
+                      Text('Save Entry', style: TextStyle(color: Colors.white)),
+                ),
+                ElevatedButton.icon(
+                  onPressed: _showPainLogDialog,
+                  icon: Icon(Icons.history, color: Colors.white),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF1F6662),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  label:
+                      Text('View Log', style: TextStyle(color: Colors.white)),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
