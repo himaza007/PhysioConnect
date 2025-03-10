@@ -308,11 +308,7 @@
       "languageVersion": "3.6"
     }
   ],
-<<<<<<< Updated upstream
-  "generated": "2025-03-06T07:02:47.974516Z",
-=======
-  "generated": "2025-03-06T06:49:59.476879Z",
->>>>>>> Stashed changes
+  "generated": "2025-03-10T07:32:30.951418Z",
   "generator": "pub",
   "generatorVersion": "3.7.0",
   "flutterRoot": "file:///Users/sachiradelankawala/flutter",
