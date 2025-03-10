@@ -76,3 +76,45 @@ class FirstAidDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
+            // ✅ Interactive Step-by-Step Guide
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.95),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 8,
+                      offset: Offset(2, -2),
+                    ),
+                  ],
+                ),
+                child: ListView(
+                  children: [
+                    // 📜 Title
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Text(
+                        "Step-by-Step Guide",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.teal.shade800,
+                        ),
+                      ),
+                    ),
+
+                    // 📋 Steps List with Animated Cards
+                    ...steps.map((step) => _buildStepCard(step)),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
