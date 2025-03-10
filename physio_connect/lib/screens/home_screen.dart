@@ -105,3 +105,29 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
 
                 SizedBox(height: 40),
+
+                // ✅ Interactive Buttons
+                _buildAnimatedButton(
+                  label: "Pain Monitoring",
+                  icon: Icons.favorite,
+                  color: Colors.redAccent,
+                  textColor: Colors.white,
+                  route: "/pain-monitoring",
+                ),
+
+                SizedBox(height: 20),
+
+                _buildAnimatedButton(
+                  label: "First Aid Tutorials",
+                  icon: Icons.local_hospital,
+                  color: Colors.blueAccent,
+                  textColor: Colors.white,
+                  route: "/first-aid-tutorials",
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
