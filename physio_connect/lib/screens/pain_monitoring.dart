@@ -20,6 +20,9 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
     10: "Severe pain detected! Consult a doctor immediately. 🚨",
   };
 
+
+
+
   @override
   void initState() {
     super.initState();
