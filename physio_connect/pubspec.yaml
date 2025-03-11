@@ -21,15 +21,22 @@ dependencies:
   # ✅ UI Enhancements & Animations
   lottie: ^3.3.1
   flutter_animate: ^4.5.0  # Smooth UI transitions & effects
+  flare_flutter: ^3.0.2  # Alternative animation system
+  confetti: ^0.7.0  # 🎉 Confetti animation for rewards/milestones
+  vibration: ^1.8.1  # Haptic feedback when adjusting pain levels
 
   # ✅ Multimedia & Notifications
   youtube_player_flutter: ^9.1.1
   flutter_local_notifications: ^18.0.1
   audioplayers: ^5.2.0  # Sound effects for UI feedback
 
+  # ✅ Gauges & Charts for Pain Tracking
+  syncfusion_flutter_gauges: ^28.2.11
+ 
   # ✅ App Styling & Fonts
   flutter_lints: ^5.0.0
   google_fonts: ^6.1.0  # Google Fonts for modern typography
+  flutter_svg: ^2.0.9  # SVG support for icons and graphics
 
 dev_dependencies:
   flutter_test:
@@ -46,5 +53,9 @@ flutter:
     - lib/assets/animations/intro_loading.json
     - lib/assets/animations/waves_background.json
     - lib/assets/animations/glowing_effect.json
-    - lib/assets/images/app_logo.png
+    - lib/assets/animations/pulse_effect.json
+    - lib/assets/animations/pain_indicator.json
+    - lib/assets/animations/radar_scan.json
 
+    # ✅ Images & Icons
+    - lib/assets/images/app_logo.png
