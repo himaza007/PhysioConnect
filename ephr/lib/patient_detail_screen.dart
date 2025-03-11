@@ -15,8 +15,7 @@ class PatientDetailsScreen extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start, // Align text to the left
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               "Patient Name: $patientName",
@@ -24,8 +23,21 @@ class PatientDetailsScreen extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text(
-              "Medical History: No major conditions.", // Placeholder for medical history
+              "Medical History: No major conditions.",
               style: TextStyle(fontSize: 18),
+            ),
+            SizedBox(height: 20),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  // Placeholder for navigation or functionality
+                },
+                child: Text("View Full History"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green[700], // Match app theme
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                ),
+              ),
             ),
           ],
         ),
