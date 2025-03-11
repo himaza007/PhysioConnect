@@ -494,6 +494,12 @@
       "languageVersion": "3.1"
     },
     {
+      "name": "syncfusion_flutter_charts",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/syncfusion_flutter_charts-28.2.11",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
       "name": "syncfusion_flutter_core",
       "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/syncfusion_flutter_core-28.2.11",
       "packageUri": "lib/",
@@ -626,7 +632,7 @@
       "languageVersion": "3.6"
     }
   ],
-  "generated": "2025-03-11T17:43:50.165682Z",
+  "generated": "2025-03-11T18:47:08.056981Z",
   "generator": "pub",
   "generatorVersion": "3.7.0",
   "flutterRoot": "file:///Users/sachiradelankawala/flutter",

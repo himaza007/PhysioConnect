@@ -8,6 +8,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  syncfusion_flutter_charts: ^28.2.11
+
   # ✅ WebView for External Resources
   flutter_inappwebview: ^6.1.5
 
