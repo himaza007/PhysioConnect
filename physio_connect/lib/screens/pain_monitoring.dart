@@ -1,269 +1,241 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import '../utils/storage_helper.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:vibration/vibration.dart';
 
-class PainMonitoringPage extends StatefulWidget {
-  const PainMonitoringPage({super.key});
-
+class PainMonitorAdjuster extends StatefulWidget {
   @override
-  _PainMonitoringPageState createState() => _PainMonitoringPageState();
+  _PainMonitorAdjusterState createState() => _PainMonitorAdjusterState();
 }
 
-class _PainMonitoringPageState extends State<PainMonitoringPage> {
-  int _painLevel = 5;
-  String _painLocation = '';
-  List<Map<String, dynamic>> _painHistory = [];
+class _PainMonitorAdjusterState extends State<PainMonitorAdjuster> {
+  double _painLevel = 5.0; // 🔥 Default pain level
+  final AudioPlayer _player = AudioPlayer();
 
-  final Map<int, String> painReliefSuggestions = {
-    1: "Minimal discomfort, rest well! 💆‍♂️",
+  final Map<int, String> _painDescriptions = {
+    1: "Minimal discomfort, just relax! 💆‍♂️",
     3: "Try gentle stretching & hydration. 💧",
-    5: "Apply an ice pack and do light movements. ❄️",
+    5: "Apply an ice pack and move lightly. ❄️",
     7: "Use heat therapy & consider physiotherapy. 🔥",
     9: "Seek medical advice for persistent pain. 🏥",
     10: "Severe pain detected! Consult a doctor immediately. 🚨",
   };
 
-  @override
-  void initState() {
-    super.initState();
-    _loadPainHistory();
-  }
-
-  Future<void> _loadPainHistory() async {
-    _painHistory = await StorageHelper.loadPainHistory();
-    setState(() {});
-  }
-
-  Future<void> _savePainEntry() async {
-    if (_painLocation.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Please enter pain location!"),
-          backgroundColor: Colors.redAccent,
-        ),
-      );
-      return;
+  void _playSound() async {
+    try {
+      await _player.play(AssetSource("sounds/click_sound.mp3"));
+    } catch (e) {
+      print("Error playing sound: $e");
     }
-
-    Map<String, dynamic> newEntry = {
-      'date': DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),
-      'painLevel': _painLevel,
-      'painLocation': _painLocation,
-    };
-
-    _painHistory.insert(0, newEntry);
-    await StorageHelper.savePainHistory(_painHistory);
-    setState(() {});
   }
 
-  void _showPainLogDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          title: Row(
-            children: [
-              Icon(Icons.history, color: Colors.teal),
-              SizedBox(width: 10),
-              Text(
-                'Pain Log History',
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-              ),
-            ],
-          ),
-          content: SizedBox(
-            height: 250,
-            child: _painHistory.isEmpty
-                ? Center(
-                    child: Text(
-                      "No records found.",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: _painHistory.length,
-                    itemBuilder: (context, index) {
-                      final entry = _painHistory[index];
-                      return Card(
-                        elevation: 4,
-                        margin: EdgeInsets.symmetric(vertical: 5),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        child: ListTile(
-                          leading: Icon(Icons.local_hospital,
-                              color: Colors.redAccent),
-                          title: Text(
-                            "Pain Level: ${entry['painLevel']}",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                          ),
-                          subtitle: Text(
-                            "Location: ${entry['painLocation']} - ${entry['date']}",
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                'Close',
-                style:
-                    TextStyle(color: Colors.teal, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
-        );
-      },
-    );
+  void _vibrate() async {
+    if (await Vibration.hasVibrator() ?? false) {
+      Vibration.vibrate(duration: 100);
+    }
+  }
+
+  void _updatePainLevel(double value) {
+    setState(() {
+      _painLevel = value;
+      _playSound();
+      _vibrate();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // ✅ White Background
+      backgroundColor: const Color(0xFFEAF7FF), // ✅ Soft gradient background
       appBar: AppBar(
-        title: Text('Pain Monitoring',
+        title: const Text('Pain Level Adjuster',
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: Color(0xFF33724B),
+        backgroundColor: const Color(0xFF33724B),
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 20.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "Pain Level",
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
+            // ✅ Modern Gauge (Syncs with Adjuster)
+            SizedBox(
+              height: 250,
+              child: SfRadialGauge(
+                axes: <RadialAxis>[
+                  RadialAxis(
+                    minimum: 1,
+                    maximum: 10,
+                    startAngle: 180,
+                    endAngle: 0,
+                    axisLineStyle: AxisLineStyle(
+                      thickness: 20,
+                      gradient: const SweepGradient(
+                        colors: [Colors.green, Colors.yellow, Colors.red],
+                      ),
+                    ),
+                    ranges: [
+                      GaugeRange(
+                          startValue: 1, endValue: 3, color: Colors.green),
+                      GaugeRange(
+                          startValue: 4, endValue: 6, color: Colors.yellow),
+                      GaugeRange(
+                          startValue: 7, endValue: 10, color: Colors.red),
+                    ],
+                    pointers: <GaugePointer>[
+                      NeedlePointer(
+                        value: _painLevel,
+                        enableAnimation: true,
+                        animationType:
+                            AnimationType.elasticOut, // ✅ Smooth effect
+                        needleColor: Colors.black,
+                        knobStyle: const KnobStyle(
+                          color: Colors.black,
+                          borderColor: Colors.white,
+                          borderWidth: 3,
+                        ),
+                        tailStyle: const TailStyle(
+                          color: Colors.black,
+                          width: 5,
+                          length: 0.2,
+                        ),
+                        needleEndWidth: 6,
+                      ),
+                    ],
+                    annotations: <GaugeAnnotation>[
+                      GaugeAnnotation(
+                        widget: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.favorite,
+                                color: Colors.redAccent, size: 40),
+                            Text(
+                              "${_painLevel.toInt()}",
+                              style: const TextStyle(
+                                  fontSize: 26, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        positionFactor: 0.5,
+                        angle: 90,
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: 15),
 
-            // ✅ Pain Level Circular Indicator
+            const SizedBox(height: 25),
+
+            // ✅ Context-Based Pain Level Pop-up
             Container(
-              height: 130,
-              width: 130,
+              padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.teal.shade50,
+                color: Colors.teal.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      blurRadius: 8,
-                      offset: Offset(2, 4)),
-                ],
-              ),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.favorite, color: Colors.redAccent, size: 35),
-                    SizedBox(height: 5),
-                    Text(
-                      "$_painLevel",
-                      style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            SizedBox(height: 15),
-
-            // ✅ Slider for Pain Level
-            Slider(
-              value: _painLevel.toDouble(),
-              min: 1,
-              max: 10,
-              divisions: 9,
-              label: _painLevel.toString(),
-              activeColor: Color(0xFF1F6662),
-              onChanged: (value) {
-                setState(() {
-                  _painLevel = value.toInt();
-                });
-              },
-            ),
-
-            // ✅ Smart Pain Relief Suggestion with Icon
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.info, color: Color(0xFF33724B)),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      painReliefSuggestions.entries
-                          .firstWhere((entry) => _painLevel <= entry.key,
-                              orElse: () => MapEntry(
-                                  10, "Please seek professional help."))
-                          .value,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Color(0xFF33724B),
-                          fontWeight: FontWeight.bold),
-                    ),
+                    color: Colors.black26,
+                    blurRadius: 10,
+                    offset: const Offset(2, 4),
                   ),
                 ],
               ),
-            ),
-
-            // ✅ Pain Location Input
-            TextField(
-              decoration: InputDecoration(
-                labelText: "Pain Location",
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                filled: true,
-                fillColor: Color(0xFFE3F3F3),
+              child: Text(
+                _painDescriptions.entries
+                    .firstWhere((entry) => _painLevel <= entry.key,
+                        orElse: () => const MapEntry(
+                            10, "Consult a doctor immediately. 🚨"))
+                    .value,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87),
               ),
-              onChanged: (value) => _painLocation = value,
             ),
 
-            SizedBox(height: 15),
+            const SizedBox(height: 20),
 
-            // ✅ Buttons Section
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            // ✅ Mac-Style Linear Adjuster
+            Column(
               children: [
-                ElevatedButton.icon(
-                  onPressed: _savePainEntry,
-                  icon: Icon(Icons.save, color: Colors.white),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF33724B),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
-                  label:
-                      Text('Save Entry', style: TextStyle(color: Colors.white)),
+                const Text(
+                  "Adjust Pain Level",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
                 ),
-                ElevatedButton.icon(
-                  onPressed: _showPainLogDialog,
-                  icon: Icon(Icons.history, color: Colors.white),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF1F6662),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                const SizedBox(height: 15),
+
+                // ✅ Custom Adjuster UI
+                Container(
+                  height: 50,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    gradient: LinearGradient(
+                      colors: [Colors.teal.shade300, Colors.teal.shade800],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                    boxShadow: [
+                      const BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 10,
+                        offset: Offset(2, 4),
+                      ),
+                    ],
                   ),
-                  label:
-                      Text('View Log', style: TextStyle(color: Colors.white)),
+                  child: Stack(
+                    alignment: Alignment.centerLeft,
+                    children: [
+                      AnimatedPositioned(
+                        duration: const Duration(milliseconds: 200),
+                        left: (_painLevel - 1) /
+                            9 *
+                            (MediaQuery.of(context).size.width - 60),
+                        child: GestureDetector(
+                          onHorizontalDragUpdate: (details) {
+                            double newLevel = ((details.localPosition.dx /
+                                        (MediaQuery.of(context).size.width -
+                                            50)) *
+                                    9) +
+                                1;
+                            if (newLevel >= 1 && newLevel <= 10) {
+                              _updatePainLevel(newLevel);
+                            }
+                          },
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  blurRadius: 8,
+                                  offset: const Offset(2, 4),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                "${_painLevel.toInt()}",
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.teal,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
