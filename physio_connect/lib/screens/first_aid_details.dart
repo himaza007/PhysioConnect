@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 class FirstAidDetailsScreen extends StatelessWidget {
   final String title;
-  const FirstAidDetailsScreen({Key? key, required this.title})
-      : super(key: key);
+  const FirstAidDetailsScreen({super.key, required this.title});
 
   // ✅ First Aid Steps
   static final Map<String, List<String>> firstAidSteps = {

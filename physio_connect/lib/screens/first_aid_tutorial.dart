@@ -3,6 +3,8 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'first_aid_details.dart';
 
 class FirstAidTutorialScreen extends StatefulWidget {
+  const FirstAidTutorialScreen({super.key});
+
   @override
   _FirstAidTutorialScreenState createState() => _FirstAidTutorialScreenState();
 }
@@ -30,7 +32,7 @@ class _FirstAidTutorialScreenState extends State<FirstAidTutorialScreen> {
   ];
 
   void _showTutorialDialog(Map<String, String> tutorial) {
-    YoutubePlayerController _controller = YoutubePlayerController(
+    YoutubePlayerController controller = YoutubePlayerController(
       initialVideoId: tutorial["videoId"] ?? "dQw4w9WgXcQ",
       flags: YoutubePlayerFlags(autoPlay: true, mute: false),
     );
@@ -46,7 +48,7 @@ class _FirstAidTutorialScreenState extends State<FirstAidTutorialScreen> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-                child: YoutubePlayer(controller: _controller),
+                child: YoutubePlayer(controller: controller),
               ),
               Padding(
                 padding: EdgeInsets.all(16),
@@ -73,7 +75,7 @@ class _FirstAidTutorialScreenState extends State<FirstAidTutorialScreen> {
                 padding: EdgeInsets.only(bottom: 10),
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    _controller.pause();
+                    controller.pause();
                     Navigator.pop(context);
                   },
                   icon: Icon(Icons.close, color: Colors.white),

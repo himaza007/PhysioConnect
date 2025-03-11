@@ -5,6 +5,8 @@ import '../components/wave_background.dart';
 import '../components/glowing_effect.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }

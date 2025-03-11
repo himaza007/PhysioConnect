@@ -9,6 +9,8 @@ void main() {
 }
 
 class PhysioConnectApp extends StatelessWidget {
+  const PhysioConnectApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

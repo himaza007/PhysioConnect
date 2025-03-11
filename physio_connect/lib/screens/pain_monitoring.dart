@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import '../utils/storage_helper.dart';
 
 class PainMonitoringPage extends StatefulWidget {
+  const PainMonitoringPage({super.key});
+
   @override
   _PainMonitoringPageState createState() => _PainMonitoringPageState();
 }
@@ -73,7 +75,7 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
               ),
             ],
           ),
-          content: Container(
+          content: SizedBox(
             height: 250,
             child: _painHistory.isEmpty
                 ? Center(
