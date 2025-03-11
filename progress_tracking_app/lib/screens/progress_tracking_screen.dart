@@ -10,6 +10,7 @@ class ProgressTrackingScreen extends StatefulWidget {
 
 class _ProgressTrackingScreenState extends State<ProgressTrackingScreen> {
   late TooltipBehavior _tooltipBehavior;
+  bool _isDarkMode = false; // Dark Mode Toggle
 
   // Sample progress data
   final List<ProgressData> _progressData = [
@@ -18,20 +19,6 @@ class _ProgressTrackingScreenState extends State<ProgressTrackingScreen> {
     ProgressData("Week 3", 55),
     ProgressData("Week 4", 70),
     ProgressData("Week 5", 90),
-  ];
-
-  // Sample milestones
-  final List<Milestone> _milestones = [
-    Milestone(title: "Completed First Exercise Session", achieved: true),
-    Milestone(title: "Improved Mobility by 50%", achieved: false),
-    Milestone(title: "Able to Perform Squats", achieved: false),
-    Milestone(title: "Ran 1km Without Pain", achieved: false),
-  ];
-
-  // Sample past milestones history
-  final List<Milestone> _pastMilestones = [
-    Milestone(title: "Walked Without Support", achieved: true),
-    Milestone(title: "Reduced Pain by 30%", achieved: true),
   ];
 
   @override
@@ -43,23 +30,36 @@ class _ProgressTrackingScreenState extends State<ProgressTrackingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // App background remains white
+      backgroundColor: _isDarkMode ? Colors.black : Colors.white,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           "Progress Tracker",
-          style: TextStyle(color: Colors.white), // Keep title white on dark bar
+          style: TextStyle(color: _isDarkMode ? Colors.white : Colors.white),
         ),
-        backgroundColor: const Color(0xFF33724B), // Midnight Teal
+        backgroundColor: const Color(0xFF33724B),
+        actions: [
+          IconButton(
+            icon: Icon(_isDarkMode ? Icons.dark_mode : Icons.light_mode),
+            onPressed: () {
+              setState(() {
+                _isDarkMode = !_isDarkMode;
+              });
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
-            const Text(
+            Text(
               "Recovery Progress 📈",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: _isDarkMode ? Colors.white : Colors.black,
+              ),
             ),
             const SizedBox(height: 10),
 
@@ -68,21 +68,24 @@ class _ProgressTrackingScreenState extends State<ProgressTrackingScreen> {
               flex: 2,
               child: Card(
                 elevation: 5,
+                color: _isDarkMode ? Colors.grey[900] : Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                color: Colors.white, // Ensure the chart card remains white
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: SfCartesianChart(
-                    backgroundColor: Colors.white, // Keep chart background white
                     primaryXAxis: CategoryAxis(
-                      labelStyle: const TextStyle(color: Colors.black), // X-Axis Labels
+                      labelStyle: TextStyle(color: _isDarkMode ? Colors.white : Colors.black),
                     ),
                     primaryYAxis: NumericAxis(
-                      labelStyle: const TextStyle(color: Colors.black), // Y-Axis Labels
+                      labelStyle: TextStyle(color: _isDarkMode ? Colors.white : Colors.black),
                     ),
                     title: ChartTitle(
                       text: "Your Recovery Journey",
-                      textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                      textStyle: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: _isDarkMode ? Colors.white : Colors.black,
+                      ),
                     ),
                     legend: Legend(isVisible: false),
                     tooltipBehavior: _tooltipBehavior,
@@ -91,11 +94,11 @@ class _ProgressTrackingScreenState extends State<ProgressTrackingScreen> {
                         dataSource: _progressData,
                         xValueMapper: (ProgressData progress, _) => progress.week,
                         yValueMapper: (ProgressData progress, _) => progress.percentage,
-                        dataLabelSettings: const DataLabelSettings(
+                        dataLabelSettings: DataLabelSettings(
                           isVisible: true,
-                          textStyle: TextStyle(color: Colors.black), // Ensure data labels are black
+                          textStyle: TextStyle(color: _isDarkMode ? Colors.white : Colors.black),
                         ),
-                        color: const Color(0xFF33724B), // Midnight Teal for the chart line
+                        color: const Color(0xFF33724B),
                       ),
                     ],
                   ),
@@ -105,50 +108,65 @@ class _ProgressTrackingScreenState extends State<ProgressTrackingScreen> {
 
             const SizedBox(height: 20),
 
-            // Milestones Section
-            const Text(
-              "Milestones 🏆",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
-            ),
-            const SizedBox(height: 10),
-
-            Expanded(
-              flex: 1,
-              child: ListView.builder(
-                itemCount: _milestones.length,
-                itemBuilder: (context, index) {
-                  return AnimatedMilestoneTile(
-                    milestone: _milestones[index],
-                    onTap: () {
-                      setState(() {
-                        _milestones[index].achieved = !_milestones[index].achieved;
-                      });
-                    },
-                  );
-                },
+            // Insights Section with Navigation
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: _isDarkMode ? Colors.grey[900] : const Color(0xFFEAF7FF),
+                borderRadius: BorderRadius.circular(12),
               ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Past Milestones History
-            const Text(
-              "Past Achievements 🏅",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
-            ),
-            const SizedBox(height: 10),
-
-            Expanded(
-              flex: 1,
-              child: ListView.builder(
-                itemCount: _pastMilestones.length,
-                itemBuilder: (context, index) {
-                  return PastMilestoneTile(milestone: _pastMilestones[index]);
-                },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Progress Insights",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: _isDarkMode ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _progressCard(
+                          "Average Improvement", "+15%", Icons.trending_up, context, ImprovementPage()),
+                      _progressCard("Total Weeks", "5", Icons.date_range, context, WeekProgressPage()),
+                      _progressCard("Current Level", "Intermediate", Icons.star, context, LevelProgressPage()),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _progressCard(String title, String value, IconData icon, BuildContext context, Widget page) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+      },
+      child: Column(
+        children: [
+          Icon(icon, size: 30, color: const Color(0xFF33724B)),
+          const SizedBox(height: 5),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: _isDarkMode ? Colors.white : Colors.black,
+            ),
+          ),
+          Text(
+            title,
+            style: TextStyle(fontSize: 14, color: _isDarkMode ? Colors.white70 : Colors.black54),
+          ),
+        ],
       ),
     );
   }
@@ -160,98 +178,4 @@ class ProgressData {
   final double percentage;
 
   ProgressData(this.week, this.percentage);
-}
-
-// 📌 Milestone Model
-class Milestone {
-  final String title;
-  bool achieved;
-
-  Milestone({required this.title, required this.achieved});
-}
-
-// 📌 Fun & Interactive Milestone Tile
-class AnimatedMilestoneTile extends StatefulWidget {
-  final Milestone milestone;
-  final VoidCallback onTap;
-
-  const AnimatedMilestoneTile({Key? key, required this.milestone, required this.onTap})
-      : super(key: key);
-
-  @override
-  _AnimatedMilestoneTileState createState() => _AnimatedMilestoneTileState();
-}
-
-class _AnimatedMilestoneTileState extends State<AnimatedMilestoneTile> {
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 400),
-        margin: const EdgeInsets.symmetric(vertical: 6),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: widget.milestone.achieved ? const Color(0xFFEAF7FF) : Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: widget.milestone.achieved ? const Color(0xFF33724B) : Colors.grey,
-            width: 2,
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              widget.milestone.achieved ? Icons.check_circle : Icons.radio_button_unchecked,
-              color: widget.milestone.achieved ? const Color(0xFF33724B) : Colors.grey,
-              size: 28,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                widget.milestone.title,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  decoration: widget.milestone.achieved ? TextDecoration.lineThrough : null,
-                  color: widget.milestone.achieved ? const Color(0xFF33724B) : Colors.black,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// 📌 Past Milestones Tile (Static)
-class PastMilestoneTile extends StatelessWidget {
-  final Milestone milestone;
-
-  const PastMilestoneTile({Key? key, required this.milestone}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEAF7FF),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFF33724B),
-          width: 2,
-        ),
-      ),
-      child: Text(
-        milestone.title,
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: Colors.black,
-        ),
-      ),
-    );
-  }
 }
