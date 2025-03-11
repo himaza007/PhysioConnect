@@ -108,7 +108,7 @@ class PhysioConnectApp extends StatelessWidget {
 
           case '/pain-monitoring':
             return _customPageRoute(
-                child: PainMonitoringPage(), transitionType: "slideRight");
+                child: PainMonitorAdjuster(), transitionType: "slideRight");
 
           case '/first-aid-tutorials':
             return _customPageRoute(
