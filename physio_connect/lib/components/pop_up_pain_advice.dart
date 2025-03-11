@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class PopUpPainAdvice extends StatelessWidget {
-  final int painLevel;
+  final double painLevel;
 
-  // ✅ Pain Advice Messages
-  final Map<int, String> _painAdvice = {
+  // ✅ Make _painDescriptions static const to resolve the error
+  static const Map<int, String> _painDescriptions = {
     1: "Minimal discomfort, just relax! 💆‍♂️",
     3: "Try gentle stretching & hydration. 💧",
     5: "Apply an ice pack and move lightly. ❄️",
@@ -13,43 +13,32 @@ class PopUpPainAdvice extends StatelessWidget {
     10: "Severe pain detected! Consult a doctor immediately. 🚨",
   };
 
-  PopUpPainAdvice({Key? key, required this.painLevel}) : super(key: key);
+  const PopUpPainAdvice({Key? key, required this.painLevel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      title: Row(
-        children: [
-          Icon(Icons.info_outline, color: Colors.teal),
-          SizedBox(width: 10),
-          Text(
-            'Pain Advice',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
+    return Container(
+      padding: EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Colors.teal.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 10,
+            offset: Offset(2, 4),
           ),
         ],
       ),
-      content: Text(
-        _painAdvice.entries
+      child: Text(
+        _painDescriptions.entries
             .firstWhere((entry) => painLevel <= entry.key,
                 orElse: () => MapEntry(10, "Consult a doctor immediately. 🚨"))
             .value,
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        style: TextStyle(
+            fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(
-            'OK',
-            style: TextStyle(color: Colors.teal, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ],
     );
   }
 }
