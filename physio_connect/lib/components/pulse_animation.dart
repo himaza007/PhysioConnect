@@ -23,12 +23,12 @@ class _PulseAnimationState extends State<PulseAnimation>
     _pulseController = AnimationController(
       vsync: this,
       duration: Duration(seconds: 1),
-      lowerBound: 0.8,
-      upperBound: 1.2,
+      lowerBound: 0.85,
+      upperBound: 1.15,
     )..repeat(reverse: true);
 
     _pulseAnimation =
-        Tween<double>(begin: 0.8, end: 1.2).animate(_pulseController);
+        Tween<double>(begin: 0.85, end: 1.15).animate(_pulseController);
   }
 
   @override
@@ -49,7 +49,7 @@ class _PulseAnimationState extends State<PulseAnimation>
             height: widget.size,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: widget.color.withOpacity(0.2),
+              color: widget.color.withOpacity(0.3),
               boxShadow: [
                 BoxShadow(
                   color: widget.color.withOpacity(0.5),
