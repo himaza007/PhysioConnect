@@ -21,27 +21,10 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/2.png
-    - assets/images/3.png
-    - assets/images/4.png
-    - assets/images/5.png
-    - assets/images/6.png
-    - assets/images/7.png
-    - assets/images/male.png
-    - assets/images/female.png
+    - assets/images/front.png
+    - assets/images/back.png
+    - assets/images/side_right.png
+    - assets/images/back_female.png
+    - assets/images/front_female.png
+    - assets/images/side_female.png
 
-    - assets/images/head.png
-    - assets/images/shoulder.png
-    - assets/images/elbow.png
-    - assets/images/knee.png
-    - assets/images/ankle.png
-    - assets/muscles/forehead.png
-    - assets/muscles/jaw.png
-    - assets/muscles/deltoid.png
-    - assets/muscles/trapezius.png
-    - assets/muscles/biceps.png
-    - assets/muscles/triceps.png
-    - assets/muscles/quadriceps.png
-    - assets/muscles/hamstring.png
-    - assets/muscles/calf.png
-    - assets/muscles/achilles.png
