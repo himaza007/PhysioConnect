@@ -4,7 +4,7 @@ void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData.dark().copyWith(
-      scaffoldBackgroundColor: Color(0xFF0D1B2A),
+      scaffoldBackgroundColor: Color.fromARGB(255, 75, 109, 87),
       textTheme: TextTheme(bodyMedium: TextStyle(color: Colors.white)),
     ),
     home: InteractiveHumanBody(),
@@ -17,25 +17,31 @@ class InteractiveHumanBody extends StatefulWidget {
 }
 
 class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
-  String selectedBodyPart = 'Tap a body part';
   String currentView = 'front';
   bool isMale = true;
+  List<String> selectedParts = [];
 
-  void updateSelection(String bodyPart) {
+  void toggleSelection(String bodyPart) {
     setState(() {
-      selectedBodyPart = bodyPart;
+      if (selectedParts.contains(bodyPart)) {
+        selectedParts.remove(bodyPart);
+      } else {
+        selectedParts.add(bodyPart);
+      }
     });
   }
 
   void changeView(String view) {
     setState(() {
       currentView = view;
+      selectedParts.clear();
     });
   }
 
   void toggleGender() {
     setState(() {
       isMale = !isMale;
+      selectedParts.clear();
     });
   }
 
@@ -52,106 +58,115 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
       if (currentView == 'side_right') imagePath += 'side_female.png';
     }
 
+    List<String> bodyParts = _bodyParts[currentView]!;
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         elevation: 0,
-        title: Text('Interactive Human Body', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
+        title: Text(
+          'PhysioConnect: Human Body',
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.white),
+        ),
         centerTitle: true,
       ),
       body: Column(
         children: [
-          // Modern Buttons Row
+          // View & Gender Buttons
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 15),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildModernButton("Front", () => changeView('front')),
+                SizedBox(width: 15),
                 _buildModernButton("Back", () => changeView('back')),
+                SizedBox(width: 15),
                 _buildModernButton("Side", () => changeView('side_right')),
-                _buildModernButton(isMale ? "Switch to Female" : "Switch to Male", toggleGender),
+                SizedBox(width: 15),
+                _buildModernButton(isMale ? "Female View" : "Male View", toggleGender),
               ],
             ),
           ),
 
-          // 3D Human Body Section
           Expanded(
-            child: Stack(
+            child: Row(
               children: [
-                Center(
-                  child: AnimatedOpacity(
-                    duration: Duration(milliseconds: 400),
-                    opacity: 1.0,
-                    child: Image.asset(imagePath, width: 300),
-                  ),
-                ),
+                // Left Side - List of Selectable Body Parts
+                _buildSideBodyPartList(bodyParts),
 
-                // Modern Interactive Areas with Arrows
-                for (var entry in _bodyParts.entries)
-                  Positioned(
-                    left: entry.value.dx,
-                    top: entry.value.dy,
-                    child: Column(
-                      children: [
-                        _buildArrow(), // Arrow pointing to body part
-                        GestureDetector(
-                          onTap: () => updateSelection(entry.key),
-                          child: _buildBodyPartButton(entry.key),
-                        ),
-                      ],
+                // Center - Enlarged Body Image
+                Expanded(
+                  flex: 5,
+                  child: Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0xFF33724B).withOpacity(0.5),
+                            blurRadius: 20,
+                            spreadRadius: 5,
+                          )
+                        ],
+                      ),
+                      child: Image.asset(imagePath, width: 420),
                     ),
                   ),
+                ),
               ],
             ),
           ),
 
-          // Selected Body Part Info Panel
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 300),
-              width: MediaQuery.of(context).size.width * 0.9,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.white.withOpacity(0.1),
-                border: Border.all(color: Colors.white.withOpacity(0.3)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    blurRadius: 10,
-                    spreadRadius: 5,
-                  )
-                ],
-              ),
-              padding: EdgeInsets.all(16),
-              child: Center(
-                child: Text(
-                  selectedBodyPart,
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
-                ),
+          // Selected Parts Horizontal List
+          if (selectedParts.isNotEmpty)
+            Container(
+              height: 70,
+              margin: EdgeInsets.symmetric(vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: selectedParts.map((part) => _buildSelectedPartChip(part)).toList(),
               ),
             ),
-          ),
         ],
       ),
     );
   }
 
-  // High-End Modern Button
-  Widget _buildModernButton(String text, VoidCallback onPressed) {
+  // Side List of Body Parts
+  Widget _buildSideBodyPartList(List<String> parts) {
+    return Expanded(
+      flex: 1,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+        child: ListView.builder(
+          itemCount: parts.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: _buildBodyPartButton(parts[index]),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  // Body Part Selection Button
+  Widget _buildBodyPartButton(String text) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: () => toggleSelection(text),
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+        duration: Duration(milliseconds: 300),
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 18),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(30),
+          color: selectedParts.contains(text) ? Color(0xFF33724B) : Colors.white.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(15),
           border: Border.all(color: Colors.white.withOpacity(0.3)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withOpacity(0.3),
               blurRadius: 6,
               spreadRadius: 2,
             )
@@ -159,46 +174,56 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
         ),
         child: Text(
           text,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),
     );
   }
 
-  // Arrow Widget
-  Widget _buildArrow() {
-    return Icon(Icons.arrow_downward, color: Colors.white, size: 24);
-  }
-
-  // Body Part Button
-  Widget _buildBodyPartButton(String text) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.white.withOpacity(0.3)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 4,
-            spreadRadius: 1,
-          )
-        ],
-      ),
-      child: Text(
-        text,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+  // Selected Parts Horizontal Chip
+  Widget _buildSelectedPartChip(String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6),
+      child: Chip(
+        label: Text(text, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)),
+        backgroundColor: Color(0xFFEAF7FF),
+        deleteIcon: Icon(Icons.close, color: Colors.black),
+        onDeleted: () => toggleSelection(text),
       ),
     );
   }
 
-  // Body Parts with Coordinates
-  final Map<String, Offset> _bodyParts = {
-    'Head': Offset(160, 50),
-    'Shoulder': Offset(140, 120),
-    'Arm': Offset(150, 180),
-    'Abdomen': Offset(140, 250),
-    'Leg': Offset(140, 350),
+  // Modern High-End Button
+  Widget _buildModernButton(String text, VoidCallback onPressed) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: Colors.white.withOpacity(0.3)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 8,
+              spreadRadius: 3,
+            )
+          ],
+        ),
+        child: Text(
+          text,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  // Body Parts for Each View
+  final Map<String, List<String>> _bodyParts = {
+    'front': ['Head', 'Chest', 'Abdomen', 'Arms', 'Legs'],
+    'back': ['Upper Back', 'Lower Back', 'Shoulders', 'Glutes', 'Hamstrings'],
+    'side_right': ['Neck', 'Shoulders', 'Ribs', 'Hips', 'Thigh'],
   };
 }
