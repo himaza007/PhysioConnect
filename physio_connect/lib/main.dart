@@ -4,7 +4,7 @@ void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData.dark().copyWith(
-      scaffoldBackgroundColor: Color.fromARGB(255, 75, 109, 87),
+      scaffoldBackgroundColor: Color.fromARGB(255, 84, 145, 96),
       textTheme: TextTheme(bodyMedium: TextStyle(color: Colors.white)),
     ),
     home: InteractiveHumanBody(),
@@ -44,9 +44,12 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
       selectedParts.clear();
     });
   }
-
+z
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double buttonTextSize = screenWidth * 0.055; // Scales dynamically
+
     String imagePath = 'assets/images/';
     if (isMale) {
       if (currentView == 'front') imagePath += 'front.png';
@@ -64,9 +67,12 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         elevation: 0,
-        title: Text(
-          'PhysioConnect: Human Body',
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.white),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            'PhysioConnect: Human Body',
+            style: TextStyle(fontSize: screenWidth * 0.05, fontWeight: FontWeight.bold),
+          ),
         ),
         centerTitle: true,
       ),
@@ -78,13 +84,13 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildModernButton("Front", () => changeView('front')),
-                SizedBox(width: 15),
-                _buildModernButton("Back", () => changeView('back')),
-                SizedBox(width: 15),
-                _buildModernButton("Side", () => changeView('side_right')),
-                SizedBox(width: 15),
-                _buildModernButton(isMale ? "Female View" : "Male View", toggleGender),
+                _buildModernButton("Front", () => changeView('front'), buttonTextSize),
+                SizedBox(width: 10),
+                _buildModernButton("Back", () => changeView('back'), buttonTextSize),
+                SizedBox(width: 10),
+                _buildModernButton("Side", () => changeView('side_right'), buttonTextSize),
+                SizedBox(width: 10),
+                _buildModernButton(isMale ? "Female View" : "Male View", toggleGender, buttonTextSize),
               ],
             ),
           ),
@@ -93,7 +99,7 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
             child: Row(
               children: [
                 // Left Side - List of Selectable Body Parts
-                _buildSideBodyPartList(bodyParts),
+                _buildSideBodyPartList(bodyParts, buttonTextSize),
 
                 // Center - Enlarged Body Image
                 Expanded(
@@ -110,7 +116,7 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
                           )
                         ],
                       ),
-                      child: Image.asset(imagePath, width: 420),
+                      child: Image.asset(imagePath, width: screenWidth * 0.75), // Responsive Image
                     ),
                   ),
                 ),
@@ -121,9 +127,9 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
           // Selected Parts Horizontal List
           if (selectedParts.isNotEmpty)
             Container(
-              height: 70,
-              margin: EdgeInsets.symmetric(vertical: 10),
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              height: 60,
+              margin: EdgeInsets.symmetric(vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 8),
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: selectedParts.map((part) => _buildSelectedPartChip(part)).toList(),
@@ -135,17 +141,17 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
   }
 
   // Side List of Body Parts
-  Widget _buildSideBodyPartList(List<String> parts) {
+  Widget _buildSideBodyPartList(List<String> parts, double textSize) {
     return Expanded(
       flex: 1,
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
         child: ListView.builder(
           itemCount: parts.length,
           itemBuilder: (context, index) {
             return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: _buildBodyPartButton(parts[index]),
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: _buildBodyPartButton(parts[index], textSize),
             );
           },
         ),
@@ -154,15 +160,15 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
   }
 
   // Body Part Selection Button
-  Widget _buildBodyPartButton(String text) {
+  Widget _buildBodyPartButton(String text, double textSize) {
     return GestureDetector(
       onTap: () => toggleSelection(text),
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300),
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
         decoration: BoxDecoration(
           color: selectedParts.contains(text) ? Color(0xFF33724B) : Colors.white.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.white.withOpacity(0.3)),
           boxShadow: [
             BoxShadow(
@@ -172,9 +178,12 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
             )
           ],
         ),
-        child: Text(
-          text,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            text,
+            style: TextStyle(fontSize: textSize, fontWeight: FontWeight.bold, color: Colors.white),
+          ),
         ),
       ),
     );
@@ -183,9 +192,15 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
   // Selected Parts Horizontal Chip
   Widget _buildSelectedPartChip(String text) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Chip(
-        label: Text(text, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)),
+        label: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            text,
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+        ),
         backgroundColor: Color(0xFFEAF7FF),
         deleteIcon: Icon(Icons.close, color: Colors.black),
         onDeleted: () => toggleSelection(text),
@@ -194,12 +209,12 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
   }
 
   // Modern High-End Button
-  Widget _buildModernButton(String text, VoidCallback onPressed) {
+  Widget _buildModernButton(String text, VoidCallback onPressed, double textSize) {
     return GestureDetector(
       onTap: onPressed,
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300),
-        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.2),
           borderRadius: BorderRadius.circular(30),
@@ -212,9 +227,17 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
             )
           ],
         ),
-        child: Text(
-          text,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            text,
+            style: TextStyle(
+            fontSize: MediaQuery.of(context).size.width * 0.05, // Increased for better visibility
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+  )
+
+          ),
         ),
       ),
     );
