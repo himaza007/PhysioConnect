@@ -62,7 +62,18 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
   }
 
   final Map<String, List<String>> _muscles = {
-    'Head': ['Frontalis', 'Temporalis'],
-    'Arms': ['Biceps', 'Triceps'],
+    'Head': [
+      'Clavicular Head of Sternocleidomastoid Muscle',
+      'Depressor Anguli Oris Muscle',
+      'Depressor Labii Inferioris Muscle',
+      'Frontal Belly of Epicranius Muscle (Frontalis Muscle)',
+      'Galea Aponeurotica',
+      'Levator Labii Superioris Alaeque Nasi Muscle',
+      'Levator Labii Superioris Muscle',
+      'Masseter Muscle',
+      'Mentalis Muscle',
+      'Nasalis Muscle',
+    ],
   };
+
 }
