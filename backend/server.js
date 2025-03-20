@@ -1,3 +1,9 @@
+// Import dependencies
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+
+
 // Seed Database
 const seedDatabase = async () => {
   await KTaping.deleteMany({});
