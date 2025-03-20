@@ -21,6 +21,42 @@ mongoose.connect('mongodb://localhost:27017/injury_remedies', {
   console.error('MongoDB connection error:', err);
 });
 
+// Define MongoDB Schemas and Models
+const KTapingSchema = new mongoose.Schema({
+  bodyPart: String,
+  steps: [String],
+  description: String,
+});
+const KTaping = mongoose.model('KTaping', KTapingSchema);
+
+const ExerciseSchema = new mongoose.Schema({
+  bodyPart: String,
+  exercises: [String],
+  description: String,
+});
+const Exercise = mongoose.model('Exercise', ExerciseSchema);
+
+const StretchSchema = new mongoose.Schema({
+  bodyPart: String,
+  stretches: [String],
+  description: String,
+});
+const Stretch = mongoose.model('Stretch', StretchSchema);
+
+const OilTreatmentSchema = new mongoose.Schema({
+  bodyPart: String,
+  steps: [String],
+  description: String,
+});
+const OilTreatment = mongoose.model('OilTreatment', OilTreatmentSchema);
+
+const RecoveryRoutineSchema = new mongoose.Schema({
+  routineType: String,
+  steps: [String],
+  description: String,
+});
+const RecoveryRoutine = mongoose.model('RecoveryRoutine', RecoveryRoutineSchema);
+
 // Seed Database
 const seedDatabase = async () => {
   await KTaping.deleteMany({});
@@ -109,3 +145,5 @@ const seedDatabase = async () => {
 };
 // Uncomment the line below to seed the database
 // seedDatabase();
+
+
