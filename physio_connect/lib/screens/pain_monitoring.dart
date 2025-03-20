@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../components/pain_adjuster.dart';
 import '../components/pop_up_pain_advice.dart';
-import '../components/pain_chart.dart';
+import '../screens/pain_history_screen.dart';
 import '../utils/storage_helper.dart';
 import 'package:intl/intl.dart';
 
@@ -34,7 +34,7 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
   Future<void> _savePainEntry() async {
     if (_painLocation.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Please enter a pain location!"),
           backgroundColor: Colors.redAccent,
         ),
@@ -48,11 +48,8 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
       'painLocation': _painLocation,
     };
 
-    setState(() {
-      _painHistory.insert(0, newEntry);
-    });
-
-    await StorageHelper.savePainHistory(_painHistory);
+    await StorageHelper.addPainEntry(newEntry);
+    await _loadPainHistory(); // Refresh history after saving
   }
 
   void _updatePainLevel(double value) {
@@ -64,31 +61,52 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEAF7FF), // ✅ Soft background
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text(
           'Pain Monitoring',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF33724B),
+        backgroundColor: Theme.of(context).primaryColor,
         centerTitle: true,
         elevation: 5,
+        actions: [
+          if (_painHistory
+              .isNotEmpty) // Show history button only if records exist
+            IconButton(
+              icon: const Icon(Icons.history),
+              tooltip: "View Pain History",
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        PainHistoryScreen(painHistory: _painHistory),
+                  ),
+                );
+              },
+            ),
+        ],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         child: Column(
           children: [
-            // ✅ Pain Level Gauge (Enhanced UI)
+            // ✅ Pain Level Gauge
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
               decoration: BoxDecoration(
-                color: Colors.white,
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF33724B), Color(0xFF1F6662)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black26,
                     blurRadius: 10,
-                    offset: Offset(3, 5),
+                    offset: const Offset(3, 5),
                   ),
                 ],
               ),
@@ -99,11 +117,11 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: Colors.white,
                     ),
                   ),
                   SizedBox(
-                    height: 250,
+                    height: 260,
                     child: SfRadialGauge(
                       axes: <RadialAxis>[
                         RadialAxis(
@@ -111,29 +129,54 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
                           maximum: 10,
                           startAngle: 180,
                           endAngle: 0,
-                          axisLineStyle: AxisLineStyle(
+                          showLabels: true,
+                          showTicks: true,
+                          labelOffset: 10,
+                          axisLineStyle: const AxisLineStyle(
                             thickness: 20,
-                            gradient: const SweepGradient(
-                              colors: [Colors.green, Colors.yellow, Colors.red],
-                            ),
+                            thicknessUnit: GaugeSizeUnit.factor,
                           ),
+                          ranges: [
+                            GaugeRange(
+                              startValue: 1,
+                              endValue: 3,
+                              color: Colors.green,
+                              startWidth: 25,
+                              endWidth: 25,
+                            ),
+                            GaugeRange(
+                              startValue: 3,
+                              endValue: 7,
+                              color: Colors.yellow,
+                              startWidth: 25,
+                              endWidth: 25,
+                            ),
+                            GaugeRange(
+                              startValue: 7,
+                              endValue: 10,
+                              color: Colors.red,
+                              startWidth: 25,
+                              endWidth: 25,
+                            ),
+                          ],
                           pointers: <GaugePointer>[
                             NeedlePointer(
                               value: _painLevel,
                               enableAnimation: true,
                               animationType: AnimationType.elasticOut,
-                              needleColor: Colors.black,
+                              needleColor: Colors.white,
+                              needleStartWidth: 2,
+                              needleEndWidth: 8,
                               knobStyle: const KnobStyle(
-                                color: Colors.black,
-                                borderColor: Colors.white,
+                                color: Colors.white,
+                                borderColor: Colors.black,
                                 borderWidth: 3,
                               ),
                               tailStyle: const TailStyle(
-                                color: Colors.black,
+                                color: Colors.white,
                                 width: 5,
                                 length: 0.2,
                               ),
-                              needleEndWidth: 6,
                             ),
                           ],
                           annotations: <GaugeAnnotation>[
@@ -148,6 +191,7 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
                                     style: const TextStyle(
                                       fontSize: 26,
                                       fontWeight: FontWeight.bold,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ],
@@ -166,12 +210,12 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
 
             const SizedBox(height: 20),
 
-            // ✅ Context-Based Pop-up Advice
+            // ✅ Pain Level Advice
             PopUpPainAdvice(painLevel: _painLevel),
 
             const SizedBox(height: 20),
 
-            // ✅ Pain Level Adjuster (Smooth & Interactive)
+            // ✅ Pain Level Adjuster
             PainAdjuster(
               painLevel: _painLevel,
               onPainLevelChanged: _updatePainLevel,
@@ -179,15 +223,16 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
 
             const SizedBox(height: 20),
 
-            // ✅ Pain Location Input Field
+            // ✅ Pain Location Input
             TextField(
               decoration: InputDecoration(
                 labelText: "Pain Location",
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
+                prefixIcon: const Icon(Icons.location_on, color: Colors.teal),
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: Theme.of(context).cardColor,
               ),
               onChanged: (value) {
                 _painLocation = value;
@@ -201,8 +246,9 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
               onPressed: _savePainEntry,
               icon: const Icon(Icons.save, color: Colors.white),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF33724B),
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                backgroundColor: Theme.of(context).primaryColor,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 14, horizontal: 25),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -215,10 +261,26 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
 
             const SizedBox(height: 20),
 
-            // ✅ Chart Displaying Pain Trends
-            Expanded(
-              child: PainChart(painHistory: _painHistory),
-            ),
+            // ✅ View Pain History Button
+            if (_painHistory.isNotEmpty)
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          PainHistoryScreen(painHistory: _painHistory),
+                    ),
+                  );
+                },
+                child: const Text(
+                  "View Pain History",
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.teal),
+                ),
+              ),
           ],
         ),
       ),
