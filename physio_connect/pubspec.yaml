@@ -27,4 +27,16 @@ flutter:
     - assets/images/back_female.png
     - assets/images/front_female.png
     - assets/images/side_female.png
+    
+    - assets/body_parts/Head/muscles/1.avif
+    - assets/body_parts/Head/muscles/2.avif
+    - assets/body_parts/Head/muscles/3.avif
+    - assets/body_parts/Head/muscles/4.avif
+    - assets/body_parts/Head/muscles/5.avif
+    - assets/body_parts/Head/muscles/6.avif
+    - assets/body_parts/Head/muscles/7.avif
+    - assets/body_parts/Head/muscles/8.avif
+    - assets/body_parts/Head/muscles/9.avif
+    - assets/body_parts/Head/muscles/10.avif
+
 
