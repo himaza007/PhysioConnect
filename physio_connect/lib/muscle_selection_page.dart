@@ -51,10 +51,10 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
+                  crossAxisCount: 1,
                   crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 0.8,
+                  mainAxisSpacing: 20,
+                  childAspectRatio: 0.9,
                 ),
                 itemCount: widget.muscles.length,
                 itemBuilder: (context, index) {
@@ -101,15 +101,15 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
       return GestureDetector(
       onTap: () => toggleMuscleSelection(muscle),
       child: Card(
-        color: selectedMuscles.contains(muscle) ? Colors.teal[700] : Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        color: selectedMuscles.contains(muscle) ? const Color.fromARGB(255, 25, 109, 34) : Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
         elevation: 3,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
               child: ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(1)),
                 child: Image.asset(
                   imagePath,
                   fit: BoxFit.cover, // Ensures the image fills the grid box
@@ -118,7 +118,7 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(3.0),
               child: Column(
                 children: [
                   Text(
@@ -139,5 +139,5 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
         ),
       ),
     );
-  }
+}
 }
