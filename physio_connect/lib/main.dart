@@ -1,25 +1,60 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData.dark().copyWith(
-      scaffoldBackgroundColor: Color.fromARGB(255, 0, 0, 0),
-      textTheme: TextTheme(bodyMedium: TextStyle(color: Colors.white)),
-    ),
-    home: InteractiveHumanBody(),
-  ));
+  runApp(const PhysioConnectApp());
+}
+
+class PhysioConnectApp extends StatefulWidget {
+  const PhysioConnectApp({Key? key}) : super(key: key);
+
+  @override
+  State<PhysioConnectApp> createState() => _PhysioConnectAppState();
+}
+
+class _PhysioConnectAppState extends State<PhysioConnectApp> {
+  bool isDarkMode = true;
+
+  void toggleTheme() {
+    setState(() {
+      isDarkMode = !isDarkMode;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: isDarkMode
+          ? ThemeData.dark().copyWith(
+              scaffoldBackgroundColor: Color(0xFF06130D),
+              textTheme: TextTheme(bodyMedium: TextStyle(color: Colors.white)),
+            )
+          : ThemeData.light().copyWith(
+              scaffoldBackgroundColor: Color(0xFFEAF7FF),
+              textTheme: TextTheme(bodyMedium: TextStyle(color: Colors.black)),
+            ),
+      home: InteractiveHumanBody(toggleTheme: toggleTheme, isDarkMode: isDarkMode),
+    );
+  }
 }
 
 class InteractiveHumanBody extends StatefulWidget {
+  final VoidCallback toggleTheme;
+  final bool isDarkMode;
+
+  const InteractiveHumanBody({Key? key, required this.toggleTheme, required this.isDarkMode})
+      : super(key: key);
+
   @override
-  State<InteractiveHumanBody> createState() => InteractiveHumanBodyState();
+  State<InteractiveHumanBody> createState() => _InteractiveHumanBodyState();
 }
 
-class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
+class _InteractiveHumanBodyState extends State<InteractiveHumanBody> {
   String currentView = 'front';
   bool isMale = true;
   List<String> selectedParts = [];
+  List<String> selectedMuscles = [];
+  bool showingMuscles = false;
 
   void toggleSelection(String bodyPart) {
     setState(() {
@@ -31,10 +66,22 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
     });
   }
 
+  void toggleMuscleSelection(String muscle) {
+    setState(() {
+      if (selectedMuscles.contains(muscle)) {
+        selectedMuscles.remove(muscle);
+      } else {
+        selectedMuscles.add(muscle);
+      }
+    });
+  }
+
   void changeView(String view) {
     setState(() {
       currentView = view;
       selectedParts.clear();
+      selectedMuscles.clear();
+      showingMuscles = false;
     });
   }
 
@@ -42,7 +89,20 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
     setState(() {
       isMale = !isMale;
       selectedParts.clear();
+      selectedMuscles.clear();
+      showingMuscles = false;
     });
+  }
+
+  void proceedToMuscleSelection() {
+    setState(() {
+      showingMuscles = true;
+      selectedMuscles.clear();
+    });
+  }
+
+  void finalizeSelection() {
+    print("Final selection: $selectedMuscles");
   }
 
   @override
@@ -58,7 +118,8 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
       if (currentView == 'side_right') imagePath += 'side_female.png';
     }
 
-    List<String> bodyParts = _bodyParts[currentView]!;
+    List<String> bodyParts = _bodyParts[currentView] ?? [];
+    List<String> muscles = showingMuscles ? (_muscles[selectedParts.first] ?? []) : [];
 
     return Scaffold(
       appBar: AppBar(
@@ -69,10 +130,15 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.white),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(widget.isDarkMode ? Icons.light_mode : Icons.dark_mode, color: Colors.white),
+            onPressed: widget.toggleTheme,
+          ),
+        ],
       ),
       body: Column(
         children: [
-          // View & Gender Buttons
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 15),
             child: Row(
@@ -92,138 +158,96 @@ class InteractiveHumanBodyState extends State<InteractiveHumanBody> {
           Expanded(
             child: Row(
               children: [
-                // Left Side - List of Selectable Body Parts
-                _buildSideBodyPartList(bodyParts),
-
-                // Center - Enlarged Body Image
+                showingMuscles ? _buildSideMuscleList(muscles) : _buildSideBodyPartList(bodyParts),
                 Expanded(
                   flex: 3,
                   child: Center(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color(0xFF33724B).withOpacity(0.5),
-                            blurRadius: 20,
-                            spreadRadius: 5,
-                          )
-                        ],
-                      ),
-                      child: Image.asset(imagePath, width: 420),
-                    ),
+                    child: Image.asset(imagePath, width: 420),
                   ),
                 ),
               ],
             ),
           ),
 
-          // Selected Parts Horizontal List
-          if (selectedParts.isNotEmpty)
-            Container(
-              height: 70,
-              margin: EdgeInsets.symmetric(vertical: 10),
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: selectedParts.map((part) => _buildSelectedPartChip(part)).toList(),
-              ),
-            ),
+          if (!showingMuscles && selectedParts.isNotEmpty) _buildContinueButton("Continue", proceedToMuscleSelection),
+          if (showingMuscles && selectedMuscles.isNotEmpty) _buildContinueButton("Finalize Selection", finalizeSelection),
         ],
       ),
     );
   }
 
-  // Side List of Body Parts
+  Widget _buildModernButton(String text, VoidCallback onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Color(0xFF33724B),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+      child: Text(text, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+    );
+  }
+
+  Widget _buildContinueButton(String text, VoidCallback onPressed) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Color(0xFF33724B),
+          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+        onPressed: onPressed,
+        child: Text(text, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+      ),
+    );
+  }
+
   Widget _buildSideBodyPartList(List<String> parts) {
     return Expanded(
       flex: 1,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-        child: ListView.builder(
-          itemCount: parts.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: _buildBodyPartButton(parts[index]),
-            );
-          },
-        ),
+      child: ListView(
+        children: parts.map((part) => _buildBodyPartButton(part)).toList(),
       ),
     );
   }
 
-  // Body Part Selection Button
+  Widget _buildSideMuscleList(List<String> muscles) {
+    return Expanded(
+      flex: 1,
+      child: ListView(
+        children: muscles.map((muscle) => _buildMuscleButton(muscle)).toList(),
+      ),
+    );
+  }
+
   Widget _buildBodyPartButton(String text) {
-    return GestureDetector(
-      onTap: () => toggleSelection(text),
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 18),
-        decoration: BoxDecoration(
-          color: selectedParts.contains(text) ? Color(0xFF33724B) : Colors.white.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: Colors.white.withOpacity(0.3)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 6,
-              spreadRadius: 2,
-            )
-          ],
-        ),
-        child: Text(
-          text,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-        ),
+    return _buildToggleButton(text, selectedParts.contains(text), () => toggleSelection(text));
+  }
+
+  Widget _buildMuscleButton(String text) {
+    return _buildToggleButton(text, selectedMuscles.contains(text), () => toggleMuscleSelection(text));
+  }
+
+  Widget _buildToggleButton(String text, bool isSelected, VoidCallback onTap) {
+    return ElevatedButton(
+      onPressed: onTap,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: isSelected ? Color(0xFF33724B) : Colors.grey[700],
+        padding: EdgeInsets.symmetric(vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
+      child: Text(text, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
     );
   }
 
-  // Selected Parts Horizontal Chip
-  Widget _buildSelectedPartChip(String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6),
-      child: Chip(
-        label: Text(text, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)),
-        backgroundColor: Color(0xFFEAF7FF),
-        deleteIcon: Icon(Icons.close, color: Colors.black),
-        onDeleted: () => toggleSelection(text),
-      ),
-    );
-  }
-
-  // Modern High-End Button
-  Widget _buildModernButton(String text, VoidCallback onPressed) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
-        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 24),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.2),
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: Colors.white.withOpacity(0.3)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 8,
-              spreadRadius: 3,
-            )
-          ],
-        ),
-        child: Text(
-          text,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-      ),
-    );
-  }
-
-  // Body Parts for Each View
   final Map<String, List<String>> _bodyParts = {
     'front': ['Head', 'Chest', 'Abdomen', 'Arms', 'Legs'],
     'back': ['Upper Back', 'Lower Back', 'Shoulders', 'Glutes', 'Hamstrings'],
-    'side_right': ['Neck', 'Shoulders', 'Ribs', 'Hips', 'Thigh'],
+  };
+
+  final Map<String, List<String>> _muscles = {
+    'Head': ['Frontalis', 'Temporalis'],
+    'Arms': ['Biceps', 'Triceps'],
   };
 }
