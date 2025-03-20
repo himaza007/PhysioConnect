@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 
 class MuscleSelectionPage extends StatefulWidget {
-  final String bodyPart;
-  final bool isDarkMode;
+  final List<String> muscles;
+  final Function(List<String>) onSelectionComplete;
 
-  const MuscleSelectionPage({Key? key, required this.bodyPart, required this.isDarkMode})
-      : super(key: key);
+  const MuscleSelectionPage({
+    Key? key,
+    required this.muscles,
+    required this.onSelectionComplete, required String bodyPart, required bool isDarkMode,
+  }) : super(key: key);
 
   @override
-  _MuscleSelectionPageState createState() => _MuscleSelectionPageState();
+  State<MuscleSelectionPage> createState() => _MuscleSelectionPageState();
 }
 
 class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
@@ -24,56 +27,117 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
     });
   }
 
+  void finalizeSelection() {
+    widget.onSelectionComplete(selectedMuscles);
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<String> muscles = _muscles[widget.bodyPart] ?? [];
-
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF33724B),
-        title: Text(
-          '${widget.bodyPart} Muscles',
+        backgroundColor: const Color(0xFF33724B),
+        elevation: 0,
+        title: const Text(
+          'Select Muscles',
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.white),
         ),
         centerTitle: true,
       ),
-      body: GridView.builder(
-        padding: EdgeInsets.all(10),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
-        itemCount: muscles.length,
-        itemBuilder: (context, index) {
-          String muscle = muscles[index];
-          return GestureDetector(
-            onTap: () => toggleMuscleSelection(muscle),
-            child: Card(
-              color: selectedMuscles.contains(muscle) ? Color(0xFF33724B) : Colors.white,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset('assets/body_parts/${widget.bodyPart.toLowerCase()}/muscles/${index + 1}.png', width: 80),
-                  Text(muscle, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 0.8,
+                ),
+                itemCount: widget.muscles.length,
+                itemBuilder: (context, index) {
+                  return _buildMuscleGridItem(widget.muscles[index], index);
+                },
               ),
             ),
-          );
-        },
+            const SizedBox(height: 10),
+            if (selectedMuscles.isNotEmpty)
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF33724B),
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+                onPressed: finalizeSelection,
+                child: const Text(
+                  "Finalize Selection",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
 
-  final Map<String, List<String>> _muscles = {
-    'Head': [
-      'Clavicular Head of Sternocleidomastoid Muscle',
-      'Depressor Anguli Oris Muscle',
-      'Depressor Labii Inferioris Muscle',
-      'Frontal Belly of Epicranius Muscle (Frontalis Muscle)',
-      'Galea Aponeurotica',
-      'Levator Labii Superioris Alaeque Nasi Muscle',
-      'Levator Labii Superioris Muscle',
-      'Masseter Muscle',
-      'Mentalis Muscle',
-      'Nasalis Muscle',
-    ],
+  Widget _buildMuscleGridItem(String muscle, int index) {
+  final Map<String, String> muscleImages = {
+    "Clavicular Head of Sternocleidomastoid Muscle": "1.avif",
+    "Depressor Anguli Oris Muscle": "2.avif",
+    "Depressor Labii Inferioris Muscle": "3.avif",
+    "Frontal Belly of Epicranius Muscle (Frontalis Muscle)": "4.avif",
+    "Galea Aponeurotica": "5.avif",
+    "Levator Labii Superioris Alaeque Nasi Muscle": "6.avif",
+    "Levator Labii Superioris Muscle": "7.avif",
+    "Masseter Muscle": "8.avif",
+    "Mentalis Muscle": "9.avif",
+    "Nasalis Muscle": "10.avif"
   };
 
+  String imagePath = 'assets/body_parts/head/muscles/${muscleImages[muscle] ?? "placeholder.png"}';
+
+      return GestureDetector(
+      onTap: () => toggleMuscleSelection(muscle),
+      child: Card(
+        color: selectedMuscles.contains(muscle) ? Colors.teal[700] : Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        elevation: 3,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                child: Image.asset(
+                  imagePath,
+                  fit: BoxFit.cover, // Ensures the image fills the grid box
+                  width: double.infinity,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Text(
+                    muscle,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+                  ),
+                  Checkbox(
+                    value: selectedMuscles.contains(muscle),
+                    onChanged: (bool? value) {
+                      toggleMuscleSelection(muscle);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
