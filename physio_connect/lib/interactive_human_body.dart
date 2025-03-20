@@ -42,7 +42,6 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> {
           muscles: muscles,
           isDarkMode: widget.isDarkMode,
           onSelectionComplete: (selectedMuscles) {
-            // ignore: avoid_print
             print("Muscle selection completed for $bodyPart: $selectedMuscles");
           },
         ),
@@ -85,16 +84,16 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15),
+            padding: const EdgeInsets.symmetric(vertical: 20), // Increased spacing
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildModernButton("Front", () => changeView('front')),
-                SizedBox(width: 15),
+                SizedBox(width: 20),
                 _buildModernButton("Back", () => changeView('back')),
-                SizedBox(width: 15),
+                SizedBox(width: 20),
                 _buildModernButton("Side", () => changeView('side_right')),
-                SizedBox(width: 15),
+                SizedBox(width: 20),
                 _buildModernButton(isMale ? "Female View" : "Male View", toggleGender),
               ],
             ),
@@ -122,8 +121,8 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xFF33724B),
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       child: Text(text, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
     );
@@ -132,21 +131,28 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> {
   Widget _buildSideBodyPartList(List<String> parts) {
     return Expanded(
       flex: 1,
-      child: ListView(
-        children: parts.map((part) => _buildBodyPartButton(part)).toList(),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: parts.map((part) => _buildBodyPartButton(part)).toList(),
+        ),
       ),
     );
   }
 
   Widget _buildBodyPartButton(String text) {
-    return ElevatedButton(
-      onPressed: () => proceedToMuscleSelection(text),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFF33724B),
-        padding: EdgeInsets.symmetric(vertical: 12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: ElevatedButton(
+        onPressed: () => proceedToMuscleSelection(text),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Color(0xFF33724B),
+          padding: EdgeInsets.symmetric(vertical: 14),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+        child: Text(text, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
       ),
-      child: Text(text, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
     );
   }
 
