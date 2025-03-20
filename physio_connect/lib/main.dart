@@ -1,13 +1,33 @@
 import 'package:flutter/material.dart';
+import 'interactive_human_body.dart';
+import 'theme_provider.dart';
 
-class AppTheme {
-  static ThemeData darkTheme = ThemeData.dark().copyWith(
-    scaffoldBackgroundColor: Color(0xFF06130D),
-    textTheme: TextTheme(bodyMedium: TextStyle(color: Colors.white)),
-  );
+void main() {
+  runApp(const PhysioConnectApp());
+}
 
-  static ThemeData lightTheme = ThemeData.light().copyWith(
-    scaffoldBackgroundColor: Color(0xFFEAF7FF),
-    textTheme: TextTheme(bodyMedium: TextStyle(color: Colors.black)),
-  );
+class PhysioConnectApp extends StatefulWidget {
+  const PhysioConnectApp({Key? key}) : super(key: key);
+
+  @override
+  State<PhysioConnectApp> createState() => _PhysioConnectAppState();
+}
+
+class _PhysioConnectAppState extends State<PhysioConnectApp> {
+  bool isDarkMode = true;
+
+  void toggleTheme() {
+    setState(() {
+      isDarkMode = !isDarkMode;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme,
+      home: InteractiveHumanBody(toggleTheme: toggleTheme, isDarkMode: isDarkMode),
+    );
+  }
 }
