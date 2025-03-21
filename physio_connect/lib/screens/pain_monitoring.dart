@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
+import '../components/gauge_pain_indicator.dart';
 import '../components/pain_adjuster.dart';
 import '../components/pop_up_pain_advice.dart';
 import '../screens/pain_history_screen.dart';
@@ -61,20 +61,23 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: const Color(0xFFEAF7FF), // Alice Blue Background
       appBar: AppBar(
         title: const Text(
           'Pain Monitoring',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF33724B), // Midnight Teal
+          ),
         ),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Colors.white,
         centerTitle: true,
-        elevation: 5,
+        elevation: 2,
         actions: [
-          if (_painHistory
-              .isNotEmpty) // Show history button only if records exist
+          if (_painHistory.isNotEmpty)
             IconButton(
-              icon: const Icon(Icons.history),
+              icon: const Icon(Icons.history,
+                  color: Color(0xFF33724B)), // Midnight Teal
               tooltip: "View Pain History",
               onPressed: () {
                 Navigator.push(
@@ -91,20 +94,24 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // ✅ Pain Level Gauge
             Container(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
               decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
                 gradient: const LinearGradient(
-                  colors: [Color(0xFF33724B), Color(0xFF1F6662)],
+                  colors: [
+                    Color(0xFF33724B),
+                    Color(0xFF1F6662)
+                  ], // Midnight Teal Gradient
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black26,
+                    color: Colors.black12.withOpacity(0.3),
                     blurRadius: 10,
                     offset: const Offset(3, 5),
                   ),
@@ -115,103 +122,16 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
                   const Text(
                     "Current Pain Level",
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(
-                    height: 260,
-                    child: SfRadialGauge(
-                      axes: <RadialAxis>[
-                        RadialAxis(
-                          minimum: 1,
-                          maximum: 10,
-                          startAngle: 180,
-                          endAngle: 0,
-                          showLabels: true,
-                          showTicks: true,
-                          labelOffset: 10,
-                          axisLineStyle: const AxisLineStyle(
-                            thickness: 20,
-                            thicknessUnit: GaugeSizeUnit.factor,
-                          ),
-                          ranges: [
-                            GaugeRange(
-                              startValue: 1,
-                              endValue: 3,
-                              color: Colors.green,
-                              startWidth: 25,
-                              endWidth: 25,
-                            ),
-                            GaugeRange(
-                              startValue: 3,
-                              endValue: 7,
-                              color: Colors.yellow,
-                              startWidth: 25,
-                              endWidth: 25,
-                            ),
-                            GaugeRange(
-                              startValue: 7,
-                              endValue: 10,
-                              color: Colors.red,
-                              startWidth: 25,
-                              endWidth: 25,
-                            ),
-                          ],
-                          pointers: <GaugePointer>[
-                            NeedlePointer(
-                              value: _painLevel,
-                              enableAnimation: true,
-                              animationType: AnimationType.elasticOut,
-                              needleColor: Colors.white,
-                              needleStartWidth: 2,
-                              needleEndWidth: 8,
-                              knobStyle: const KnobStyle(
-                                color: Colors.white,
-                                borderColor: Colors.black,
-                                borderWidth: 3,
-                              ),
-                              tailStyle: const TailStyle(
-                                color: Colors.white,
-                                width: 5,
-                                length: 0.2,
-                              ),
-                            ),
-                          ],
-                          annotations: <GaugeAnnotation>[
-                            GaugeAnnotation(
-                              widget: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(Icons.favorite,
-                                      color: Colors.redAccent, size: 40),
-                                  Text(
-                                    "${_painLevel.toInt()}",
-                                    style: const TextStyle(
-                                      fontSize: 26,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              positionFactor: 0.5,
-                              angle: 90,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                  const SizedBox(height: 10),
+                  GaugePainIndicator(painLevel: _painLevel),
                 ],
               ),
             ),
-
-            const SizedBox(height: 20),
-
-            // ✅ Pain Level Advice
-            PopUpPainAdvice(painLevel: _painLevel),
 
             const SizedBox(height: 20),
 
@@ -223,20 +143,40 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
 
             const SizedBox(height: 20),
 
+            // ✅ Pain Level Advice
+            PopUpPainAdvice(painLevel: _painLevel),
+
+            const SizedBox(height: 20),
+
             // ✅ Pain Location Input
-            TextField(
-              decoration: InputDecoration(
-                labelText: "Pain Location",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                prefixIcon: const Icon(Icons.location_on, color: Colors.teal),
-                filled: true,
-                fillColor: Theme.of(context).cardColor,
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12.withOpacity(0.2),
+                    blurRadius: 8,
+                    offset: const Offset(2, 4),
+                  ),
+                ],
               ),
-              onChanged: (value) {
-                _painLocation = value;
-              },
+              child: TextField(
+                decoration: InputDecoration(
+                  labelText: "Pain Location",
+                  labelStyle: const TextStyle(
+                      color: Color(0xFF33724B)), // Midnight Teal
+                  border: InputBorder.none,
+                  prefixIcon: const Icon(Icons.location_on,
+                      color: Color(0xFF33724B)), // Midnight Teal
+                  contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+                style: const TextStyle(color: Colors.black87),
+                onChanged: (value) {
+                  _painLocation = value;
+                },
+              ),
             ),
 
             const SizedBox(height: 20),
@@ -246,12 +186,13 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
               onPressed: _savePainEntry,
               icon: const Icon(Icons.save, color: Colors.white),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
+                backgroundColor: const Color(0xFF33724B), // Midnight Teal
                 padding:
                     const EdgeInsets.symmetric(vertical: 14, horizontal: 25),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
+                elevation: 3,
               ),
               label: const Text(
                 'Save Entry',
@@ -276,9 +217,10 @@ class _PainMonitoringPageState extends State<PainMonitoringPage> {
                 child: const Text(
                   "View Pain History",
                   style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.teal),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF33724B), // Midnight Teal
+                  ),
                 ),
               ),
           ],
