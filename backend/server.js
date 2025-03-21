@@ -146,4 +146,69 @@ const seedDatabase = async () => {
 // Uncomment the line below to seed the database
 // seedDatabase();
 
+// API Endpoints
+app.get('/k-taping/:bodyPart', async (req, res) => {
+  const { bodyPart } = req.params;
+  try {
+    const instructions = await KTaping.findOne({ bodyPart });
+    if (!instructions) {
+      return res.status(404).json({ error: 'Instructions not found' });
+    }
+    res.json(instructions);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.get('/exercises/:bodyPart', async (req, res) => {
+  const { bodyPart } = req.params;
+  try {
+    const exercises = await Exercise.findOne({ bodyPart });
+    if (!exercises) {
+      return res.status(404).json({ error: 'Exercises not found' });
+    }
+    res.json(exercises);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.get('/stretches/:bodyPart', async (req, res) => {
+  const { bodyPart } = req.params;
+  try {
+    const stretches = await Stretch.findOne({ bodyPart });
+    if (!stretches) {
+      return res.status(404).json({ error: 'Stretches not found' });
+    }
+    res.json(stretches);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.get('/oil-treatment/:bodyPart', async (req, res) => {
+  const { bodyPart } = req.params;
+  try {
+    const treatments = await OilTreatment.findOne({ bodyPart });
+    if (!treatments) {
+      return res.status(404).json({ error: 'Oil treatment not found' });
+    }
+    res.json(treatments);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.get('/recovery-routines/:routineType', async (req, res) => {
+  const { routineType } = req.params;
+  try {
+    const routines = await RecoveryRoutine.findOne({ routineType });
+    if (!routines) {
+      return res.status(404).json({ error: 'Recovery routines not found' });
+    }
+    res.json(routines);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 
