@@ -1,3 +1,4 @@
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 
 class MuscleSelectionPage extends StatefulWidget {
@@ -5,12 +6,12 @@ class MuscleSelectionPage extends StatefulWidget {
   final Function(List<String>) onSelectionComplete;
 
   const MuscleSelectionPage({
-    Key? key,
+    super.key,  // 
     required this.muscles,
     required this.onSelectionComplete,
     required String bodyPart,
     required bool isDarkMode,
-  }) : super(key: key);
+  });
 
   @override
   State<MuscleSelectionPage> createState() => _MuscleSelectionPageState();
@@ -41,9 +42,13 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF1F5F3A),
         elevation: 5,
-        title: const Text(
+        title: Text(
           'Select Muscles',
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.white),
+          style: GoogleFonts.montserrat(
+            fontSize: 22,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
         ),
         centerTitle: true,
       ),
@@ -54,10 +59,10 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 15,
-                  childAspectRatio: 1.3, // Adjusted for perfect fit
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 15,
+                  mainAxisSpacing: 20,
+                  childAspectRatio: 0.85,
                 ),
                 itemCount: widget.muscles.length,
                 itemBuilder: (context, index) {
@@ -72,7 +77,7 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
                   backgroundColor: const Color(0xFF1F5F3D),
                   padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 30),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  elevation: 5,
+                  elevation: 8,
                 ),
                 onPressed: finalizeSelection,
                 child: const Text(
@@ -115,40 +120,38 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
     };
 
     String imagePath = 'assets/body_parts/head/muscles/${muscleImages[muscle] ?? "placeholder.png"}';
-    
+
     return GestureDetector(
       onTap: () => toggleMuscleSelection(muscle),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
         decoration: BoxDecoration(
-          color: selectedMuscles.contains(muscle) ? const Color(0xFF1A8D50) : const Color.fromARGB(0, 0, 0, 0),
+          color: selectedMuscles.contains(muscle) ? const Color(0xFF1A8D50) : Colors.white,
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.2),
-              blurRadius: 10,
-              offset: const Offset(3, 3),
+              blurRadius: 12,
+              spreadRadius: 2,
+              offset: const Offset(4, 4),
             ),
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Enlarged Image Section (FULLY VISIBLE)
             Expanded(
               flex: 3,
               child: ClipRRect(
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
                 child: Image.asset(
                   imagePath,
-                  fit: BoxFit.contain, // Ensures full visibility without distortion
+                  fit: BoxFit.contain,
                   width: double.infinity,
                 ),
               ),
             ),
-
-            // Text & Checkbox Section
             Expanded(
               flex: 1,
               child: Padding(
@@ -159,14 +162,14 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
                     Text(
                       muscle,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16, // Bigger text
+                      style: GoogleFonts.roboto(
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: selectedMuscles.contains(muscle) ? Colors.white : const Color(0xFF083D10),
+                        color: selectedMuscles.contains(muscle) ? Colors.white : Colors.black,
                       ),
                     ),
                     Transform.scale(
-                      scale: 1.3, // Enlarged checkbox for better usability
+                      scale: 1.3,
                       child: Checkbox(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                         checkColor: Colors.white,

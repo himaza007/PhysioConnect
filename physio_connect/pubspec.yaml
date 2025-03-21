@@ -1,4 +1,4 @@
-name: my_first_app
+name: physio_connect
 description: "A new Flutter project."
 publish_to: 'none'
 
@@ -12,6 +12,7 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   flutter_svg: ^1.1.6  # For SVG-based body image
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -38,6 +39,35 @@ flutter:
     - assets/body_parts/head/muscles/8.avif
     - assets/body_parts/head/muscles/9.avif
     - assets/body_parts/head/muscles/10.avif
-    
+    - assets/body_parts/head/muscles/11.avif
+    - assets/body_parts/head/muscles/12.avif
+    - assets/body_parts/head/muscles/13.avif
+    - assets/body_parts/head/muscles/14.avif
+    - assets/body_parts/head/muscles/15.avif
+    - assets/body_parts/head/muscles/16.avif
+    - assets/body_parts/head/muscles/17.avif
+    - assets/body_parts/head/muscles/18.avif
+    - assets/body_parts/head/muscles/19.avif
+    - assets/body_parts/head/muscles/20.avif
+    - assets/body_parts/head/muscles/21.avif
+    - assets/body_parts/head/muscles/22.avif
+    - assets/body_parts/head/muscles/23.avif
+
+    - assets/fonts/Montserrat-Regular.ttf
+
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+        - asset: assets/fonts/Montserrat-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Montserrat-Italic.ttf
+          style: italic
+
+
+
+
+
+
 
 
