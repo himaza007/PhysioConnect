@@ -8,7 +8,8 @@ class AnimatedButton extends StatefulWidget {
   final Color textColor;
   final String route;
 
-  const AnimatedButton({super.key, 
+  const AnimatedButton({
+    super.key,
     required this.label,
     required this.icon,
     required this.color,
