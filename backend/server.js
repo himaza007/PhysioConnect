@@ -150,13 +150,14 @@ const seedDatabase = async () => {
 app.get('/k-taping/:bodyPart', async (req, res) => {
   const { bodyPart } = req.params;
   try {
-    const instructions = await KTaping.findOne({ bodyPart });
+    const instructions = await KTaping.findOne({ bodyPart: { $regex: new RegExp(`^${bodyPart}$`, "i") } });
     if (!instructions) {
       return res.status(404).json({ error: 'Instructions not found' });
     }
     res.json(instructions);
   } catch (error) {
-    res.status(500).json({ error: 'Server error' });
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
   }
 });
 
