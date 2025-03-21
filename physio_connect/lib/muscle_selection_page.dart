@@ -48,16 +48,16 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15),
         child: Column(
           children: [
             Expanded(
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1, // Increased size by reducing items per row
-                  crossAxisSpacing: 15,
-                  mainAxisSpacing: 20,
-                  childAspectRatio: 1.2, // Adjusted for bigger images
+                  crossAxisCount: 1,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 15,
+                  childAspectRatio: 1.3, // Adjusted for perfect fit
                 ),
                 itemCount: widget.muscles.length,
                 itemBuilder: (context, index) {
@@ -65,12 +65,12 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
                 },
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             if (selectedMuscles.isNotEmpty)
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1F5F3D),
-                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 40),
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 30),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   elevation: 5,
                 ),
@@ -80,7 +80,7 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 10),
           ],
         ),
       ),
@@ -109,13 +109,13 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
         decoration: BoxDecoration(
-          color: selectedMuscles.contains(muscle) ? const Color(0xFF1A8D50) : Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          color: selectedMuscles.contains(muscle) ? const Color(0xFF1A8D50) : const Color.fromARGB(0, 0, 0, 0),
+          borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.2),
-              blurRadius: 12,
-              offset: const Offset(4, 4),
+              blurRadius: 10,
+              offset: const Offset(3, 3),
             ),
           ],
         ),
@@ -124,28 +124,22 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
           children: [
             // Enlarged Image Section (FULLY VISIBLE)
             Expanded(
-              flex: 4,
+              flex: 3,
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFF1F5F3D), width: 2),
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                  ),
-                  child: Image.asset(
-                    imagePath,
-                    fit: BoxFit.contain, // Ensures full visibility without distortion
-                    width: double.infinity,
-                  ),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+                child: Image.asset(
+                  imagePath,
+                  fit: BoxFit.contain, // Ensures full visibility without distortion
+                  width: double.infinity,
                 ),
               ),
             ),
 
             // Text & Checkbox Section
             Expanded(
-              flex: 2,
+              flex: 1,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -159,7 +153,7 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
                       ),
                     ),
                     Transform.scale(
-                      scale: 1.4, // Enlarged checkbox for better usability
+                      scale: 1.3, // Enlarged checkbox for better usability
                       child: Checkbox(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                         checkColor: Colors.white,
