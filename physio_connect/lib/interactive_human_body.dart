@@ -172,7 +172,20 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> {
       'Levator Labii Superioris Muscle',
       'Masseter Muscle',
       'Mentalis Muscle',
-      'Nasalis Muscle'
+      'Nasalis Muscle',
+      'Occipital Belly of Epicranius Muscle (Occipitalis Muscle)',
+      'Omohyoid Muscle',
+      'Orbicularis Oculi Muscle',
+      'Orbicularis Oris Muscle',
+      'Platysma Muscle',
+      'Risorius Muscle',
+      'Scalene Muscles',
+      'Semispinalis Capitis Muscle',
+      'Splenius Capitis Muscle',
+      'Sternal Head of Sternocleidomastoid Muscle',
+      'Temporalis Muscle',
+      'Zygomaticus Major Muscle',
+      'Zygomaticus Minor Muscle'
     ],
   };
 }

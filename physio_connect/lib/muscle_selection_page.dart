@@ -98,11 +98,24 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
       "Levator Labii Superioris Muscle": "7.avif",
       "Masseter Muscle": "8.avif",
       "Mentalis Muscle": "9.avif",
-      "Nasalis Muscle": "10.avif"
+      "Nasalis Muscle": "10.avif",
+      "Occipital Belly of Epicranius Muscle (Occipitalis Muscle)": "11.avif",
+      "Omohyoid Muscle": "12.avif",
+      "Orbicularis Oculi Muscle": "13.avif",
+      "Orbicularis Oris Muscle": "14.avif",
+      "Platysma Muscle": "15.avif",
+      "Risorius Muscle": "16.avif",
+      "Scalene Muscles": "17.avif",
+      "Semispinalis Capitis Muscle": "18.avif",
+      "Splenius Capitis Muscle": "19.avif",
+      "Sternal Head of Sternocleidomastoid Muscle": "20.avif",
+      "Temporalis Muscle": "21.avif",
+      "Zygomaticus Major Muscle": "22.avif",
+      "Zygomaticus Minor Muscle": "23.avif"
     };
 
     String imagePath = 'assets/body_parts/head/muscles/${muscleImages[muscle] ?? "placeholder.png"}';
-
+    
     return GestureDetector(
       onTap: () => toggleMuscleSelection(muscle),
       child: AnimatedContainer(
