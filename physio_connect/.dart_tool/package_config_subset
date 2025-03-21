@@ -98,6 +98,10 @@ flutter_animate
 2.17
 file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_animate-4.5.2/
 file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_animate-4.5.2/lib/
+flutter_dotenv
+2.12
+file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_dotenv-5.2.1/
+file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_dotenv-5.2.1/lib/
 flutter_inappwebview
 3.5
 file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_inappwebview-6.1.5/
@@ -167,9 +171,9 @@ http_parser
 file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/http_parser-4.1.2/
 file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/http_parser-4.1.2/lib/
 intl
-3.3
-file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/intl-0.20.2/
-file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/intl-0.20.2/lib/
+2.12
+file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/intl-0.18.1/
+file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/intl-0.18.1/lib/
 js
 2.19
 file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/js-0.6.7/

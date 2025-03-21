@@ -158,6 +158,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "flutter_dotenv",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_dotenv-5.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_inappwebview",
       "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/flutter_inappwebview-6.1.5",
       "packageUri": "lib/",
@@ -273,9 +279,9 @@
     },
     {
       "name": "intl",
-      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/intl-0.20.2",
+      "rootUri": "file:///Users/sachiradelankawala/.pub-cache/hosted/pub.dev/intl-0.18.1",
       "packageUri": "lib/",
-      "languageVersion": "3.3"
+      "languageVersion": "2.12"
     },
     {
       "name": "js",
@@ -632,7 +638,7 @@
       "languageVersion": "3.6"
     }
   ],
-  "generated": "2025-03-11T19:10:41.495345Z",
+  "generated": "2025-03-21T18:22:55.697260Z",
   "generator": "pub",
   "generatorVersion": "3.7.0",
   "flutterRoot": "file:///Users/sachiradelankawala/flutter",
