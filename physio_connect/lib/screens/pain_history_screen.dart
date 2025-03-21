@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import '../utils/storage_helper.dart';
 import 'package:intl/intl.dart';
 
 class PainHistoryScreen extends StatefulWidget {
-  final List<Map<String, dynamic>> painHistory; // ✅ Ensure correct data passing
+  final List<Map<String, dynamic>> painHistory;
 
   const PainHistoryScreen({super.key, required this.painHistory});
 
@@ -13,26 +12,16 @@ class PainHistoryScreen extends StatefulWidget {
 }
 
 class _PainHistoryScreenState extends State<PainHistoryScreen> {
-  List<Map<String, dynamic>> _painHistory = [];
   List<Map<String, dynamic>> _filteredPainHistory = [];
-  String selectedFilter = "Month"; // Default selection
+  String selectedFilter = "Month"; // Default filter
 
   @override
   void initState() {
     super.initState();
-    _loadPainHistory();
+    _applyFilter(selectedFilter);
   }
 
-  /// ✅ Load pain history from local storage & apply the filter
-  Future<void> _loadPainHistory() async {
-    final history = await StorageHelper.loadPainHistory();
-    setState(() {
-      _painHistory = history;
-      _applyFilter(selectedFilter); // Apply the selected filter on load
-    });
-  }
-
-  /// ✅ Apply selected timeframe filter to history
+  /// ✅ Apply filter for relevant pain history
   void _applyFilter(String filter) {
     DateTime now = DateTime.now();
     DateTime cutoffDate;
@@ -56,41 +45,70 @@ class _PainHistoryScreenState extends State<PainHistoryScreen> {
 
     setState(() {
       selectedFilter = filter;
-      _filteredPainHistory = _painHistory.where((entry) {
+      _filteredPainHistory = widget.painHistory.where((entry) {
         try {
           return DateFormat('yyyy-MM-dd – kk:mm')
               .parse(entry['date'])
               .isAfter(cutoffDate);
         } catch (e) {
-          print("⚠ Error parsing date: ${entry['date']}");
           return false;
         }
       }).toList();
     });
   }
 
+  /// ✅ Format Date as "Fri 21 Mar"
+  String _formatDate(String dateString) {
+    try {
+      DateTime dateTime = DateFormat('yyyy-MM-dd – kk:mm').parse(dateString);
+      return DateFormat('E d MMM').format(dateTime); // Fri 21 Mar
+    } catch (e) {
+      return "Invalid Date";
+    }
+  }
+
+  /// ✅ Format Time as "02:46 AM"
+  String _formatTime(String dateString) {
+    try {
+      DateTime dateTime = DateFormat('yyyy-MM-dd – kk:mm').parse(dateString);
+      return DateFormat('hh:mm a').format(dateTime); // 02:46 AM
+    } catch (e) {
+      return "--:--";
+    }
+  }
+
+  /// ✅ Get Color for Pain Level
+  Color _getPainColor(num level) {
+    if (level <= 3) return const Color(0xFF33724B); // Midnight Teal
+    if (level <= 6) return Colors.orange;
+    return Colors.red;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0E21), // Dark Theme
+      backgroundColor: const Color(0xFFEAF7FF), // Alice Blue Background
       appBar: AppBar(
         title: const Text(
           'Pain History',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF33724B)), // Midnight Teal
         ),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         centerTitle: true,
+        elevation: 1,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh, color: Color(0xFF33724B)),
             tooltip: "Refresh Data",
-            onPressed: _loadPainHistory,
+            onPressed: () => _applyFilter(selectedFilter),
           ),
         ],
       ),
       body: Column(
         children: [
-          // ✅ Filter Selection
+          // ✅ Timeframe Selection with Better UI
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: Row(
@@ -102,19 +120,20 @@ class _PainHistoryScreenState extends State<PainHistoryScreen> {
                         onSelected: (selected) {
                           if (selected) _applyFilter(filter);
                         },
-                        backgroundColor: Colors.black,
-                        selectedColor: Colors.blueAccent,
+                        backgroundColor: Colors.white,
+                        selectedColor: const Color(0xFF33724B), // Midnight Teal
                         labelStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
                           color: selectedFilter == filter
                               ? Colors.white
-                              : Colors.grey.shade400,
+                              : const Color(0xFF33724B), // Midnight Teal
                         ),
                       ))
                   .toList(),
             ),
           ),
 
-          // ✅ Pain Trend Chart with Modern UI
+          // ✅ Improved Pain Level Chart
           Expanded(
             flex: 2,
             child: Container(
@@ -122,130 +141,85 @@ class _PainHistoryScreenState extends State<PainHistoryScreen> {
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                color: Colors.black,
+                color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.blueAccent.withOpacity(0.5),
-                    blurRadius: 15,
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
                     spreadRadius: 2,
                   ),
                 ],
               ),
               child: SfCartesianChart(
                 backgroundColor: Colors.transparent,
-                title: ChartTitle(
-                  text: "Pain Level Trend",
-                  textStyle: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
                 primaryXAxis: CategoryAxis(
-                  title: AxisTitle(
-                      text: "Date", textStyle: TextStyle(color: Colors.white)),
-                  labelRotation: 45,
-                  majorGridLines: const MajorGridLines(width: 0),
-                  labelStyle: const TextStyle(color: Colors.white),
+                  labelRotation: 0,
+                  labelStyle: const TextStyle(
+                      color: Color(0xFF33724B)), // Midnight Teal
                 ),
                 primaryYAxis: NumericAxis(
-                  title: AxisTitle(
-                      text: "Pain Level",
-                      textStyle: TextStyle(color: Colors.white)),
                   minimum: 0,
                   maximum: 10,
                   interval: 1,
-                  majorGridLines: const MajorGridLines(
-                    dashArray: [5, 5],
-                  ),
-                  labelStyle: const TextStyle(color: Colors.white),
-                ),
-                tooltipBehavior: TooltipBehavior(
-                  enable: true,
-                  color: Colors.blueAccent,
-                  textStyle: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                  format: 'Date: point.x \nPain Level: point.y',
-                ),
-                zoomPanBehavior: ZoomPanBehavior(
-                  enablePinching: true,
-                  enablePanning: true,
+                  labelStyle: const TextStyle(
+                      color: Color(0xFF33724B)), // Midnight Teal
                 ),
                 series: <CartesianSeries>[
-                  SplineSeries<Map<String, dynamic>, String>(
+                  ColumnSeries<Map<String, dynamic>, String>(
                     dataSource: _filteredPainHistory,
-                    xValueMapper: (data, _) => data['date'].toString(),
-                    yValueMapper: (data, _) => data['painLevel'],
-                    width: 4,
-                    color: Colors.blueAccent.withOpacity(0.8),
-                    markerSettings: const MarkerSettings(
-                      isVisible: true,
-                      shape: DataMarkerType.circle,
-                      color: Colors.blueAccent,
-                      borderColor: Colors.white,
-                      borderWidth: 2,
-                    ),
-                    dataLabelSettings: const DataLabelSettings(
-                      isVisible: true,
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                        color: Colors.white,
-                      ),
-                    ),
+                    xValueMapper: (data, _) => _formatDate(data['date']),
+                    yValueMapper: (data, _) => (data['painLevel'] as num)
+                        .toInt(), // ✅ Ensured safety for int conversion
+                    color: const Color(0xFF33724B)
+                        .withOpacity(0.8), // Midnight Teal
+                    borderRadius: BorderRadius.circular(6),
                   ),
                 ],
               ),
             ),
           ),
 
-          // ✅ Pain History List
+          // ✅ Enhanced Pain Entries List
           Expanded(
             flex: 2,
-            child: _filteredPainHistory.isEmpty
-                ? const Center(
-                    child: Text(
-                      "No pain history records found.",
-                      style: TextStyle(fontSize: 16, color: Colors.white70),
-                    ),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: _filteredPainHistory.length,
-                    itemBuilder: (context, index) {
-                      final entry = _filteredPainHistory[index];
-                      return Card(
-                        elevation: 6,
-                        color: Colors.black,
-                        margin: const EdgeInsets.symmetric(vertical: 8),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                        child: ListTile(
-                          leading: const Icon(Icons.local_hospital,
-                              color: Colors.redAccent),
-                          title: Text(
-                            "Pain Level: ${entry['painLevel']}",
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                          subtitle: Text(
-                            "Location: ${entry['painLocation']} \n${entry['date']}",
-                            style: const TextStyle(color: Colors.white60),
-                          ),
-                          trailing: Text(
-                            entry['painLevel'] >= 7 ? "Critical" : "Normal",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: entry['painLevel'] >= 7
-                                  ? Colors.red
-                                  : Colors.green,
-                            ),
-                          ),
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: _filteredPainHistory.length,
+              itemBuilder: (context, index) {
+                final entry = _filteredPainHistory[index];
+                return Card(
+                  elevation: 3,
+                  color: Colors.white,
+                  margin: const EdgeInsets.symmetric(vertical: 6),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  child: ListTile(
+                    leading: Icon(Icons.circle,
+                        color: _getPainColor(entry['painLevel']), size: 12),
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Pain Level: ${entry['painLevel'].toInt()}",
+                          style: TextStyle(
+                              color: _getPainColor(entry['painLevel']),
+                              fontWeight: FontWeight.bold),
                         ),
-                      );
-                    },
+                        Text(
+                          _formatTime(entry['date']),
+                          style:
+                              const TextStyle(color: Colors.grey, fontSize: 12),
+                        ),
+                      ],
+                    ),
+                    subtitle: Text(
+                      "📍 Location: ${entry['painLocation']}",
+                      style: const TextStyle(color: Colors.black54),
+                    ),
                   ),
+                );
+              },
+            ),
           ),
         ],
       ),
