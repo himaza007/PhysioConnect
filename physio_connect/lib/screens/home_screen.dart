@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import '../components/animated_button.dart';
 import '../components/wave_background.dart';
-import '../components/glowing_effect.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -72,17 +71,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   fit: BoxFit.cover,
                 ),
               ),
-            ),
-          ),
-
-          // ✅ Subtle Glowing Effect Centered to Physio Animation
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.22, // Centered Effect
-            left: MediaQuery.of(context).size.width / 2 - 100,
-            child: SizedBox(
-              width: 200,
-              height: 200,
-              child: GlowingEffect(),
             ),
           ),
 
