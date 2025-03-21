@@ -12,60 +12,58 @@ class TherapistSelectionScreen extends StatelessWidget {
       name: 'Dr. John Doe',
       specialty: 'Sports Injury',
       available: true,
-      image: 'build/flutter_assets/img/therapist1.jpg',
+      image: 'assets/doctor_icon.jpg',
       rating: 4.8,
     ),
     Therapist(
       name: 'Dr. Sarah Smith',
       specialty: 'Neurological',
       available: false,
-      image: '',
+      image: 'assets/doctor_icon.jpg',
       rating: 4.9,
     ),
     Therapist(
       name: 'Dr. Sarah Smith',
       specialty: 'Neurological',
       available: false,
-      image: '',
+      image: 'assets/doctor_icon.jpg',
       rating: 4.9,
     ),
     Therapist(
       name: 'Dr. Alex Brown',
       specialty: 'Orthopedic',
       available: true,
-      image: '',
+      image: 'assets/doctor_icon.jpg',
       rating: 4.7,
     ),
     Therapist(
       name: 'Dr. Emily Johnson',
       specialty: 'Pediatric',
       available: true,
-      image: '',
+      image: 'assets/doctor_icon.jpg',
       rating: 4.6,
     ),
     Therapist(
       name: 'Dr.  Michael Chen',
       specialty: 'Geriatric',
       available: true,
-      image: '',
+      image: 'assets/doctor_icon.jpg',
       rating: 4.9,
     ),
     Therapist(
       name: 'Dr Robert Garcia',
       specialty: 'Cardiopulmonary',
       available: false,
-      image: '',
+      image: 'assets/doctor_icon.jpg',
       rating: 4.9,
     ),
     Therapist(
       name: 'Dr. Lisa Wilson',
       specialty: 'Sports Rehabilitation',
       available: true,
-      image: '',
+      image: 'assets/doctor_icon.jpg',
       rating: 4.9,
     ),
-
-    // Add remaining therapists
   ];
 
   @override
@@ -89,8 +87,8 @@ class TherapistSelectionScreen extends StatelessWidget {
       body: GridView.builder(
         padding: EdgeInsets.all(10),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.9,
+          crossAxisCount: 3,
+          childAspectRatio: 0.8,
           crossAxisSpacing: 8,
           mainAxisSpacing: 8,
         ),

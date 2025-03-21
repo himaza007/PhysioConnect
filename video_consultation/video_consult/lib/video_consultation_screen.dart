@@ -37,21 +37,21 @@ class _VideoConsultationScreenState extends State<VideoConsultationScreen> {
       'specialty': 'Sports Injury',
       'date': DateTime.now().add(Duration(days: 1)),
       'time': '10:00',
-      'image': 'assets/img/therapist1.jpg',
+      'image': 'assets/doctor_icon.jpg',
     },
     {
       'therapistName': 'Dr. Lisa Wilson',
       'specialty': 'Sports Rehabilitation',
       'date': DateTime.now().add(Duration(days: 3)),
       'time': '14:00',
-      'image': 'assets/img/therapist2.jpg',
+      'image': 'assets/doctor_icon.jpg',
     },
     {
       'therapistName': 'Dr. Emily Johnson',
       'specialty': 'Pediatric',
       'date': DateTime.now().add(Duration(days: 5)),
       'time': '11:00',
-      'image': 'assets/img/therapist3.jpg',
+      'image': 'assets/doctor_icon.jpg',
     },
   ];
 

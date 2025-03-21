@@ -70,7 +70,7 @@ class _BookingScreenState extends State<BookingScreen> {
               child: Row(
                 children: [
                   CircleAvatar(
-                    backgroundImage: AssetImage('assets/img/therapist1.jpg'),
+                    backgroundImage: AssetImage('assets/doctor_icon.jpg'),
                     radius: 30,
                   ),
                   SizedBox(width: 16),

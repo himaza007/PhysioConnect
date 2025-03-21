@@ -303,7 +303,7 @@ class _EmergencySessionScreenState extends State<EmergencySessionScreen> {
             child: Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: AssetImage('assets/img/therapist5.jpg'),
+                  backgroundImage: AssetImage('assets/doctor_icon.jpg'),
                   radius: 16,
                 ),
                 SizedBox(width: 8),
