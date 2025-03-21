@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'components/theme_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/pain_monitoring.dart';
 import 'screens/first_aid_tutorial.dart';
 import 'screens/first_aid_details.dart';
+import 'components/settings_screen.dart';
 
 void main() {
-  runApp(PhysioConnectApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const PhysioConnectApp(),
+    ),
+  );
 }
 
 class PhysioConnectApp extends StatelessWidget {
@@ -16,113 +24,35 @@ class PhysioConnectApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'PhysioConnect',
-
-      // ✅ Elegant Light Theme
-      theme: ThemeData(
-        primaryColor: Color(0xFF33724B),
-        scaffoldBackgroundColor: Color(0xFFEAF7FF),
-        appBarTheme: AppBarTheme(
-          backgroundColor: Color(0xFF33724B),
-          elevation: 5,
-          centerTitle: true,
-          titleTextStyle: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        textTheme: TextTheme(
-          titleLarge: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF1F4B3D),
-            shadows: [
-              Shadow(
-                color: Colors.black26,
-                blurRadius: 2,
-                offset: Offset(1, 1),
-              ),
-            ],
-          ),
-          bodyLarge: TextStyle(fontSize: 16, color: Colors.black87),
-          labelLarge: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Color(0xFF33724B),
-            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            elevation: 5,
-            textStyle: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
-
-      // ✅ Stylish Dark Theme
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: Color(0xFF1F1F1F),
-        scaffoldBackgroundColor: Color(0xFF121212),
-        appBarTheme: AppBarTheme(
-          backgroundColor: Color(0xFF1F1F1F),
-          elevation: 5,
-          centerTitle: true,
-          titleTextStyle: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        textTheme: TextTheme(
-          titleLarge: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-          bodyLarge: TextStyle(fontSize: 16, color: Colors.white70),
-          labelLarge: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-        ),
-      ),
-
-      // ✅ Route Management
+      theme: Provider.of<ThemeProvider>(context).currentTheme,
       initialRoute: '/',
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/':
             return _customPageRoute(
-                child: HomeScreen(), transitionType: "fade");
+                child: const HomeScreen(), transitionType: "fade");
 
           case '/pain-monitoring':
             return _customPageRoute(
-                child: PainMonitoringPage(), transitionType: "slideRight");
+                child: const PainMonitoringPage(),
+                transitionType: "slideRight");
 
           case '/first-aid-tutorials':
             return _customPageRoute(
-                child: FirstAidTutorialScreen(), transitionType: "slideLeft");
+                child: const FirstAidTutorialScreen(),
+                transitionType: "slideLeft");
 
           case '/first-aid-details':
             return _customPageRoute(
-                child: FirstAidDetailsScreen(title: "First Aid Details"),
+                child: const FirstAidDetailsScreen(title: "First Aid Details"),
                 transitionType: "scale");
 
+          case '/settings':
+            return _customPageRoute(
+                child: const SettingsScreen(), transitionType: "fade");
+
           default:
-            return MaterialPageRoute(
-              builder: (context) => _errorScreen(),
-            );
+            return MaterialPageRoute(builder: (context) => _errorScreen());
         }
       },
     );
@@ -139,14 +69,16 @@ class PhysioConnectApp extends StatelessWidget {
             return FadeTransition(opacity: animation, child: child);
           case "slideRight":
             return SlideTransition(
-              position: Tween<Offset>(begin: Offset(-1, 0), end: Offset.zero)
-                  .animate(animation),
+              position:
+                  Tween<Offset>(begin: const Offset(-1, 0), end: Offset.zero)
+                      .animate(animation),
               child: child,
             );
           case "slideLeft":
             return SlideTransition(
-              position: Tween<Offset>(begin: Offset(1, 0), end: Offset.zero)
-                  .animate(animation),
+              position:
+                  Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
+                      .animate(animation),
               child: child,
             );
           case "scale":
@@ -158,13 +90,13 @@ class PhysioConnectApp extends StatelessWidget {
             return child;
         }
       },
-      transitionDuration: Duration(milliseconds: 500),
+      transitionDuration: const Duration(milliseconds: 500),
     );
   }
 
   // ✅ Error Screen for Undefined Routes
   Widget _errorScreen() {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: Text(
           "Oops! Page not found.",
