@@ -11,3 +11,26 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// Fetch a specific resource by ID
+router.get("/:id", async (req, res) => {
+    try {
+      const resource = await Resource.findById(req.params.id);
+      if (!resource) return res.status(404).json({ message: "Resource not found" });
+      res.json(resource);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+  
+  // Add a new resource (admin-only)
+  router.post("/", async (req, res) => {
+    const { title, description, subtopics } = req.body;
+    const resource = new Resource({ title, description, subtopics });
+    try {
+      const newResource = await resource.save();
+      res.status(201).json(newResource);
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  });
