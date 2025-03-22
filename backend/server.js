@@ -56,11 +56,8 @@ const RecoveryRoutine = mongoose.model('RecoveryRoutine', RecoveryRoutineSchema)
 
 // Seed Database
 const seedDatabase = async () => {
-  await KTaping.deleteMany({});
-  await Exercise.deleteMany({});
-  await Stretch.deleteMany({});
-  await OilTreatment.deleteMany({});
-  await RecoveryRoutine.deleteMany({});
+  const collections = [KTaping, Exercise, Stretch, OilTreatment, RecoveryRoutine];
+  await Promise.all(collections.map((model) => model.deleteMany({})));
 
   const kTapingData = [
     {
