@@ -22,19 +22,16 @@ mongoose.connect('mongodb://localhost:27017/injury_remedies', {
 });
 
 // Define MongoDB Schemas and Models
-const KTapingSchema = new mongoose.Schema({
-  bodyPart: String,
-  steps: [String],
-  description: String,
-});
-const KTaping = mongoose.model('KTaping', KTapingSchema);
-
-const ExerciseSchema = new mongoose.Schema({
-  bodyPart: String,
-  exercises: [String],
-  description: String,
-});
-const Exercise = mongoose.model('Exercise', ExerciseSchema);
+const createSchema = (stepsField = 'steps') => {
+    return new mongoose.Schema({
+      bodyPart: String,
+      [stepsField]: [String],
+      description: String,
+    });
+  };
+  
+  const KTaping = mongoose.model('KTaping', createSchema());
+  const Exercise = mongoose.model('Exercise', createSchema('exercises'));
 
 const StretchSchema = new mongoose.Schema({
   bodyPart: String,
