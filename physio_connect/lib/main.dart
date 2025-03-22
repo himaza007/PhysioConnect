@@ -7,7 +7,7 @@ void main() {
 }
 
 class PhysioConnectApp extends StatefulWidget {
-  const PhysioConnectApp({Key? key}) : super(key: key);
+  const PhysioConnectApp({super.key});
 
   @override
   State<PhysioConnectApp> createState() => _PhysioConnectAppState();
@@ -27,7 +27,10 @@ class _PhysioConnectAppState extends State<PhysioConnectApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme,
-      home: InteractiveHumanBody(toggleTheme: toggleTheme, isDarkMode: isDarkMode),
+      home: InteractiveHumanBody(
+        toggleTheme: toggleTheme,
+        isDarkMode: isDarkMode,
+      ),
     );
   }
 }
