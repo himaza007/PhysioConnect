@@ -35,7 +35,7 @@ router.get("/:id", async (req, res) => {
     }
   });
 
-  //Update a resource (admin-only)
+  // Update a resource (admin-only)
   router.put("/:id", async (req, res) => {
     try {
         const resources = await Resource.findByIdAndUpdate(req.params.id, req.body, {new: true});
@@ -45,4 +45,17 @@ router.get("/:id", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
   });
+
+  // Delete a resource (admin-only)
+  router.delete("/:id", async (req, res) => {
+    try {
+        const resources = await Resource.findByIdAndDelete(req.params.id);
+        if (!resources) return res.status(404).json({ message: "Resource not found" });
+        res.json({ message: "Resource deleted successfully" });
+    } catch (error){
+        res.status(500).json({ message: error.message });
+    }
+  });
+
+module.exports = router;
 
