@@ -1,150 +1,164 @@
 import 'package:flutter/material.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class FirstAidDetailsScreen extends StatelessWidget {
+class FirstAidDetailsScreen extends StatefulWidget {
   final String title;
-  const FirstAidDetailsScreen({super.key, required this.title});
+  final String? videoId;
 
-  // ✅ First Aid Steps
-  static final Map<String, List<String>> firstAidSteps = {
-    "CPR - How to Perform Chest Compressions": [
-      "✔ Check if the person is responsive.",
-      "✔ Call emergency services immediately.",
-      "✔ Place both hands in the center of the chest.",
-      "✔ Push hard & fast (100-120 compressions per minute).",
-      "✔ Continue until professional help arrives."
-    ],
-    "How to Stop Severe Bleeding": [
-      "✔ Apply direct pressure with a **clean cloth**.",
-      "✔ If possible, elevate the injured area.",
-      "✔ Maintain pressure for at least **5 minutes**.",
-      "✔ Seek immediate **medical attention** if bleeding persists."
-    ],
-    "Choking First Aid - Heimlich Maneuver": [
-      "✔ Stand behind the person & **wrap arms around their waist**.",
-      "✔ Make a **fist** and place it above the belly button.",
-      "✔ Perform **quick** abdominal thrusts.",
-      "✔ Continue until the object is **expelled**."
-    ],
+  const FirstAidDetailsScreen({super.key, required this.title, this.videoId});
+
+  @override
+  State<FirstAidDetailsScreen> createState() => _FirstAidDetailsScreenState();
+}
+
+class _FirstAidDetailsScreenState extends State<FirstAidDetailsScreen> {
+  late YoutubePlayerController _youtubeController;
+
+  static final Map<String, Map<String, dynamic>> firstAidData = {
+    "Foot Pain Relief": {
+      "summary":
+          "Effective stretches and techniques to reduce foot pain at home.",
+      "steps": [
+        "Stretch your toes and arches.",
+        "Roll a cold water bottle under your foot.",
+        "Avoid tight shoes and support with cushions."
+      ],
+      "videoId": "8Sj8uUOeobI"
+    },
+    "Knee Pain Relief": {
+      "summary":
+          "Simple movements to ease knee joint pain and improve flexibility.",
+      "steps": [
+        "Do straight leg raises.",
+        "Stretch your hamstrings and calves.",
+        "Avoid prolonged standing and stairs."
+      ],
+      "videoId": "1rHqj6oSmuI"
+    },
+    // ➕ Add other entries here like you've listed
+    "Wrist Taping": {
+      "summary": "Supportive tape method for wrist strains and sprains.",
+      "steps": [
+        "Wrap anchor around the wrist joint.",
+        "Apply support strips across the wrist back and palm.",
+        "Avoid overly tight wrapping."
+      ],
+      "videoId": "91DHdEeFokM"
+    },
   };
 
   @override
+  void initState() {
+    super.initState();
+    final videoId =
+        widget.videoId ?? firstAidData[widget.title]?['videoId'] ?? "";
+    _youtubeController = YoutubePlayerController(
+      initialVideoId: videoId,
+      flags: const YoutubePlayerFlags(autoPlay: false, mute: false),
+    );
+  }
+
+  @override
+  void dispose() {
+    _youtubeController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final List<String> steps =
-        firstAidSteps[title] ?? ["⚠ No instructions available."];
+    final data = firstAidData[widget.title] ??
+        {
+          "summary": "No instructions available.",
+          "steps": ["⚠ No steps found."],
+          "videoId": "dQw4w9WgXcQ"
+        };
+
+    final List<String> steps = List<String>.from(data['steps']);
+    final String summary = data['summary'];
 
     return Scaffold(
-      backgroundColor: Colors.white, // ✅ Clean White Background
+      backgroundColor: const Color(0xFFEAF7FF),
       body: SafeArea(
         child: Column(
           children: [
-            // ✅ Custom AppBar with Animated Back Button
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
               child: Row(
                 children: [
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
-                    child: AnimatedContainer(
-                      duration: Duration(milliseconds: 300),
-                      padding: EdgeInsets.all(12),
+                    child: Container(
                       decoration: BoxDecoration(
                         color: Colors.redAccent,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 6,
-                            offset: Offset(2, 3),
-                          ),
-                        ],
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Icon(Icons.arrow_back, color: Colors.white),
+                      padding: const EdgeInsets.all(10),
+                      child: const Icon(Icons.arrow_back, color: Colors.white),
                     ),
                   ),
-                  SizedBox(width: 15),
+                  const SizedBox(width: 15),
                   Expanded(
-                    child: Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.teal.shade800,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    child: Text(widget.title,
+                        style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.teal.shade800)),
                   ),
                 ],
               ),
             ),
-
-            // ✅ Interactive Step-by-Step Guide
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.95),
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 8,
-                      offset: Offset(2, -2),
-                    ),
-                  ],
-                ),
-                child: ListView(
-                  children: [
-                    // 📜 Title
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 10),
-                      child: Text(
-                        "Step-by-Step Guide",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.teal.shade800,
-                        ),
-                      ),
-                    ),
-
-                    // 📋 Steps List with Animated Cards
-                    ...steps.map((step) => _buildStepCard(step)),
-                  ],
-                ),
+            YoutubePlayer(
+              controller: _youtubeController,
+              showVideoProgressIndicator: true,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Text(
+                summary,
+                style: const TextStyle(
+                    fontSize: 16, color: Colors.black87, height: 1.5),
+                textAlign: TextAlign.center,
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ✅ Reusable Step Card with Hover Effect
-  Widget _buildStepCard(String step) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 12),
-      child: Container(
-        padding: EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: Colors.teal.shade50,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 5,
-              offset: Offset(2, 3),
-            ),
-          ],
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(Icons.check_circle, color: Colors.green, size: 24),
-            SizedBox(width: 12),
+            const Divider(),
             Expanded(
-              child: Text(
-                step,
-                style: TextStyle(fontSize: 16, height: 1.5),
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: steps.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 6,
+                          offset: const Offset(2, 3),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(Icons.medical_services_rounded,
+                            color: Colors.teal.shade700),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            "Step ${index + 1}: ${steps[index]}",
+                            style: const TextStyle(
+                                fontSize: 16,
+                                height: 1.4,
+                                color: Colors.black87),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
           ],
