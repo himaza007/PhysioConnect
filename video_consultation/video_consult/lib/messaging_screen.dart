@@ -3,7 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class MessagingScreen extends StatelessWidget {
   // Support hotline number
-  final String hotlineNumber = '+1-800-123-4567';
+  final String hotlineNumber = '+94 76 648 0202';
 
   // FAQ items as Map of questions and answers
   final List<Map<String, String>> faqItems = [
@@ -43,7 +43,7 @@ class MessagingScreen extends StatelessWidget {
   void _sendEmail(BuildContext context) async {
     final Uri emailUri = Uri(
       scheme: 'mailto',
-      path: 'support@yourapp.com',
+      path: 'physioconnect.co@gmail.com',
       query: 'subject=Help%20Request&body=I%20need%20assistance%20with%20...',
     );
 
@@ -146,7 +146,7 @@ class MessagingScreen extends StatelessWidget {
                     context,
                     icon: Icons.email,
                     title: 'Email',
-                    subtitle: 'support@yourapp.com',
+                    subtitle: 'physioconnect.co@gmail.com',
                     onTap: () => _sendEmail(context),
                     color: Colors.orange.shade100,
                     iconColor: Colors.orange,
