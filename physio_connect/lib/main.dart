@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'components/theme_provider.dart';
+import 'components/settings_screen.dart';
+import 'models/tutorial_model.dart';
+
 import 'screens/home_screen.dart';
 import 'screens/pain_monitoring.dart';
-import 'screens/first_aid_tutorial.dart';
-import 'screens/first_aid_details.dart';
-import 'components/settings_screen.dart';
+import 'screens/first_aid/tutorial_list_screen.dart';
+import 'screens/first_aid/tutorial_detail_screen.dart';
+import 'screens/first_aid/first_aid_screen.dart'; // ✅ Tab view screen
 
 void main() {
   runApp(
@@ -30,37 +34,61 @@ class PhysioConnectApp extends StatelessWidget {
         switch (settings.name) {
           case '/':
             return _customPageRoute(
-                child: const HomeScreen(), transitionType: "fade");
+              child: const HomeScreen(),
+              transitionType: "fade",
+            );
 
           case '/pain-monitoring':
             return _customPageRoute(
-                child: const PainMonitoringPage(),
-                transitionType: "slideRight");
+              child: const PainMonitoringPage(),
+              transitionType: "slideRight",
+            );
 
+          // ✅ FULL TAB SCREEN for Taping / Exercise / Home Remedies
           case '/first-aid-tutorials':
             return _customPageRoute(
-                child: const FirstAidTutorialScreen(),
-                transitionType: "slideLeft");
+              child: const FirstAidScreen(),
+              transitionType: "slideLeft",
+            );
 
-          case '/first-aid-details':
+          // ✅ FILTERED LIST SCREEN with passed category
+          case '/tutorial-category':
+            final data = settings.arguments as Map<String, dynamic>?;
+            final category = data?['category'] ?? 'Home Remedies';
             return _customPageRoute(
-                child: const FirstAidDetailsScreen(title: "First Aid Details"),
-                transitionType: "scale");
+              child: TutorialListScreen(category: category),
+              transitionType: "slideLeft",
+            );
+
+          // ✅ TUTORIAL DETAILS SCREEN
+          case '/first-aid-details':
+            final tutorial = settings.arguments as TutorialModel?;
+            if (tutorial != null) {
+              return _customPageRoute(
+                child: TutorialDetailScreen(tutorial: tutorial),
+                transitionType: "scale",
+              );
+            }
+            return _errorRoute("Missing tutorial data");
 
           case '/settings':
             return _customPageRoute(
-                child: const SettingsScreen(), transitionType: "fade");
+              child: const SettingsScreen(),
+              transitionType: "fade",
+            );
 
           default:
-            return MaterialPageRoute(builder: (context) => _errorScreen());
+            return _errorRoute("Oops! Page not found.");
         }
       },
     );
   }
 
-  // ✅ Custom Transition Function
-  PageRoute _customPageRoute(
-      {required Widget child, required String transitionType}) {
+  // ✅ Custom page transitions
+  PageRoute _customPageRoute({
+    required Widget child,
+    required String transitionType,
+  }) {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => child,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -82,10 +110,7 @@ class PhysioConnectApp extends StatelessWidget {
               child: child,
             );
           case "scale":
-            return ScaleTransition(
-              scale: animation,
-              child: child,
-            );
+            return ScaleTransition(scale: animation, child: child);
           default:
             return child;
         }
@@ -94,13 +119,16 @@ class PhysioConnectApp extends StatelessWidget {
     );
   }
 
-  // ✅ Error Screen for Undefined Routes
-  Widget _errorScreen() {
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          "Oops! Page not found.",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+  // ✅ Error fallback route
+  MaterialPageRoute _errorRoute(String message) {
+    return MaterialPageRoute(
+      builder: (_) => Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Text(
+            message,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );
