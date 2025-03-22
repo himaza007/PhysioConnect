@@ -23,6 +23,10 @@ class _HomeScreenState extends State<HomeScreen>
     Colors.green.shade50,
   ];
 
+  // User login state
+  bool _isLoggedIn = false;
+  String _userName = "John Doe";
+
   @override
   void initState() {
     super.initState();
@@ -110,9 +114,11 @@ class _HomeScreenState extends State<HomeScreen>
             icon: Icons.person,
             onTap: () {
               HapticFeedback.lightImpact();
-              _showProfileDialog(context);
+              _isLoggedIn
+                  ? _showProfileDialog(context)
+                  : _showLoginDialog(context);
             },
-            tooltip: 'Profile',
+            tooltip: _isLoggedIn ? 'Profile' : 'Login',
           ),
         ],
       ),
@@ -168,7 +174,9 @@ class _HomeScreenState extends State<HomeScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Welcome back!',
+                          _isLoggedIn
+                              ? 'Welcome back, ${_userName.split(" ")[0]}!'
+                              : 'Welcome!',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -459,6 +467,165 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
+  // Login Dialog
+  void _showLoginDialog(BuildContext context) {
+    final TextEditingController _emailController = TextEditingController();
+    final TextEditingController _passwordController = TextEditingController();
+
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Dismiss',
+      pageBuilder: (context, animation1, animation2) {
+        return Container();
+      },
+      transitionBuilder: (context, animation1, animation2, child) {
+        final curvedAnimation = CurvedAnimation(
+          parent: animation1,
+          curve: Curves.easeInOut,
+        );
+
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.8, end: 1.0).animate(curvedAnimation),
+          child: FadeTransition(
+            opacity:
+                Tween<double>(begin: 0.0, end: 1.0).animate(curvedAnimation),
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              title: Text(
+                'Login',
+                style: TextStyle(
+                  color: Colors.green.shade800,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircleAvatar(
+                      radius: 40,
+                      backgroundColor: Colors.green.shade100,
+                      child: Icon(
+                        Icons.lock_outline,
+                        size: 40,
+                        color: Colors.green.shade700,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    TextField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        hintText: 'Enter your email',
+                        prefixIcon:
+                            Icon(Icons.email, color: Colors.green.shade600),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                              color: Colors.green.shade600, width: 2),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        hintText: 'Enter your password',
+                        prefixIcon:
+                            Icon(Icons.lock, color: Colors.green.shade600),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                              color: Colors.green.shade600, width: 2),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          // Show forgot password dialog
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Password reset email sent!'),
+                              backgroundColor: Colors.green.shade700,
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Forgot Password?',
+                          style: TextStyle(
+                            color: Colors.green.shade700,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    // Navigate to registration screen
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Registration form will appear here'),
+                        backgroundColor: Colors.green.shade700,
+                      ),
+                    );
+                  },
+                  child: Text(
+                    'Sign Up',
+                    style: TextStyle(
+                      color: Colors.green.shade700,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Perform login
+                    Navigator.pop(context);
+                    setState(() {
+                      _isLoggedIn = true;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Successfully logged in!'),
+                        backgroundColor: Colors.green.shade700,
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green.shade600,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text('Login'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Enhanced Profile Dialog
   void _showProfileDialog(BuildContext context) {
     showGeneralDialog(
       context: context,
@@ -489,34 +656,76 @@ class _HomeScreenState extends State<HomeScreen>
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.green.shade100,
-                    child: Icon(
-                      Icons.person,
-                      size: 50,
-                      color: Colors.green.shade700,
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundColor: Colors.green.shade100,
+                      child: Icon(
+                        Icons.person,
+                        size: 50,
+                        color: Colors.green.shade700,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 15),
-                  Text(
-                    'John Doe',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                    SizedBox(height: 15),
+                    Text(
+                      _userName,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    'Next appointment: Tomorrow, 10:00 AM',
-                    style: TextStyle(
-                      color: Colors.grey.shade700,
+                    SizedBox(height: 5),
+                    Text(
+                      'Next appointment: Tomorrow, 10:00 AM',
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                      ),
                     ),
-                  ),
-                ],
+                    Divider(height: 25),
+                    _buildProfileOption(
+                      icon: Icons.calendar_today,
+                      title: 'My Bookings',
+                      onTap: () {
+                        Navigator.pop(context);
+                        _showBookingsDialog(context);
+                      },
+                    ),
+                    _buildProfileOption(
+                      icon: Icons.add_circle_outline,
+                      title: 'Book New Appointment',
+                      onTap: () {
+                        Navigator.pop(context);
+                        _showAvailableTimeslotsDialog(context);
+                      },
+                    ),
+                    _buildProfileOption(
+                      icon: Icons.settings,
+                      title: 'Edit Profile',
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    _buildProfileOption(
+                      icon: Icons.logout,
+                      title: 'Logout',
+                      onTap: () {
+                        Navigator.pop(context);
+                        setState(() {
+                          _isLoggedIn = false;
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Successfully logged out'),
+                            backgroundColor: Colors.green.shade700,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
               actions: [
                 TextButton(
@@ -528,21 +737,699 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   ),
                 ),
-                ElevatedButton(
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Helper widget for profile options
+  Widget _buildProfileOption({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.green.shade700),
+      title: Text(title),
+      trailing: Icon(Icons.arrow_forward_ios, size: 16),
+      onTap: onTap,
+      contentPadding: EdgeInsets.symmetric(horizontal: 8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      tileColor: Colors.transparent,
+      hoverColor: Colors.green.shade50,
+    );
+  }
+
+  // Show bookings dialog
+  void _showBookingsDialog(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Dismiss',
+      pageBuilder: (context, animation1, animation2) {
+        return Container();
+      },
+      transitionBuilder: (context, animation1, animation2, child) {
+        final curvedAnimation = CurvedAnimation(
+          parent: animation1,
+          curve: Curves.easeInOut,
+        );
+
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.8, end: 1.0).animate(curvedAnimation),
+          child: FadeTransition(
+            opacity:
+                Tween<double>(begin: 0.0, end: 1.0).animate(curvedAnimation),
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              title: Text(
+                'My Bookings',
+                style: TextStyle(
+                  color: Colors.green.shade800,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              content: Container(
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildBookingCard(
+                      therapistName: 'Dr. Sarah Johnson',
+                      specialty: 'Physical Therapist',
+                      date: 'Tomorrow',
+                      time: '10:00 AM',
+                      isUpcoming: true,
+                    ),
+                    SizedBox(height: 10),
+                    _buildBookingCard(
+                      therapistName: 'Dr. Michael Chen',
+                      specialty: 'Sports Medicine',
+                      date: 'March 25, 2025',
+                      time: '2:30 PM',
+                      isUpcoming: true,
+                    ),
+                    SizedBox(height: 10),
+                    _buildBookingCard(
+                      therapistName: 'Dr. Emily Rivera',
+                      specialty: 'Rehabilitation Specialist',
+                      date: 'March 15, 2025',
+                      time: '11:15 AM',
+                      isUpcoming: false,
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
                   onPressed: () => Navigator.pop(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green.shade600,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                  child: Text(
+                    'Close',
+                    style: TextStyle(
+                      color: Colors.green.shade700,
                     ),
                   ),
-                  child: Text('Edit Profile'),
                 ),
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+  // Helper widget for booking cards
+  Widget _buildBookingCard({
+    required String therapistName,
+    required String specialty,
+    required String date,
+    required String time,
+    required bool isUpcoming,
+  }) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+        side: BorderSide(
+          color: isUpcoming ? Colors.green.shade200 : Colors.grey.shade300,
+          width: 1,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor:
+                      isUpcoming ? Colors.green.shade100 : Colors.grey.shade200,
+                  child: Icon(
+                    Icons.person,
+                    color: isUpcoming
+                        ? Colors.green.shade700
+                        : Colors.grey.shade700,
+                  ),
+                ),
+                SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        therapistName,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        specialty,
+                        style: TextStyle(
+                          color: Colors.grey.shade700,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: isUpcoming
+                        ? Colors.green.shade100
+                        : Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    isUpcoming ? 'Upcoming' : 'Past',
+                    style: TextStyle(
+                      color: isUpcoming
+                          ? Colors.green.shade800
+                          : Colors.grey.shade700,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Icon(Icons.calendar_today,
+                    size: 16, color: Colors.grey.shade600),
+                SizedBox(width: 5),
+                Text(
+                  date,
+                  style: TextStyle(
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+                SizedBox(width: 15),
+                Icon(Icons.access_time, size: 16, color: Colors.grey.shade600),
+                SizedBox(width: 5),
+                Text(
+                  time,
+                  style: TextStyle(
+                    color: Colors.grey.shade800,
+                  ),
+                ),
+              ],
+            ),
+            if (isUpcoming) ...[
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  OutlinedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Appointment rescheduled'),
+                          backgroundColor: Colors.blue.shade600,
+                        ),
+                      );
+                    },
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      side: BorderSide(color: Colors.blue.shade600),
+                    ),
+                    child: Text(
+                      'Reschedule',
+                      style: TextStyle(
+                        color: Colors.blue.shade600,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  OutlinedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Appointment cancelled'),
+                          backgroundColor: Colors.red.shade600,
+                        ),
+                      );
+                    },
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      side: BorderSide(color: Colors.red.shade600),
+                    ),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: Colors.red.shade600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Show available time slots dialog
+  void _showAvailableTimeslotsDialog(BuildContext context) {
+    final List<String> therapists = [
+      'Dr. Sarah Johnson',
+      'Dr. Michael Chen',
+      'Dr. Emily Rivera',
+      'Dr. James Wilson',
+      'Dr. Maria Rodriguez'
+    ];
+    String selectedTherapist = therapists[0];
+
+    // Create a date range for the next 7 days
+    final List<DateTime> dates = List.generate(
+        7, (index) => DateTime.now().add(Duration(days: index + 1)));
+    DateTime selectedDate = dates[0];
+
+    // Available time slots
+    final List<String> morningSlots = ['9:00 AM', '10:00 AM', '11:00 AM'];
+    final List<String> afternoonSlots = [
+      '1:00 PM',
+      '2:00 PM',
+      '3:00 PM',
+      '4:00 PM'
+    ];
+    String? selectedTimeSlot;
+
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Dismiss',
+      pageBuilder: (context, animation1, animation2) {
+        return Container();
+      },
+      transitionBuilder: (context, animation1, animation2, child) {
+        final curvedAnimation = CurvedAnimation(
+          parent: animation1,
+          curve: Curves.easeInOut,
+        );
+
+        return StatefulBuilder(builder: (context, setState) {
+          return ScaleTransition(
+            scale: Tween<double>(begin: 0.8, end: 1.0).animate(curvedAnimation),
+            child: FadeTransition(
+              opacity:
+                  Tween<double>(begin: 0.0, end: 1.0).animate(curvedAnimation),
+              child: AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                title: Text(
+                  'Book New Appointment',
+                  style: TextStyle(
+                    color: Colors.green.shade800,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                content: Container(
+                  width: double.maxFinite,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Select Therapist',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green.shade800,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.green.shade200),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              isExpanded: true,
+                              value: selectedTherapist,
+                              items: therapists.map((String therapist) {
+                                return DropdownMenuItem<String>(
+                                  value: therapist,
+                                  child: Text(therapist),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                if (newValue != null) {
+                                  setState(() {
+                                    selectedTherapist = newValue;
+                                    selectedTimeSlot =
+                                        null; // Reset time slot when therapist changes
+                                  });
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          'Select Date',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green.shade800,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Container(
+                          height: 80,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: dates.length,
+                            itemBuilder: (context, index) {
+                              final date = dates[index];
+                              final isSelected = date.day == selectedDate.day &&
+                                  date.month == selectedDate.month;
+
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedDate = date;
+                                    selectedTimeSlot =
+                                        null; // Reset time slot when date changes
+                                  });
+                                },
+                                child: Container(
+                                  width: 60,
+                                  margin: EdgeInsets.only(right: 10),
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? Colors.green.shade600
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: isSelected
+                                          ? Colors.green.shade600
+                                          : Colors.green.shade200,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        [
+                                          'Mon',
+                                          'Tue',
+                                          'Wed',
+                                          'Thu',
+                                          'Fri',
+                                          'Sat',
+                                          'Sun'
+                                        ][date.weekday - 1],
+                                        style: TextStyle(
+                                          color: isSelected
+                                              ? Colors.white
+                                              : Colors.grey.shade800,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        date.day.toString(),
+                                        style: TextStyle(
+                                          color: isSelected
+                                              ? Colors.white
+                                              : Colors.grey.shade800,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        [
+                                          'Jan',
+                                          'Feb',
+                                          'Mar',
+                                          'Apr',
+                                          'May',
+                                          'Jun',
+                                          'Jul',
+                                          'Aug',
+                                          'Sep',
+                                          'Oct',
+                                          'Nov',
+                                          'Dec'
+                                        ][date.month - 1],
+                                        style: TextStyle(
+                                          color: isSelected
+                                              ? Colors.white
+                                              : Colors.grey.shade800,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          'Select Time',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green.shade800,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'Morning',
+                          style: TextStyle(
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
+                          children: morningSlots.map((time) {
+                            final isSelected = selectedTimeSlot == time;
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedTimeSlot = time;
+                                });
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? Colors.green.shade600
+                                      : Colors.white,
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? Colors.green.shade600
+                                        : Colors.green.shade200,
+                                  ),
+                                ),
+                                child: Text(
+                                  time,
+                                  style: TextStyle(
+                                    color: isSelected
+                                        ? Colors.white
+                                        : Colors.grey.shade800,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        SizedBox(height: 15),
+                        Text(
+                          'Afternoon',
+                          style: TextStyle(
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
+                          children: afternoonSlots.map((time) {
+                            final isSelected = selectedTimeSlot == time;
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedTimeSlot = time;
+                                });
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? Colors.green.shade600
+                                      : Colors.white,
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? Colors.green.shade600
+                                        : Colors.green.shade200,
+                                  ),
+                                ),
+                                child: Text(
+                                  time,
+                                  style: TextStyle(
+                                    color: isSelected
+                                        ? Colors.white
+                                        : Colors.grey.shade800,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          'Appointment Type',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green.shade800,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildAppointmentTypeCard(
+                                icon: Icons.videocam,
+                                title: 'Video Session',
+                                isSelected: true,
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: _buildAppointmentTypeCard(
+                                icon: Icons.person,
+                                title: 'In-Person',
+                                isSelected: false,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: selectedTimeSlot == null
+                        ? null
+                        : () {
+                            Navigator.pop(context);
+                            HapticFeedback.mediumImpact();
+
+                            // Format the date for display
+                            final String formattedDate =
+                                '${selectedDate.day} ${[
+                              'Jan',
+                              'Feb',
+                              'Mar',
+                              'Apr',
+                              'May',
+                              'Jun',
+                              'Jul',
+                              'Aug',
+                              'Sep',
+                              'Oct',
+                              'Nov',
+                              'Dec'
+                            ][selectedDate.month - 1]}, ${selectedDate.year}';
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    'Appointment booked with $selectedTherapist on $formattedDate at $selectedTimeSlot'),
+                                backgroundColor: Colors.green.shade700,
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green.shade600,
+                      disabledBackgroundColor: Colors.grey.shade300,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text('Book Appointment'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+      },
+    );
+  }
+
+// Helper widget for appointment type selection
+  Widget _buildAppointmentTypeCard({
+    required IconData icon,
+    required String title,
+    required bool isSelected,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+      decoration: BoxDecoration(
+        color: isSelected ? Colors.green.shade50 : Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: isSelected ? Colors.green.shade600 : Colors.grey.shade300,
+          width: isSelected ? 2 : 1,
+        ),
+      ),
+      child: Column(
+        children: [
+          Icon(
+            icon,
+            color: isSelected ? Colors.green.shade600 : Colors.grey.shade600,
+            size: 24,
+          ),
+          SizedBox(height: 8),
+          Text(
+            title,
+            style: TextStyle(
+              color: isSelected ? Colors.green.shade800 : Colors.grey.shade800,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
