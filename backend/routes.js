@@ -34,3 +34,15 @@ router.get("/:id", async (req, res) => {
       res.status(400).json({ message: error.message });
     }
   });
+
+  //Update a resource (admin-only)
+  router.put("/:id", async (req, res) => {
+    try {
+        const resources = await Resource.findByIdAndUpdate(req.params.id, req.body, {new: true});
+        if (!resources) return res.status(404).json({ message: "Resource not found" });
+        res.json(resources);
+    } catch (error){
+        res.status(500).json({ message: error.message });
+    }
+  });
+
