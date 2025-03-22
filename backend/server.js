@@ -144,19 +144,24 @@ const seedDatabase = async () => {
 // seedDatabase();
 
 // API Endpoints
+
 app.get('/k-taping/:bodyPart', async (req, res) => {
-  const { bodyPart } = req.params;
-  try {
-    const instructions = await KTaping.findOne({ bodyPart: { $regex: new RegExp(`^${bodyPart}$`, "i") } });
-    if (!instructions) {
-      return res.status(404).json({ error: 'Instructions not found' });
-    }
-    res.json(instructions);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error', details: error.message });
-  }
+    const response = await handleRequest(KTaping, 'bodyPart', req.params.bodyPart);
+    res.status(response.status).json(response.data || { error: response.message });
 });
+
+const handleRequest = async (model, key, value) => {
+  try {
+    const data = await model.findOne({ [key]: value });
+    if (!data) {
+      return { status: 404, message: `${model.modelName} not found` };
+    }
+    return { status: 200, data };
+  } catch (error) {
+    return { status: 500, message: 'Server error' };
+  }
+};
+
 
 app.get('/exercises/:bodyPart', async (req, res) => {
   const { bodyPart } = req.params;
