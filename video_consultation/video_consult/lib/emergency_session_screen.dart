@@ -26,12 +26,17 @@ class _EmergencySessionScreenState extends State<EmergencySessionScreen> {
   @override
   void initState() {
     super.initState();
+    // Initialize camera right away
+    initCamera();
+
     // Simulate connection delay
     Future.delayed(Duration(seconds: 3), () {
       if (mounted) {
         setState(() {
           isConnecting = false;
         });
+        // Start session timer when connected
+        startSessionTimer();
       }
     });
   }
@@ -142,7 +147,9 @@ class _EmergencySessionScreenState extends State<EmergencySessionScreen> {
 
   @override
   void dispose() {
-    sessionTimer.cancel();
+    if (secondsElapsed > 0) {
+      sessionTimer.cancel();
+    }
     cameraController?.dispose();
     super.dispose();
   }
@@ -242,6 +249,32 @@ class _EmergencySessionScreenState extends State<EmergencySessionScreen> {
           ),
         ),
 
+        // Self video small overlay - this is where we show our camera feed
+        Positioned(
+          top: 16,
+          right: 16,
+          child: Container(
+            width: 120,
+            height: 180,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade800,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: isCameraInitialized && !isVideoOff
+                  ? CameraPreview(cameraController!)
+                  : Center(
+                      child: Icon(
+                        Icons.person,
+                        size: 60,
+                        color: Colors.white70,
+                      ),
+                    ),
+            ),
+          ),
+        ),
+
         // Emergency indicator
         Positioned(
           top: 16,
@@ -269,27 +302,6 @@ class _EmergencySessionScreenState extends State<EmergencySessionScreen> {
           ),
         ),
 
-        // Self video small overlay
-        Positioned(
-          top: 16,
-          right: 16,
-          child: Container(
-            width: 120,
-            height: 180,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade800,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Center(
-              child: Icon(
-                Icons.person,
-                size: 60,
-                color: Colors.white70,
-              ),
-            ),
-          ),
-        ),
-
         // Connected to info
         Positioned(
           top: 70,
@@ -303,7 +315,8 @@ class _EmergencySessionScreenState extends State<EmergencySessionScreen> {
             child: Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: AssetImage('assets/doctor_icon.jpg'),
+                  backgroundColor: Colors.grey,
+                  child: Icon(Icons.person, color: Colors.white),
                   radius: 16,
                 ),
                 SizedBox(width: 8),
@@ -518,12 +531,12 @@ class _EmergencySessionScreenState extends State<EmergencySessionScreen> {
             children: [
               _buildCallControlButton(
                 isVideoOff ? Icons.videocam : Icons.videocam_off,
-                isVideoOff ? Colors.red.shade700 : Colors.grey.shade800,
+                isVideoOff ? Colors.grey.shade800 : Colors.red.shade700,
                 onPressed: toggleVideo,
               ),
               _buildCallControlButton(
                 isMicMuted ? Icons.mic : Icons.mic_off,
-                isMicMuted ? Colors.red.shade700 : Colors.grey.shade800,
+                isMicMuted ? Colors.grey.shade800 : Colors.red.shade700,
                 onPressed: toggleMic,
               ),
               _buildCallControlButton(
@@ -541,32 +554,6 @@ class _EmergencySessionScreenState extends State<EmergencySessionScreen> {
             ],
           ),
         ),
-
-        // Session time
-        Positioned(
-          top: 120,
-          left: 16,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.black54,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.timer, color: Colors.white, size: 16),
-                SizedBox(width: 4),
-                Text(
-                  sessionTime,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -582,28 +569,6 @@ class _EmergencySessionScreenState extends State<EmergencySessionScreen> {
       ),
     );
   }
-}
-
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: Text('Video Consultation'),
-      backgroundColor: Colors.green.shade700,
-    ),
-    body: Center(child: Text('Video Consultation Feature Coming Soon...')),
-    floatingActionButton: FloatingActionButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SupportChatScreen()),
-        );
-      },
-      backgroundColor: Colors.green.shade700,
-      child: Icon(Icons.support_agent),
-      tooltip: 'Contact Support',
-    ),
-  );
 }
 
 extension on CameraController {
