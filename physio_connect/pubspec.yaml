@@ -1,34 +1,25 @@
 name: physio_connect
-description: "A new Flutter project."
-publish_to: 'none'
 
+description: A modern physiotherapy assistant app.
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.7.0
+  sdk: '>=2.19.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
-  flutter_svg: ^1.1.6  # For SVG-based body image
+  cupertino_icons: ^1.0.2
   google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
 
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/front.png
-    - assets/images/back.png
-    - assets/images/side_right.png
-    - assets/images/back_female.png
-    - assets/images/front_female.png
-    - assets/images/side_female.png
-
+    - assets/images/
     - assets/body_parts/head/muscles/1.avif
     - assets/body_parts/head/muscles/2.avif
     - assets/body_parts/head/muscles/3.avif
@@ -52,22 +43,10 @@ flutter:
     - assets/body_parts/head/muscles/21.avif
     - assets/body_parts/head/muscles/22.avif
     - assets/body_parts/head/muscles/23.avif
-
-    - assets/fonts/Montserrat-Regular.ttf
-
   fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
     - family: Montserrat
       fonts:
         - asset: assets/fonts/Montserrat-Regular.ttf
-        - asset: assets/fonts/Montserrat-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/Montserrat-Italic.ttf
-          style: italic
-
-
-
-
-
-
-
-
