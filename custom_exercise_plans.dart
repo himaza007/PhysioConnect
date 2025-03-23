@@ -51,7 +51,7 @@ class _CustomExercisePlansScreenState extends State<CustomExercisePlansScreen>
           title: FadeTransition(
             opacity: _fadeAnimation,
             child: const Text(
-              "Customizable Exercise Plans",
+              "Customized Exercise Plans",
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

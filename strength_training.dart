@@ -1,92 +1,66 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class StrengthTrainingScreen extends StatelessWidget {
+class StrengthTrainingScreen extends StatefulWidget {
   const StrengthTrainingScreen({super.key});
+
+  @override
+  State<StrengthTrainingScreen> createState() => _StrengthTrainingScreenState();
+}
+
+class _StrengthTrainingScreenState extends State<StrengthTrainingScreen> {
+  List<dynamic> workouts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchStrengthWorkouts();
+  }
+
+  Future<void> fetchStrengthWorkouts() async {
+    final uri = Uri.parse('http://localhost:5000/api/strength-workouts'); // Replace with IP if needed
+    try {
+      final response = await http.get(uri);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          workouts = data;
+        });
+      } else {
+        print("Failed to load strength workouts: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching strength workouts: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF33724B), // Midnight Teal
+        backgroundColor: const Color(0xFF33724B),
         title: const Text("Strength Training for Recovery"),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: SingleChildScrollView(
-        // Prevents overflow issues
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Strength Training for Recovery",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF33724B),
-                ),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                "Focus on controlled resistance training, bodyweight exercises, and core activation to safely rebuild strength after an injury. Perform each movement with proper form and avoid excessive strain.",
-                style: TextStyle(fontSize: 16, color: Colors.black87),
-              ),
-              const SizedBox(height: 20),
-              _buildExerciseStep(
-                "🏋️‍♂️ Resistance Band Pulls",
-                "Enhances muscle strength with controlled resistance.",
-                "1️⃣ Anchor a resistance band at chest height.\n"
-                    "2️⃣ Hold the band with both hands and step back slightly.\n"
-                    "3️⃣ Keep your elbows close to your body and pull the band towards your chest.\n"
-                    "4️⃣ Slowly return to the start position.\n"
-                    "🔁 Repeat **10-15 times** for **2-3 sets**.",
-              ),
-              _buildExerciseStep(
-                "🦵 Step-ups",
-                "Improves lower limb coordination and power.",
-                "1️⃣ Stand in front of a **low step or sturdy box**.\n"
-                    "2️⃣ Step onto the platform with one foot and push through your heel.\n"
-                    "3️⃣ Bring the other foot up and then slowly lower back down.\n"
-                    "4️⃣ Switch legs and repeat.\n"
-                    "🔁 Perform **10 reps per leg** for **2-3 sets**.",
-              ),
-              _buildExerciseStep(
-                "🤲 Grip Strengthening",
-                "Strengthens forearm and wrist muscles.",
-                "1️⃣ Hold a **stress ball or hand gripper** in your palm.\n"
-                    "2️⃣ Squeeze the ball firmly and hold for **5 seconds**.\n"
-                    "3️⃣ Release slowly and repeat.\n"
-                    "🔁 Perform **12-15 squeezes per hand**.",
-              ),
-              _buildExerciseStep(
-                "🧍‍♂️ Wall Sit",
-                "Builds endurance in the legs and core.",
-                "1️⃣ Stand with your back against a **wall** and feet **shoulder-width apart**.\n"
-                    "2️⃣ Slide down into a seated position, keeping your knees at **90 degrees**.\n"
-                    "3️⃣ Hold for **20-40 seconds**, keeping your core engaged.\n"
-                    "🔁 Repeat **3 times**.",
-              ),
-              _buildExerciseStep(
-                "💪 Seated Leg Extensions",
-                "Strengthens quadriceps while protecting the knee.",
-                "1️⃣ Sit on a sturdy chair with feet flat on the floor.\n"
-                    "2️⃣ Slowly extend one leg straight and hold for **3-5 seconds**.\n"
-                    "3️⃣ Lower it back down and switch legs.\n"
-                    "🔁 Perform **12 reps per leg** for **2-3 sets**.",
-              ),
-              const SizedBox(height: 20), // Prevents bottom cutoff
-            ],
-          ),
-        ),
+      body: workouts.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+        padding: const EdgeInsets.all(16.0),
+        itemCount: workouts.length,
+        itemBuilder: (context, index) {
+          final workout = workouts[index];
+          return _buildExerciseStep(
+            workout['title'],
+            workout['description'],
+            workout['instructions'],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildExerciseStep(
-    String title,
-    String description,
-    String instructions,
-  ) {
+  Widget _buildExerciseStep(String title, String description, String instructions) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Card(
@@ -99,32 +73,17 @@ class StrengthTrainingScreen extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Icon(
-                    Icons.check_circle,
-                    color: Color(0xFF33724B),
-                  ), // Green check icon
+                  const Icon(Icons.check_circle, color: Color(0xFF33724B)),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: Text(
-                      title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
+                    child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   ),
                 ],
               ),
               const SizedBox(height: 5),
-              Text(
-                description,
-                style: const TextStyle(fontSize: 14, color: Colors.black87),
-              ),
+              Text(description, style: const TextStyle(fontSize: 14, color: Colors.black87)),
               const SizedBox(height: 5),
-              Text(
-                instructions,
-                style: const TextStyle(fontSize: 13, color: Colors.black54),
-              ),
+              Text(instructions, style: const TextStyle(fontSize: 13, color: Colors.black54)),
             ],
           ),
         ),
