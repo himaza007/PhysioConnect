@@ -1,16 +1,17 @@
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 
 class MuscleSelectionPage extends StatefulWidget {
+  final String bodyPart;
   final List<String> muscles;
+  final bool isDarkMode;
   final Function(List<String>) onSelectionComplete;
 
   const MuscleSelectionPage({
-    super.key,  // 
+    super.key,
+    required this.bodyPart,
     required this.muscles,
+    required this.isDarkMode,
     required this.onSelectionComplete,
-    required String bodyPart,
-    required bool isDarkMode,
   });
 
   @override
@@ -43,11 +44,12 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
         backgroundColor: const Color(0xFF1F5F3A),
         elevation: 5,
         title: Text(
-          'Select Muscles',
-          style: GoogleFonts.montserrat(
+          'Select Muscles (${widget.bodyPart})',
+          style: const TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w600,
             color: Colors.white,
+            fontFamily: 'Montserrat',
           ),
         ),
         centerTitle: true,
@@ -57,17 +59,10 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
         child: Column(
           children: [
             Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 15,
-                  mainAxisSpacing: 20,
-                  childAspectRatio: 0.85,
-                ),
+              child: ListView.separated(
                 itemCount: widget.muscles.length,
-                itemBuilder: (context, index) {
-                  return _buildMuscleGridItem(widget.muscles[index]);
-                },
+                separatorBuilder: (_, __) => const SizedBox(height: 20),
+                itemBuilder: (context, index) => _buildMuscleTile(widget.muscles[index]),
               ),
             ),
             const SizedBox(height: 10),
@@ -77,7 +72,7 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
                   backgroundColor: const Color(0xFF1F5F3D),
                   padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 30),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  elevation: 8,
+                  elevation: 5,
                 ),
                 onPressed: finalizeSelection,
                 child: const Text(
@@ -92,8 +87,8 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
     );
   }
 
-  Widget _buildMuscleGridItem(String muscle) {
-    final Map<String, String> muscleImages = {
+  Widget _buildMuscleTile(String muscle) {
+    final muscleImages = {
       "Clavicular Head of Sternocleidomastoid Muscle": "1.avif",
       "Depressor Anguli Oris Muscle": "2.avif",
       "Depressor Labii Inferioris Muscle": "3.avif",
@@ -116,76 +111,59 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
       "Sternal Head of Sternocleidomastoid Muscle": "20.avif",
       "Temporalis Muscle": "21.avif",
       "Zygomaticus Major Muscle": "22.avif",
-      "Zygomaticus Minor Muscle": "23.avif"
+      "Zygomaticus Minor Muscle": "23.avif",
     };
 
     String imagePath = 'assets/body_parts/head/muscles/${muscleImages[muscle] ?? "placeholder.png"}';
 
-    return GestureDetector(
-      onTap: () => toggleMuscleSelection(muscle),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        decoration: BoxDecoration(
-          color: selectedMuscles.contains(muscle) ? const Color(0xFF1A8D50) : Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 12,
-              spreadRadius: 2,
-              offset: const Offset(4, 4),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: selectedMuscles.contains(muscle) ? const Color(0xFF1A8D50) : Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(2, 4),
+          )
+        ],
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.asset(
+              imagePath,
+              width: 90,
+              height: 90,
+              fit: BoxFit.contain,
             ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              flex: 3,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
-                child: Image.asset(
-                  imagePath,
-                  fit: BoxFit.contain,
-                  width: double.infinity,
-                ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Text(
+              muscle,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Poppins',
+                color: selectedMuscles.contains(muscle) ? Colors.white : const Color(0xFF083D10),
               ),
             ),
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      muscle,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.roboto(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: selectedMuscles.contains(muscle) ? Colors.white : Colors.black,
-                      ),
-                    ),
-                    Transform.scale(
-                      scale: 1.3,
-                      child: Checkbox(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                        checkColor: Colors.white,
-                        activeColor: const Color(0xFF1F5F3D),
-                        value: selectedMuscles.contains(muscle),
-                        onChanged: (bool? value) {
-                          toggleMuscleSelection(muscle);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+          ),
+          Transform.scale(
+            scale: 1.3,
+            child: Checkbox(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+              checkColor: Colors.white,
+              activeColor: const Color(0xFF1F5F3D),
+              value: selectedMuscles.contains(muscle),
+              onChanged: (_) => toggleMuscleSelection(muscle),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

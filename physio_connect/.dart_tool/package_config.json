@@ -45,25 +45,13 @@
     },
     {
       "name": "flutter",
-      "rootUri": "file:///Users/himazazahara/flutter/packages/flutter",
+      "rootUri": "file:///Users/himazazahara/Downloads/flutter/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
     {
-      "name": "flutter_lints",
-      "rootUri": "file:///Users/himazazahara/.pub-cache/hosted/pub.dev/flutter_lints-5.0.0",
-      "packageUri": "lib/",
-      "languageVersion": "3.5"
-    },
-    {
-      "name": "flutter_svg",
-      "rootUri": "file:///Users/himazazahara/.pub-cache/hosted/pub.dev/flutter_svg-1.1.6",
-      "packageUri": "lib/",
-      "languageVersion": "2.17"
-    },
-    {
       "name": "flutter_test",
-      "rootUri": "file:///Users/himazazahara/flutter/packages/flutter_test",
+      "rootUri": "file:///Users/himazazahara/Downloads/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
@@ -84,12 +72,6 @@
       "rootUri": "file:///Users/himazazahara/.pub-cache/hosted/pub.dev/leak_tracker_testing-3.0.1",
       "packageUri": "lib/",
       "languageVersion": "3.2"
-    },
-    {
-      "name": "lints",
-      "rootUri": "file:///Users/himazazahara/.pub-cache/hosted/pub.dev/lints-5.1.1",
-      "packageUri": "lib/",
-      "languageVersion": "3.6"
     },
     {
       "name": "matcher",
@@ -116,26 +98,8 @@
       "languageVersion": "3.4"
     },
     {
-      "name": "path_drawing",
-      "rootUri": "file:///Users/himazazahara/.pub-cache/hosted/pub.dev/path_drawing-1.0.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "path_parsing",
-      "rootUri": "file:///Users/himazazahara/.pub-cache/hosted/pub.dev/path_parsing-1.1.0",
-      "packageUri": "lib/",
-      "languageVersion": "3.3"
-    },
-    {
-      "name": "petitparser",
-      "rootUri": "file:///Users/himazazahara/.pub-cache/hosted/pub.dev/petitparser-6.1.0",
-      "packageUri": "lib/",
-      "languageVersion": "3.5"
-    },
-    {
       "name": "sky_engine",
-      "rootUri": "file:///Users/himazazahara/flutter/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///Users/himazazahara/Downloads/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
@@ -188,22 +152,16 @@
       "languageVersion": "3.3"
     },
     {
-      "name": "xml",
-      "rootUri": "file:///Users/himazazahara/.pub-cache/hosted/pub.dev/xml-6.5.0",
-      "packageUri": "lib/",
-      "languageVersion": "3.2"
-    },
-    {
-      "name": "my_first_app",
+      "name": "physio_connect",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "2.19"
     }
   ],
-  "generated": "2025-03-03T09:46:57.992880Z",
+  "generated": "2025-03-23T11:03:24.344112Z",
   "generator": "pub",
-  "generatorVersion": "3.7.0",
-  "flutterRoot": "file:///Users/himazazahara/flutter",
-  "flutterVersion": "3.29.0",
+  "generatorVersion": "3.7.2",
+  "flutterRoot": "file:///Users/himazazahara/Downloads/flutter",
+  "flutterVersion": "3.29.2",
   "pubCache": "file:///Users/himazazahara/.pub-cache"
 }
