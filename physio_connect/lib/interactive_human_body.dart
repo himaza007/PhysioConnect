@@ -5,8 +5,7 @@ class InteractiveHumanBody extends StatefulWidget {
   final VoidCallback toggleTheme;
   final bool isDarkMode;
 
-  const InteractiveHumanBody({Key? key, required this.toggleTheme, required this.isDarkMode})
-      : super(key: key);
+  const InteractiveHumanBody({super.key, required this.toggleTheme, required this.isDarkMode});
 
   @override
   State<InteractiveHumanBody> createState() => _InteractiveHumanBodyState();
@@ -33,7 +32,6 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> {
 
   void proceedToMuscleSelection(String bodyPart) {
     List<String> muscles = _muscles[bodyPart] ?? [];
-
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -42,7 +40,7 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> {
           muscles: muscles,
           isDarkMode: widget.isDarkMode,
           onSelectionComplete: (selectedMuscles) {
-            print("Muscle selection completed for $bodyPart: $selectedMuscles");
+            debugPrint("Muscle selection completed for $bodyPart: $selectedMuscles");
           },
         ),
       ),
@@ -67,11 +65,17 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> {
     List<String> bodyParts = _bodyParts[currentView] ?? [];
 
     return Scaffold(
+      backgroundColor: const Color(0xFF06130D),
       appBar: AppBar(
-        backgroundColor: Color(0xFF33724B),
-        title: Text(
+        backgroundColor: const Color(0xFF1F5F3A),
+        title: const Text(
           'PhysioConnect: Human Body',
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.white),
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+            color: Colors.white,
+            fontFamily: 'Montserrat',
+          ),
         ),
         centerTitle: true,
         actions: [
@@ -83,21 +87,23 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20), // Increased spacing
+          const SizedBox(height: 16),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildModernButton("Front", () => changeView('front')),
-                SizedBox(width: 20),
+                const SizedBox(width: 12),
                 _buildModernButton("Back", () => changeView('back')),
-                SizedBox(width: 20),
+                const SizedBox(width: 12),
                 _buildModernButton("Side", () => changeView('side_right')),
-                SizedBox(width: 20),
+                const SizedBox(width: 12),
                 _buildModernButton(isMale ? "Female View" : "Male View", toggleGender),
               ],
             ),
           ),
+          const SizedBox(height: 18),
           Expanded(
             child: Row(
               children: [
@@ -105,7 +111,14 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> {
                 Expanded(
                   flex: 3,
                   child: Center(
-                    child: Image.asset(imagePath, width: 420),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Image.asset(
+                        imagePath,
+                        width: MediaQuery.of(context).size.width * 0.55,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -120,11 +133,20 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFF33724B),
-        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+        backgroundColor: const Color(0xFF33724B),
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 3,
       ),
-      child: Text(text, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w600,
+          fontFamily: 'Poppins',
+          color: Colors.white,
+        ),
+      ),
     );
   }
 
@@ -132,10 +154,11 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> {
     return Expanded(
       flex: 1,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: parts.map((part) => _buildBodyPartButton(part)).toList(),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+        child: ListView.separated(
+          itemCount: parts.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 12),
+          itemBuilder: (context, index) => _buildBodyPartButton(parts[index]),
         ),
       ),
     );
@@ -143,15 +166,24 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> {
 
   Widget _buildBodyPartButton(String text) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 2),
       child: ElevatedButton(
         onPressed: () => proceedToMuscleSelection(text),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color(0xFF33724B),
-          padding: EdgeInsets.symmetric(vertical: 14),
+          backgroundColor: const Color(0xFF33724B),
+          padding: const EdgeInsets.symmetric(vertical: 14),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          elevation: 2,
         ),
-        child: Text(text, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'Poppins',
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }
@@ -185,7 +217,7 @@ class _InteractiveHumanBodyState extends State<InteractiveHumanBody> {
       'Sternal Head of Sternocleidomastoid Muscle',
       'Temporalis Muscle',
       'Zygomaticus Major Muscle',
-      'Zygomaticus Minor Muscle'
+      'Zygomaticus Minor Muscle',
     ],
   };
 }
