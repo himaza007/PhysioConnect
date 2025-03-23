@@ -1,41 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class RehabilitationExercisesScreen extends StatelessWidget {
+class RehabilitationExercisesScreen extends StatefulWidget {
   const RehabilitationExercisesScreen({super.key});
+
+  @override
+  State<RehabilitationExercisesScreen> createState() =>
+      _RehabilitationExercisesScreenState();
+}
+
+class _RehabilitationExercisesScreenState
+    extends State<RehabilitationExercisesScreen> {
+  List<dynamic> _exercises = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchExercises();
+  }
+
+  Future<void> fetchExercises() async {
+    final uri = Uri.parse("http://localhost:5000/api/rehabilitation-exercises"); // Replace localhost with IP for real device
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      setState(() {
+        _exercises = json.decode(response.body);
+      });
+    } else {
+      print("Failed to fetch rehabilitation exercises");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true, // Allows transparency effect
+      extendBodyBehindAppBar: true,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(65), // Adjusted AppBar height
+        preferredSize: const Size.fromHeight(65),
         child: AppBar(
-          backgroundColor: Colors.transparent, // Fully transparent AppBar
-          elevation: 0, // Removes shadow
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           centerTitle: true,
           title: const Text(
             "Rehabilitation Exercises",
             style: TextStyle(
-              fontSize: 20, // Adjusted font size
+              fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF33724B), // Green text (Midnight Teal)
+              color: Color(0xFF33724B),
             ),
           ),
-          iconTheme: const IconThemeData(
-              color: Color(0xFF33724B)), // Green back button
+          iconTheme: const IconThemeData(color: Color(0xFF33724B)),
         ),
       ),
       body: Stack(
         children: [
-          // Background Gradient (optional for better readability)
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.white.withOpacity(0.1), // Light Transparent White
-                  Colors.white.withOpacity(0.05), // Fading White
+                  Colors.white.withOpacity(0.1),
+                  Colors.white.withOpacity(0.05),
                 ],
               ),
             ),
@@ -43,7 +71,7 @@ class RehabilitationExercisesScreen extends StatelessWidget {
           SafeArea(
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+              const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -52,7 +80,7 @@ class RehabilitationExercisesScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF33724B), // Midnight Teal
+                      color: Color(0xFF33724B),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -62,40 +90,17 @@ class RehabilitationExercisesScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 15),
                   Expanded(
-                    child: ListView(
-                      padding: EdgeInsets.zero,
-                      children: [
-                        _buildRehabExerciseCard(
-                          title: "Range of Motion Exercises",
-                          description:
-                              "Gentle movements that improve joint flexibility and mobility after an injury.",
-                          icon: Icons.open_in_full,
-                        ),
-                        _buildRehabExerciseCard(
-                          title: "Strengthening Exercises",
-                          description:
-                              "Focused movements to rebuild muscle strength in the affected area.",
-                          icon: Icons.fitness_center,
-                        ),
-                        _buildRehabExerciseCard(
-                          title: "Balance & Coordination Drills",
-                          description:
-                              "Exercises that help restore stability and prevent future injuries.",
-                          icon: Icons.accessibility_new,
-                        ),
-                        _buildRehabExerciseCard(
-                          title: "Stretching & Flexibility Exercises",
-                          description:
-                              "Improves muscle elasticity and reduces tightness post-injury.",
-                          icon: Icons.directions_run,
-                        ),
-                        _buildRehabExerciseCard(
-                          title: "Low-Impact Cardiovascular Training",
-                          description:
-                              "Activities like cycling or swimming to maintain fitness without stressing injuries.",
-                          icon: Icons.pedal_bike,
-                        ),
-                      ],
+                    child: _exercises.isEmpty
+                        ? const Center(child: CircularProgressIndicator())
+                        : ListView.builder(
+                      itemCount: _exercises.length,
+                      itemBuilder: (context, index) {
+                        final exercise = _exercises[index];
+                        return _buildRehabExerciseCard(
+                          title: exercise['title'],
+                          description: exercise['description'],
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -110,21 +115,18 @@ class RehabilitationExercisesScreen extends StatelessWidget {
   Widget _buildRehabExerciseCard({
     required String title,
     required String description,
-    required IconData icon,
   }) {
     return Card(
-      color: Colors.white.withOpacity(0.9), // Slight transparency for cards
+      color: Colors.white.withOpacity(0.9),
       margin: const EdgeInsets.symmetric(vertical: 6),
-      elevation: 2, // Lowered elevation for a smoother look
+      elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        leading: Icon(icon, color: const Color(0xFF33724B)), // Green icon
         title: Text(
           title,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
         ),
         subtitle: Text(description, style: const TextStyle(fontSize: 13)),
-        // Removed the trailing `>` icon here
       ),
     );
   }

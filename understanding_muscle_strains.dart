@@ -1,49 +1,75 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class UnderstandingMuscleStrainsScreen extends StatelessWidget {
+class UnderstandingMuscleStrainsScreen extends StatefulWidget {
   const UnderstandingMuscleStrainsScreen({super.key});
+
+  @override
+  State<UnderstandingMuscleStrainsScreen> createState() => _UnderstandingMuscleStrainsScreenState();
+}
+
+class _UnderstandingMuscleStrainsScreenState extends State<UnderstandingMuscleStrainsScreen> {
+  List<dynamic> _strains = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchStrains();
+  }
+
+  Future<void> fetchStrains() async {
+    final uri = Uri.parse("http://localhost:5000/api/strains"); // Use your IP for real device
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      setState(() {
+        _strains = json.decode(response.body);
+      });
+    } else {
+      // Handle error
+      print("Failed to fetch data");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true, // Allows transparency effect
+      extendBodyBehindAppBar: true,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(65), // Adjusted AppBar height
+        preferredSize: const Size.fromHeight(65),
         child: AppBar(
-          backgroundColor: Colors.transparent, // Fully transparent AppBar
-          elevation: 0, // Removes shadow
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           centerTitle: true,
           title: const Text(
             "Understanding Muscle Strains",
             style: TextStyle(
-              fontSize: 20, // Adjusted font size
+              fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF33724B), // Green text (Midnight Teal)
+              color: Color(0xFF33724B),
             ),
           ),
-          iconTheme: const IconThemeData(
-              color: Color(0xFF33724B)), // Green back button
+          iconTheme: const IconThemeData(color: Color(0xFF33724B)),
         ),
       ),
       body: Stack(
         children: [
-          // Background Gradient (optional for better readability)
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.white.withOpacity(0.1), // Light Transparent White
-                  Colors.white.withOpacity(0.05), // Fading White
+                  Colors.white.withOpacity(0.1),
+                  Colors.white.withOpacity(0.05),
                 ],
               ),
             ),
           ),
           SafeArea(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -52,50 +78,27 @@ class UnderstandingMuscleStrainsScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF33724B), // Midnight Teal
+                      color: Color(0xFF33724B),
                     ),
                   ),
                   const SizedBox(height: 10),
                   const Text(
-                    "Muscle strains occur when muscle fibers are overstretched or torn due to excessive force. Strains can range from mild discomfort to severe tears that require medical intervention. Below are the types of muscle strains and how to treat them effectively.",
+                    "Learn about the types of muscle strains and treatments.",
                     style: TextStyle(fontSize: 15, color: Colors.black87),
                   ),
                   const SizedBox(height: 15),
                   Expanded(
-                    child: ListView(
-                      padding: EdgeInsets.zero,
-                      children: [
-                        _buildMuscleStrainCard(
-                          title: "Grade 1 Strain (Mild)",
-                          description:
-                              "A small number of muscle fibers are overstretched, causing mild pain but no significant loss of strength.",
-                          icon: Icons.looks_one,
-                        ),
-                        _buildMuscleStrainCard(
-                          title: "Grade 2 Strain (Moderate)",
-                          description:
-                              "More muscle fibers are damaged, leading to swelling, bruising, and partial loss of strength.",
-                          icon: Icons.looks_two,
-                        ),
-                        _buildMuscleStrainCard(
-                          title: "Grade 3 Strain (Severe)",
-                          description:
-                              "A complete muscle tear, causing intense pain, loss of function, and possible surgery requirement.",
-                          icon: Icons.looks_3,
-                        ),
-                        _buildMuscleStrainCard(
-                          title: "R.I.C.E Treatment",
-                          description:
-                              "Rest, Ice, Compression, and Elevation—essential first aid for muscle strains.",
-                          icon: Icons.health_and_safety,
-                        ),
-                        _buildMuscleStrainCard(
-                          title: "Rehabilitation & Strengthening",
-                          description:
-                              "Gradual stretching, physical therapy, and strengthening exercises to aid recovery.",
-                          icon: Icons.fitness_center,
-                        ),
-                      ],
+                    child: _strains.isEmpty
+                        ? const Center(child: CircularProgressIndicator())
+                        : ListView.builder(
+                      itemCount: _strains.length,
+                      itemBuilder: (context, index) {
+                        final strain = _strains[index];
+                        return _buildStrainCard(
+                          title: strain['title'],
+                          description: strain['description'],
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -107,24 +110,18 @@ class UnderstandingMuscleStrainsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMuscleStrainCard({
-    required String title,
-    required String description,
-    required IconData icon,
-  }) {
+  Widget _buildStrainCard({required String title, required String description}) {
     return Card(
-      color: Colors.white.withOpacity(0.9), // Slight transparency for cards
+      color: Colors.white.withOpacity(0.9),
       margin: const EdgeInsets.symmetric(vertical: 6),
-      elevation: 2, // Lowered elevation for a smoother look
+      elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        leading: Icon(icon, color: const Color(0xFF33724B)), // Green icon
         title: Text(
           title,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
         ),
         subtitle: Text(description, style: const TextStyle(fontSize: 13)),
-        // Removed the trailing `>` icon here
       ),
     );
   }

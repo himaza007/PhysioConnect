@@ -1,49 +1,76 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class EffectiveStretchingTechniquesScreen extends StatelessWidget {
+class EffectiveStretchingTechniquesScreen extends StatefulWidget {
   const EffectiveStretchingTechniquesScreen({super.key});
+
+  @override
+  State<EffectiveStretchingTechniquesScreen> createState() =>
+      _EffectiveStretchingTechniquesScreenState();
+}
+
+class _EffectiveStretchingTechniquesScreenState
+    extends State<EffectiveStretchingTechniquesScreen> {
+  List<dynamic> _techniques = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchTechniques();
+  }
+
+  Future<void> fetchTechniques() async {
+    final uri = Uri.parse("http://localhost:5000/api/stretching-techniques"); // Use IP for real device
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      setState(() {
+        _techniques = json.decode(response.body);
+      });
+    } else {
+      print("Failed to fetch techniques");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true, // Allows transparency effect
+      extendBodyBehindAppBar: true,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(65), // Adjusted AppBar height
+        preferredSize: const Size.fromHeight(65),
         child: AppBar(
-          backgroundColor: Colors.transparent, // Fully transparent AppBar
-          elevation: 0, // Removes shadow
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           centerTitle: true,
           title: const Text(
             "Effective Stretching Techniques",
             style: TextStyle(
-              fontSize: 20, // Adjusted font size
+              fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF33724B), // Green text (Midnight Teal)
+              color: Color(0xFF33724B),
             ),
           ),
-          iconTheme: const IconThemeData(
-              color: Color(0xFF33724B)), // Green back button
+          iconTheme: const IconThemeData(color: Color(0xFF33724B)),
         ),
       ),
       body: Stack(
         children: [
-          // Background Gradient (optional for better readability)
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.white.withOpacity(0.1), // Light Transparent White
-                  Colors.white.withOpacity(0.05), // Fading White
+                  Colors.white.withOpacity(0.1),
+                  Colors.white.withOpacity(0.05),
                 ],
               ),
             ),
           ),
           SafeArea(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -52,7 +79,7 @@ class EffectiveStretchingTechniquesScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF33724B), // Midnight Teal
+                      color: Color(0xFF33724B),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -62,40 +89,17 @@ class EffectiveStretchingTechniquesScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 15),
                   Expanded(
-                    child: ListView(
-                      padding: EdgeInsets.zero,
-                      children: [
-                        _buildStretchingCard(
-                          title: "Static Stretching",
-                          description:
-                              "Holding a stretch for a prolonged period to increase flexibility and relax muscles.",
-                          icon: Icons.accessibility,
-                        ),
-                        _buildStretchingCard(
-                          title: "Dynamic Stretching",
-                          description:
-                              "Involves controlled movements to improve range of motion and activate muscles.",
-                          icon: Icons.directions_walk,
-                        ),
-                        _buildStretchingCard(
-                          title: "PNF Stretching",
-                          description:
-                              "A technique that combines stretching and contracting the muscle to enhance flexibility.",
-                          icon: Icons.fitness_center,
-                        ),
-                        _buildStretchingCard(
-                          title: "Ballistic Stretching",
-                          description:
-                              "Uses bouncing movements to stretch muscles beyond their normal range.",
-                          icon: Icons.sports_gymnastics,
-                        ),
-                        _buildStretchingCard(
-                          title: "Active Isolated Stretching",
-                          description:
-                              "Short, repeated stretches targeting specific muscle groups to improve mobility.",
-                          icon: Icons.accessibility_new,
-                        ),
-                      ],
+                    child: _techniques.isEmpty
+                        ? const Center(child: CircularProgressIndicator())
+                        : ListView.builder(
+                      itemCount: _techniques.length,
+                      itemBuilder: (context, index) {
+                        final technique = _techniques[index];
+                        return _buildStretchingCard(
+                          title: technique['title'],
+                          description: technique['description'],
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -110,21 +114,18 @@ class EffectiveStretchingTechniquesScreen extends StatelessWidget {
   Widget _buildStretchingCard({
     required String title,
     required String description,
-    required IconData icon,
   }) {
     return Card(
-      color: Colors.white.withOpacity(0.9), // Slight transparency for cards
+      color: Colors.white.withOpacity(0.9),
       margin: const EdgeInsets.symmetric(vertical: 6),
-      elevation: 2, // Lowered elevation for a smoother look
+      elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        leading: Icon(icon, color: const Color(0xFF33724B)), // Green icon
         title: Text(
           title,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
         ),
         subtitle: Text(description, style: const TextStyle(fontSize: 13)),
-        // Removed the trailing `>` icon here
       ),
     );
   }

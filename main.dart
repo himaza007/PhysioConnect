@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'educational_resources.dart'; // Import the new screen
+import 'customized_injury_remedies.dart'; // Import the new screen
 
 void main() {
   runApp(const MyApp());
@@ -17,8 +18,7 @@ class MyApp extends StatelessWidget {
         primaryColor: const Color(0xFF33724B), // Midnight Teal
         scaffoldBackgroundColor: const Color(0xFFEAF7FF), // Alice Blue
       ),
-      home:
-          const EducationalResourcesScreen(), // Automatically loads this page
+      home: const EducationalResourcesScreen(), // Automatically loads this page
     );
   }
 }

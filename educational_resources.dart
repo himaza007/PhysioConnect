@@ -31,7 +31,7 @@ class EducationalResourcesScreen extends StatelessWidget {
           title: const Text(
             "Educational Resources",
             style: TextStyle(
-              fontSize: 20, // Adjusted font size
+              fontSize: 22, // Adjusted font size
               fontWeight: FontWeight.bold,
               color: Color(0xFF33724B), // Green text (Midnight Teal)
             ),
