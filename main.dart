@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         primaryColor: const Color(0xFF33724B), // Midnight Teal
         scaffoldBackgroundColor: const Color(0xFFEAF7FF), // Alice Blue
       ),
-      home: const CustomExercisePlansScreen(), // Automatically loads this page
+      home: const NearbyFacilitiesScreen(), // Automatically loads this page
     );
   }
 }
