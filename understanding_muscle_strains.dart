@@ -6,10 +6,12 @@ class UnderstandingMuscleStrainsScreen extends StatefulWidget {
   const UnderstandingMuscleStrainsScreen({super.key});
 
   @override
-  State<UnderstandingMuscleStrainsScreen> createState() => _UnderstandingMuscleStrainsScreenState();
+  State<UnderstandingMuscleStrainsScreen> createState() =>
+      _UnderstandingMuscleStrainsScreenState();
 }
 
-class _UnderstandingMuscleStrainsScreenState extends State<UnderstandingMuscleStrainsScreen> {
+class _UnderstandingMuscleStrainsScreenState
+    extends State<UnderstandingMuscleStrainsScreen> {
   List<dynamic> _strains = [];
 
   @override
@@ -19,7 +21,8 @@ class _UnderstandingMuscleStrainsScreenState extends State<UnderstandingMuscleSt
   }
 
   Future<void> fetchStrains() async {
-    final uri = Uri.parse("http://localhost:5000/api/strains"); // Use your IP for real device
+    final uri = Uri.parse(
+        "http://192.168.8.140:5000/api/strains"); // Use your IP for real device
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
@@ -69,7 +72,8 @@ class _UnderstandingMuscleStrainsScreenState extends State<UnderstandingMuscleSt
           ),
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -91,15 +95,15 @@ class _UnderstandingMuscleStrainsScreenState extends State<UnderstandingMuscleSt
                     child: _strains.isEmpty
                         ? const Center(child: CircularProgressIndicator())
                         : ListView.builder(
-                      itemCount: _strains.length,
-                      itemBuilder: (context, index) {
-                        final strain = _strains[index];
-                        return _buildStrainCard(
-                          title: strain['title'],
-                          description: strain['description'],
-                        );
-                      },
-                    ),
+                            itemCount: _strains.length,
+                            itemBuilder: (context, index) {
+                              final strain = _strains[index];
+                              return _buildStrainCard(
+                                title: strain['title'],
+                                description: strain['description'],
+                              );
+                            },
+                          ),
                   ),
                 ],
               ),
@@ -110,7 +114,8 @@ class _UnderstandingMuscleStrainsScreenState extends State<UnderstandingMuscleSt
     );
   }
 
-  Widget _buildStrainCard({required String title, required String description}) {
+  Widget _buildStrainCard(
+      {required String title, required String description}) {
     return Card(
       color: Colors.white.withOpacity(0.9),
       margin: const EdgeInsets.symmetric(vertical: 6),

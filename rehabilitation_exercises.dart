@@ -21,7 +21,8 @@ class _RehabilitationExercisesScreenState
   }
 
   Future<void> fetchExercises() async {
-    final uri = Uri.parse("http://localhost:5000/api/rehabilitation-exercises"); // Replace localhost with IP for real device
+    final uri = Uri.parse(
+        "http://192.168.8.140:5000/api/rehabilitation-exercises"); // Replace localhost with IP for real device
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
@@ -71,7 +72,7 @@ class _RehabilitationExercisesScreenState
           SafeArea(
             child: Padding(
               padding:
-              const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -93,15 +94,15 @@ class _RehabilitationExercisesScreenState
                     child: _exercises.isEmpty
                         ? const Center(child: CircularProgressIndicator())
                         : ListView.builder(
-                      itemCount: _exercises.length,
-                      itemBuilder: (context, index) {
-                        final exercise = _exercises[index];
-                        return _buildRehabExerciseCard(
-                          title: exercise['title'],
-                          description: exercise['description'],
-                        );
-                      },
-                    ),
+                            itemCount: _exercises.length,
+                            itemBuilder: (context, index) {
+                              final exercise = _exercises[index];
+                              return _buildRehabExerciseCard(
+                                title: exercise['title'],
+                                description: exercise['description'],
+                              );
+                            },
+                          ),
                   ),
                 ],
               ),

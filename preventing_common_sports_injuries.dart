@@ -21,7 +21,8 @@ class _PreventingCommonSportsInjuriesScreenState
   }
 
   Future<void> fetchPreventionTips() async {
-    final uri = Uri.parse("http://localhost:5000/api/sports-injury-prevention"); // Replace with IP if on real device
+    final uri = Uri.parse(
+        "http://192.168.8.140:5000/api/sports-injury-prevention"); // Replace with IP if on real device
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
@@ -71,7 +72,7 @@ class _PreventingCommonSportsInjuriesScreenState
           SafeArea(
             child: Padding(
               padding:
-              const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -93,15 +94,15 @@ class _PreventingCommonSportsInjuriesScreenState
                     child: _preventions.isEmpty
                         ? const Center(child: CircularProgressIndicator())
                         : ListView.builder(
-                      itemCount: _preventions.length,
-                      itemBuilder: (context, index) {
-                        final tip = _preventions[index];
-                        return _buildInjuryPreventionCard(
-                          title: tip['title'],
-                          description: tip['description'],
-                        );
-                      },
-                    ),
+                            itemCount: _preventions.length,
+                            itemBuilder: (context, index) {
+                              final tip = _preventions[index];
+                              return _buildInjuryPreventionCard(
+                                title: tip['title'],
+                                description: tip['description'],
+                              );
+                            },
+                          ),
                   ),
                 ],
               ),

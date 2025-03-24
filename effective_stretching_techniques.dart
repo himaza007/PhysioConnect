@@ -21,7 +21,8 @@ class _EffectiveStretchingTechniquesScreenState
   }
 
   Future<void> fetchTechniques() async {
-    final uri = Uri.parse("http://localhost:5000/api/stretching-techniques"); // Use IP for real device
+    final uri = Uri.parse(
+        "http://192.168.8.140:5000/api/stretching-techniques"); // Use IP for real device
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
@@ -70,7 +71,8 @@ class _EffectiveStretchingTechniquesScreenState
           ),
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -92,15 +94,15 @@ class _EffectiveStretchingTechniquesScreenState
                     child: _techniques.isEmpty
                         ? const Center(child: CircularProgressIndicator())
                         : ListView.builder(
-                      itemCount: _techniques.length,
-                      itemBuilder: (context, index) {
-                        final technique = _techniques[index];
-                        return _buildStretchingCard(
-                          title: technique['title'],
-                          description: technique['description'],
-                        );
-                      },
-                    ),
+                            itemCount: _techniques.length,
+                            itemBuilder: (context, index) {
+                              final technique = _techniques[index];
+                              return _buildStretchingCard(
+                                title: technique['title'],
+                                description: technique['description'],
+                              );
+                            },
+                          ),
                   ),
                 ],
               ),
