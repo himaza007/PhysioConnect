@@ -21,8 +21,8 @@ class _CustomizedInjuryRemediesScreenState
   }
 
   Future<void> fetchRemedies() async {
-    final response =
-        await http.get(Uri.parse('http://localhost:5000/api/custom-remedies'));
+    final response = await http
+        .get(Uri.parse('http://192.168.8.140:5000/api/custom-remedies'));
     if (response.statusCode == 200) {
       setState(() {
         remedies = json.decode(response.body);
@@ -31,8 +31,8 @@ class _CustomizedInjuryRemediesScreenState
   }
 
   void _handleRemedyTap(int remedyId, String remedyTitle) async {
-    final response = await http
-        .get(Uri.parse('http://localhost:5000/api/muscle-groups/$remedyId'));
+    final response = await http.get(
+        Uri.parse('http://192.168.8.140:5000/api/muscle-groups/$remedyId'));
     if (response.statusCode == 200) {
       List groups = json.decode(response.body);
       showDialog(
@@ -65,8 +65,8 @@ class _CustomizedInjuryRemediesScreenState
   }
 
   void _showInstructions(int muscleGroupId, String name) async {
-    final response = await http.get(
-        Uri.parse('http://localhost:5000/api/remedy-details/$muscleGroupId'));
+    final response = await http.get(Uri.parse(
+        'http://192.168.8.140:5000/api/remedy-details/$muscleGroupId'));
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       showDialog(

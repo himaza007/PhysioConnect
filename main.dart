@@ -18,8 +18,7 @@ class MyApp extends StatelessWidget {
         primaryColor: const Color(0xFF33724B), // Midnight Teal
         scaffoldBackgroundColor: const Color(0xFFEAF7FF), // Alice Blue
       ),
-      home:
-          const CustomizedInjuryRemediesScreen(), // Automatically loads this page
+      home: const EducationalResourcesScreen(), // Automatically loads this page
     );
   }
 }
