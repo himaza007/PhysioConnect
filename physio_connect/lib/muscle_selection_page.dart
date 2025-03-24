@@ -1,17 +1,16 @@
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 
 class MuscleSelectionPage extends StatefulWidget {
-  final List<String> muscles;
+  final String bodyPart;
+  final bool isDarkMode;
   final Function(List<String>) onSelectionComplete;
 
   const MuscleSelectionPage({
-    super.key,  // 
-    required this.muscles,
+    Key? key,
+    required this.bodyPart,
+    required this.isDarkMode,
     required this.onSelectionComplete,
-    required String bodyPart,
-    required bool isDarkMode,
-  });
+  }) : super(key: key);
 
   @override
   State<MuscleSelectionPage> createState() => _MuscleSelectionPageState();
@@ -19,6 +18,94 @@ class MuscleSelectionPage extends StatefulWidget {
 
 class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
   List<String> selectedMuscles = [];
+
+  final Map<String, List<String>> muscleData = {
+    "Head": [
+      "Clavicular Head of Sternocleidomastoid Muscle",
+      "Depressor Anguli Oris Muscle",
+      "Depressor Labii Inferioris Muscle",
+      "Frontal Belly of Epicranius Muscle (Frontalis Muscle)",
+      "Galea Aponeurotica",
+      "Levator Labii Superioris Alaeque Nasi Muscle",
+      "Levator Labii Superioris Muscle",
+      "Masseter Muscle",
+      "Mentalis Muscle",
+      "Nasalis Muscle",
+      "Occipital Belly of Epicranius Muscle (Occipitalis Muscle)",
+      "Omohyoid Muscle",
+      "Orbicularis Oculi Muscle",
+      "Orbicularis Oris Muscle",
+      "Platysma Muscle",
+      "Risorius Muscle",
+      "Scalene Muscles",
+      "Semispinalis Capitis Muscle",
+      "Splenius Capitis Muscle",
+      "Sternal Head of Sternocleidomastoid Muscle",
+      "Temporalis Muscle",
+      "Zygomaticus Major Muscle",
+      "Zygomaticus Minor Muscle",
+    ],
+    "Chest": [
+      "Pectoralis Major",
+      "Pectoralis Minor",
+      "Serratus Anterior",
+      "Subclavius",
+      "Intercostal Muscles",
+      "Costal Cartilage",
+      "Manubrium",
+      "Sternal Angle",
+      "Xiphoid Process",
+      "Thoracic Diaphragm",
+      "External Oblique (Upper)",
+    ],
+    "Abdomen": [
+      "Rectus Abdominis",
+      "External Oblique",
+      "Internal Oblique",
+      "Transversus Abdominis",
+    ],
+    "Arms": [
+      "Biceps Brachii",
+      "Triceps Brachii",
+      "Brachialis",
+      "Coracobrachialis",
+      "Deltoid",
+      "Anconeus",
+      "Flexor Carpi Radialis",
+      "Palmaris Longus",
+      "Flexor Carpi Ulnaris",
+      "Flexor Digitorum Superficialis",
+      "Flexor Digitorum Profundus",
+      "Extensor Carpi Radialis",
+      "Extensor Digitorum",
+      "Extensor Carpi Ulnaris",
+      "Pronator Teres",
+      "Supinator",
+      "Abductor Pollicis Longus",
+      "Extensor Pollicis Brevis",
+      "Extensor Indicis",
+      "Thenar Muscles",
+      "Hypothenar Muscles",
+      "Brachioradialis",
+      "Subscapularis",
+      "Supraspinatus",
+      "Infraspinatus",
+      "Teres Major",
+      "Teres Minor",
+    ],
+  };
+
+  String getMuscleImagePath(String bodyPart, int index) {
+    final folderMap = {
+      "Head": "Head",
+      "Chest": "Area2",
+      "Abdomen": "abdomen",
+      "Arms": "Area4",
+    };
+
+    final folder = folderMap[bodyPart] ?? "Head";
+    return 'assets/body_parts/$folder/muscles/${index + 1}.avif';
+  }
 
   void toggleMuscleSelection(String muscle) {
     setState(() {
@@ -37,36 +124,33 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final muscles = muscleData[widget.bodyPart] ?? [];
+
     return Scaffold(
       backgroundColor: const Color(0xFF06130D),
       appBar: AppBar(
         backgroundColor: const Color(0xFF1F5F3A),
-        elevation: 5,
         title: Text(
-          'Select Muscles',
-          style: GoogleFonts.montserrat(
-            fontSize: 22,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
+          '${widget.bodyPart} Muscles',
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.white),
         ),
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 14),
         child: Column(
           children: [
             Expanded(
               child: GridView.builder(
+                itemCount: muscles.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 15,
+                  crossAxisCount: 1,
                   mainAxisSpacing: 20,
-                  childAspectRatio: 0.85,
+                  childAspectRatio: 1.3,
                 ),
-                itemCount: widget.muscles.length,
                 itemBuilder: (context, index) {
-                  return _buildMuscleGridItem(widget.muscles[index]);
+                  final muscle = muscles[index];
+                  return _buildMuscleCard(muscle, getMuscleImagePath(widget.bodyPart, index));
                 },
               ),
             ),
@@ -75,9 +159,8 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1F5F3D),
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 30),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  elevation: 8,
                 ),
                 onPressed: finalizeSelection,
                 child: const Text(
@@ -92,49 +175,21 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
     );
   }
 
-  Widget _buildMuscleGridItem(String muscle) {
-    final Map<String, String> muscleImages = {
-      "Clavicular Head of Sternocleidomastoid Muscle": "1.avif",
-      "Depressor Anguli Oris Muscle": "2.avif",
-      "Depressor Labii Inferioris Muscle": "3.avif",
-      "Frontal Belly of Epicranius Muscle (Frontalis Muscle)": "4.avif",
-      "Galea Aponeurotica": "5.avif",
-      "Levator Labii Superioris Alaeque Nasi Muscle": "6.avif",
-      "Levator Labii Superioris Muscle": "7.avif",
-      "Masseter Muscle": "8.avif",
-      "Mentalis Muscle": "9.avif",
-      "Nasalis Muscle": "10.avif",
-      "Occipital Belly of Epicranius Muscle (Occipitalis Muscle)": "11.avif",
-      "Omohyoid Muscle": "12.avif",
-      "Orbicularis Oculi Muscle": "13.avif",
-      "Orbicularis Oris Muscle": "14.avif",
-      "Platysma Muscle": "15.avif",
-      "Risorius Muscle": "16.avif",
-      "Scalene Muscles": "17.avif",
-      "Semispinalis Capitis Muscle": "18.avif",
-      "Splenius Capitis Muscle": "19.avif",
-      "Sternal Head of Sternocleidomastoid Muscle": "20.avif",
-      "Temporalis Muscle": "21.avif",
-      "Zygomaticus Major Muscle": "22.avif",
-      "Zygomaticus Minor Muscle": "23.avif"
-    };
-
-    String imagePath = 'assets/body_parts/head/muscles/${muscleImages[muscle] ?? "placeholder.png"}';
+  Widget _buildMuscleCard(String muscle, String imagePath) {
+    final selected = selectedMuscles.contains(muscle);
 
     return GestureDetector(
       onTap: () => toggleMuscleSelection(muscle),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 250),
         decoration: BoxDecoration(
-          color: selectedMuscles.contains(muscle) ? const Color(0xFF1A8D50) : Colors.white,
-          borderRadius: BorderRadius.circular(18),
+          color: selected ? const Color(0xFF1A8D50) : const Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 12,
-              spreadRadius: 2,
-              offset: const Offset(4, 4),
+              color: Colors.black.withOpacity(0.15),
+              blurRadius: 8,
+              offset: const Offset(2, 2),
             ),
           ],
         ),
@@ -144,11 +199,14 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
             Expanded(
               flex: 3,
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                 child: Image.asset(
                   imagePath,
                   fit: BoxFit.contain,
                   width: double.infinity,
+                  errorBuilder: (context, error, stackTrace) => const Center(
+                    child: Icon(Icons.broken_image, size: 40, color: Colors.grey),
+                  ),
                 ),
               ),
             ),
@@ -162,22 +220,20 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
                     Text(
                       muscle,
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.roboto(
-                        fontSize: 16,
+                      style: TextStyle(
+                        fontSize: 15,
                         fontWeight: FontWeight.bold,
-                        color: selectedMuscles.contains(muscle) ? Colors.white : Colors.black,
+                        color: selected ? Colors.white : const Color(0xFF06130D),
                       ),
                     ),
                     Transform.scale(
                       scale: 1.3,
                       child: Checkbox(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                         checkColor: Colors.white,
                         activeColor: const Color(0xFF1F5F3D),
-                        value: selectedMuscles.contains(muscle),
-                        onChanged: (bool? value) {
-                          toggleMuscleSelection(muscle);
-                        },
+                        value: selected,
+                        onChanged: (value) => toggleMuscleSelection(muscle),
                       ),
                     ),
                   ],
