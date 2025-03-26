@@ -18,8 +18,9 @@ class MainBodyPartPage extends StatelessWidget {
         builder: (context) => MuscleSelectionPage(
           bodyPart: bodyPart,
           isDarkMode: isDarkMode,
-          onSelectionComplete: (selected) {
+          onSelectionComplete: (selectedBodyParts, selectedMuscles) {
             // You can handle selection result here if needed
+            // Now it accepts two parameters instead of one
           },
         ),
       ),
