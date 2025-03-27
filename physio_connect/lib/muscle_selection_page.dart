@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'selected_muscles_page.dart';
 
 class MuscleSelectionPage extends StatefulWidget {
   final String bodyPart;
   final bool isDarkMode;
-  final Function(List<String>) onSelectionComplete;
+  final List<String> previouslySelectedBodyParts;
+  final List<String> previouslySelectedMuscles;
+  final Function(List<String>, List<String>) onSelectionComplete;
 
   const MuscleSelectionPage({
     Key? key,
     required this.bodyPart,
     required this.isDarkMode,
+    this.previouslySelectedBodyParts = const [],
+    this.previouslySelectedMuscles = const [],
     required this.onSelectionComplete,
   }) : super(key: key);
 
@@ -18,45 +23,39 @@ class MuscleSelectionPage extends StatefulWidget {
 
 class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
   List<String> selectedMuscles = [];
+  late List<String> previousBodyParts;
+  late List<String> previousMuscles;
 
+  @override
+  void initState() {
+    super.initState();
+    // Initialize with previously selected muscles and body parts
+    selectedMuscles = List.from(widget.previouslySelectedMuscles);
+    previousBodyParts = List.from(widget.previouslySelectedBodyParts);
+    
+    // Add current body part if not already in the list
+    if (!previousBodyParts.contains(widget.bodyPart)) {
+      previousBodyParts.add(widget.bodyPart);
+    }
+  }
+
+  // Updated muscle data with comprehensive lists
   final Map<String, List<String>> muscleData = {
     "Head": [
-      "Clavicular Head of Sternocleidomastoid Muscle",
-      "Depressor Anguli Oris Muscle",
-      "Depressor Labii Inferioris Muscle",
-      "Frontal Belly of Epicranius Muscle (Frontalis Muscle)",
-      "Galea Aponeurotica",
-      "Levator Labii Superioris Alaeque Nasi Muscle",
-      "Levator Labii Superioris Muscle",
-      "Masseter Muscle",
-      "Mentalis Muscle",
-      "Nasalis Muscle",
-      "Occipital Belly of Epicranius Muscle (Occipitalis Muscle)",
-      "Omohyoid Muscle",
-      "Orbicularis Oculi Muscle",
-      "Orbicularis Oris Muscle",
-      "Platysma Muscle",
-      "Risorius Muscle",
-      "Scalene Muscles",
-      "Semispinalis Capitis Muscle",
-      "Splenius Capitis Muscle",
-      "Sternal Head of Sternocleidomastoid Muscle",
+      "Clavicular Head of Sternocleidomastoid",
+      "Orbicularis Oculi",
       "Temporalis Muscle",
-      "Zygomaticus Major Muscle",
-      "Zygomaticus Minor Muscle",
+      "Masseter Muscle",
+      "Platysma Muscle",
+      "Zygomaticus Major",
+      "Frontalis Muscle",
+      "Occipitalis Muscle",
     ],
     "Chest": [
       "Pectoralis Major",
       "Pectoralis Minor",
       "Serratus Anterior",
-      "Subclavius",
       "Intercostal Muscles",
-      "Costal Cartilage",
-      "Manubrium",
-      "Sternal Angle",
-      "Xiphoid Process",
-      "Thoracic Diaphragm",
-      "External Oblique (Upper)",
     ],
     "Abdomen": [
       "Rectus Abdominis",
@@ -67,31 +66,41 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
     "Arms": [
       "Biceps Brachii",
       "Triceps Brachii",
-      "Brachialis",
-      "Coracobrachialis",
       "Deltoid",
-      "Anconeus",
-      "Flexor Carpi Radialis",
-      "Palmaris Longus",
-      "Flexor Carpi Ulnaris",
-      "Flexor Digitorum Superficialis",
-      "Flexor Digitorum Profundus",
-      "Extensor Carpi Radialis",
-      "Extensor Digitorum",
-      "Extensor Carpi Ulnaris",
-      "Pronator Teres",
-      "Supinator",
-      "Abductor Pollicis Longus",
-      "Extensor Pollicis Brevis",
-      "Extensor Indicis",
-      "Thenar Muscles",
-      "Hypothenar Muscles",
-      "Brachioradialis",
-      "Subscapularis",
-      "Supraspinatus",
+      "Brachialis",
+      "Forearm Muscles",
+    ],
+    "Legs": [
+      "Quadriceps",
+      "Hamstrings",
+      "Calves",
+      "Glutes",
+    ],
+    "Upper Back": [
+      "Trapezius",
+      "Rhomboids",
+      "Latissimus Dorsi",
       "Infraspinatus",
-      "Teres Major",
-      "Teres Minor",
+    ],
+    "Lower Back": [
+      "Erector Spinae",
+      "Quadratus Lumborum",
+      "Multifidus",
+    ],
+    "Shoulders": [
+      "Rotator Cuff Muscles",
+      "Deltoid",
+      "Supraspinatus",
+    ],
+    "Glutes": [
+      "Gluteus Maximus",
+      "Gluteus Medius",
+      "Gluteus Minimus",
+    ],
+    "Hamstrings": [
+      "Biceps Femoris",
+      "Semitendinosus",
+      "Semimembranosus",
     ],
   };
 
@@ -101,10 +110,18 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
       "Chest": "Area2",
       "Abdomen": "abdomen",
       "Arms": "Area4",
+      "Legs": "Area3",
+      "Upper Back": "back_muscles",
+      "Lower Back": "back_muscles",
+      "Shoulders": "Area2",
+      "Glutes": "Area3",
+      "Hamstrings": "Area3",
     };
 
     final folder = folderMap[bodyPart] ?? "Head";
-    return 'assets/body_parts/$folder/muscles/${index + 1}.avif';
+    // Ensure index is within range
+    final safeIndex = index % 10 + 1;
+    return 'assets/body_parts/$folder/muscles/$safeIndex.avif';
   }
 
   void toggleMuscleSelection(String muscle) {
@@ -117,81 +134,225 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
     });
   }
 
-  void finalizeSelection() {
-    widget.onSelectionComplete(selectedMuscles);
-    Navigator.pop(context);
+  void proceedToNextBodyPart() {
+    // If no muscles selected for current body part, show a warning
+    if (selectedMuscles.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select at least one muscle'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Show a modal to choose the next body part
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        // Filter out already selected body parts
+        final availableBodyParts = [
+          'Head', 'Chest', 'Abdomen', 'Arms', 'Legs', 
+          'Upper Back', 'Lower Back', 'Shoulders', 'Glutes', 'Hamstrings'
+        ].where((part) => !previousBodyParts.contains(part)).toList();
+
+        return ListView(
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Select Next Body Part',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            ...availableBodyParts.map((bodyPart) => ListTile(
+                  title: Text(bodyPart),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MuscleSelectionPage(
+                          bodyPart: bodyPart,
+                          isDarkMode: widget.isDarkMode,
+                          previouslySelectedBodyParts: previousBodyParts,
+                          previouslySelectedMuscles: selectedMuscles,
+                          onSelectionComplete: widget.onSelectionComplete,
+                        ),
+                      ),
+                    );
+                  },
+                )).toList(),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  // Finish selection and go to selected muscles page
+                  Navigator.pop(context);
+                  widget.onSelectionComplete(previousBodyParts, selectedMuscles);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SelectedMusclesPage(
+                        selectedBodyParts: previousBodyParts,
+                        selectedMuscles: selectedMuscles,
+                        isDarkMode: widget.isDarkMode,
+                      ),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF33724B),
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                ),
+                child: const Text(
+                  'Finish Muscle Selection',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final muscles = muscleData[widget.bodyPart] ?? [];
 
+    // Handle case with no muscles
+    if (muscles.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('${widget.bodyPart} Muscles'),
+          backgroundColor: const Color(0xFF33724B),
+        ),
+        body: Center(
+          child: Text(
+            'No muscles found for ${widget.bodyPart}',
+            style: const TextStyle(fontSize: 18),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
-      backgroundColor: const Color(0xFF06130D),
+      backgroundColor: widget.isDarkMode 
+        ? const Color(0xFF06130D) 
+        : const Color(0xFFEAF7FF),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1F5F3A),
+        backgroundColor: const Color(0xFF33724B),
         title: Text(
           '${widget.bodyPart} Muscles',
-          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.white),
+          style: const TextStyle(
+            fontSize: 22, 
+            fontWeight: FontWeight.w600, 
+            color: Colors.white
+          ),
         ),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 14),
-        child: Column(
-          children: [
-            Expanded(
-              child: GridView.builder(
-                itemCount: muscles.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  mainAxisSpacing: 20,
-                  childAspectRatio: 1.3,
+        actions: [
+          if (selectedMuscles.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: Chip(
+                label: Text(
+                  '${selectedMuscles.length} Selected',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                itemBuilder: (context, index) {
-                  final muscle = muscles[index];
-                  return _buildMuscleCard(muscle, getMuscleImagePath(widget.bodyPart, index));
-                },
+                backgroundColor: const Color(0xFF1F5F3A),
               ),
             ),
-            const SizedBox(height: 10),
-            if (selectedMuscles.isNotEmpty)
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1F5F3D),
-                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 30),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: GridView.builder(
+              padding: const EdgeInsets.all(16),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.8,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+              ),
+              itemCount: muscles.length,
+              itemBuilder: (context, index) {
+                final muscle = muscles[index];
+                final imagePath = getMuscleImagePath(widget.bodyPart, index);
+                
+                return _buildMuscleCard(
+                  muscle: muscle, 
+                  imagePath: imagePath,
+                  isSelected: selectedMuscles.contains(muscle),
+                  onTap: () => toggleMuscleSelection(muscle),
+                );
+              },
+            ),
+          ),
+          // Proceed to Next Body Part or Finish Button
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              onPressed: proceedToNextBodyPart,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF33724B),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40, 
+                  vertical: 15
                 ),
-                onPressed: finalizeSelection,
-                child: const Text(
-                  "Finalize Selection",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
                 ),
               ),
-            const SizedBox(height: 10),
-          ],
-        ),
+              child: Text(
+                selectedMuscles.isEmpty 
+                  ? 'Select Muscles' 
+                  : 'Next Body Part (${selectedMuscles.length} Selected)',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildMuscleCard(String muscle, String imagePath) {
-    final selected = selectedMuscles.contains(muscle);
-
+  // Reuse existing _buildMuscleCard method from previous implementation
+  Widget _buildMuscleCard({
+    required String muscle, 
+    required String imagePath, 
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
-      onTap: () => toggleMuscleSelection(muscle),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
+      onTap: onTap,
+      child: Container(
         decoration: BoxDecoration(
-          color: selected ? const Color(0xFF1A8D50) : const Color.fromARGB(255, 255, 255, 255),
-          borderRadius: BorderRadius.circular(16),
+          color: isSelected 
+            ? const Color(0xFF33724B).withOpacity(0.2)
+            : Colors.white,
+          borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.15),
-              blurRadius: 8,
-              offset: const Offset(2, 2),
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
             ),
           ],
+          border: Border.all(
+            color: isSelected 
+              ? const Color(0xFF33724B) 
+              : Colors.transparent,
+            width: 2,
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -199,42 +360,49 @@ class _MuscleSelectionPageState extends State<MuscleSelectionPage> {
             Expanded(
               flex: 3,
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(18),
+                ),
                 child: Image.asset(
                   imagePath,
-                  fit: BoxFit.contain,
-                  width: double.infinity,
-                  errorBuilder: (context, error, stackTrace) => const Center(
-                    child: Icon(Icons.broken_image, size: 40, color: Colors.grey),
-                  ),
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    print('Error loading image: $imagePath');
+                    return const Center(
+                      child: Icon(
+                        Icons.broken_image, 
+                        color: Colors.grey, 
+                        size: 50
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
             Expanded(
-              flex: 1,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: Column(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      muscle,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: selected ? Colors.white : const Color(0xFF06130D),
+                    Expanded(
+                      child: Text(
+                        muscle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: isSelected 
+                            ? const Color(0xFF33724B) 
+                            : Colors.black87,
+                        ),
                       ),
                     ),
-                    Transform.scale(
-                      scale: 1.3,
-                      child: Checkbox(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                        checkColor: Colors.white,
-                        activeColor: const Color(0xFF1F5F3D),
-                        value: selected,
-                        onChanged: (value) => toggleMuscleSelection(muscle),
-                      ),
+                    Checkbox(
+                      value: isSelected,
+                      onChanged: (_) => onTap(),
+                      activeColor: const Color(0xFF33724B),
                     ),
                   ],
                 ),
