@@ -1,10 +1,12 @@
-void main() {
-  runApp(abc());
-}
+// frontend/lib/main.dart
 
-class abc extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: LoginScreen());
-  }
+import 'package:flutter/material.dart';
+import 'app.dart';
+
+void main() {
+  // Initialize any required services
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Run the app
+  runApp(const PhysioConnectApp());
 }
