@@ -59,7 +59,7 @@ flutter:
     - assets/body_parts/Area2/muscles/
     - assets/body_parts/abdomen/muscles/
     - assets/body_parts/Area4/muscles/
-    - assets/body_parts/
+    - assets/body_parts/Area5/muscles/
 
 
   fonts:
