@@ -1,11 +1,8 @@
 // File: frontend/lib/features/auth/screens/login_screen.dart
-// Purpose: Login screen UI
-// Description: Login interface for user authentication
 
 import 'package:flutter/material.dart';
 import '../../../config/constants.dart';
 import '../../../config/routes.dart';
-//import '../../../shared/widgets/custom_button.dart';
 import '../../../shared/widgets/custom_text_field.dart';
 import '../../../core/services/auth_service.dart';
 import 'package:provider/provider.dart';
@@ -223,22 +220,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
-// // File: frontend/lib/features/auth/screens/login_screen.dart
-// import 'package:flutter/material.dart';
-
-// class LoginScreen extends StatelessWidget {
-//   const LoginScreen({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Login'),
-//       ),
-//       body: const Center(
-//         child: Text('Login Screen - To be implemented'),
-//       ),
-//     );
-//   }
-// }
