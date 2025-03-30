@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=/Users/himazazahara/Downloads/flutter"
-export "FLUTTER_APPLICATION_PATH=/Users/himazazahara/Downloads/physioconnect/project/PhysioConnect/HIMAZA/physio_connect"
+export "FLUTTER_APPLICATION_PATH=/Users/himazazahara/Downloads/physioconnect/project/PhysioConnect/HIMAZA/physio_connect/progress_tracking"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_TARGET=lib/main.dart"
 export "FLUTTER_BUILD_DIR=build"
