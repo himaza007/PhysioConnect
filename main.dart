@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'customized_injury_remedies.dart'; // Import the new screen
+import 'educational_resources.dart'; // Import the new screen
+
+
 
 void main() {
   runApp(const MyApp());
