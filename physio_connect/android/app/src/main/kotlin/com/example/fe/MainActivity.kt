@@ -1,4 +1,4 @@
-package com.example.physio_connect
+package com.example.fe
 
 import io.flutter.embedding.android.FlutterActivity
 

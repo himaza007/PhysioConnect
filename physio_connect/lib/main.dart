@@ -1,122 +1,159 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'components/theme_provider.dart';
+import 'components/settings_screen.dart';
+import 'models/tutorial_model.dart';
+import 'screens/splash_screen.dart'; // ✅ Splash Screen Integrated
+import 'screens/home_screen.dart';
+import 'screens/pain_monitoring.dart';
+import 'screens/first_aid/tutorial_list_screen.dart';
+import 'screens/first_aid/tutorial_detail_screen.dart';
+import 'screens/first_aid/first_aid_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const PhysioConnectApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// ✅ Centralized Route Names
+class Routes {
+  static const String splash = '/';
+  static const String home = '/home';
+  static const String painMonitoring = '/pain-monitoring';
+  static const String firstAidTabs = '/first-aid-tutorials';
+  static const String tutorialCategory = '/tutorial-category';
+  static const String tutorialDetail = '/first-aid-details';
+  static const String settings = '/settings';
+}
 
-  // This widget is the root of your application.
+class PhysioConnectApp extends StatelessWidget {
+  const PhysioConnectApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      debugShowCheckedModeBanner: false,
+      title: 'PhysioConnect',
+      theme: Provider.of<ThemeProvider>(context).currentTheme,
+      initialRoute: Routes.splash,
+      onGenerateRoute: _onGenerateRoute,
     );
   }
-}
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  Route<dynamic> _onGenerateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case Routes.splash:
+        return _customPageRoute(
+            child: const SplashScreen(), transition: "fade");
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
+      case Routes.home:
+        return _customPageRoute(child: const HomeScreen(), transition: "fade");
 
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+      case Routes.painMonitoring:
+        return _customPageRoute(
+            child: const PainMonitoringPage(), transition: "slideRight");
 
-  final String title;
+      case Routes.firstAidTabs:
+        return _customPageRoute(
+            child: const FirstAidScreen(), transition: "slideLeft");
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+      case Routes.tutorialCategory:
+        final data = settings.arguments as Map<String, dynamic>?;
+        final category = data?['category'] ?? 'Taping';
+        return _customPageRoute(
+          child: TutorialListScreen(category: category),
+          transition: "slideLeft",
+        );
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+      case Routes.tutorialDetail:
+        final tutorial = settings.arguments as TutorialModel?;
+        if (tutorial != null) {
+          return _customPageRoute(
+            child: TutorialDetailScreen(tutorial: tutorial),
+            transition: "scale",
+          );
+        }
+        return _errorRoute("Missing tutorial data");
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+      case Routes.settings:
+        return _customPageRoute(
+            child: const SettingsScreen(), transition: "fade");
+
+      default:
+        return _errorRoute("Oops! Page not found.");
+    }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+  // ✅ Custom Transitions
+  PageRoute _customPageRoute({
+    required Widget child,
+    required String transition,
+  }) {
+    return PageRouteBuilder(
+      pageBuilder: (_, animation, __) => child,
+      transitionsBuilder: (_, animation, __, child) {
+        final curved =
+            CurvedAnimation(parent: animation, curve: Curves.easeInOut);
+        switch (transition) {
+          case "fade":
+            return FadeTransition(opacity: curved, child: child);
+          case "slideRight":
+            return SlideTransition(
+              position:
+                  Tween<Offset>(begin: const Offset(-1, 0), end: Offset.zero)
+                      .animate(curved),
+              child: child,
+            );
+          case "slideLeft":
+            return SlideTransition(
+              position:
+                  Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
+                      .animate(curved),
+              child: child,
+            );
+          case "scale":
+            return ScaleTransition(scale: curved, child: child);
+          default:
+            return child;
+        }
+      },
+      transitionDuration: const Duration(milliseconds: 450),
+    );
+  }
+
+  // ✅ Friendly Fallback UI
+  MaterialPageRoute _errorRoute(String message) {
+    return MaterialPageRoute(
+      builder: (context) => Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.error_outline,
+                  color: Colors.redAccent, size: 48),
+              const SizedBox(height: 12),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Go Back"),
+              ),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
