@@ -43,3 +43,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Add these lines to your .gitignore
+**/build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
