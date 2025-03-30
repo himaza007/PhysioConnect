@@ -1,0 +1,68 @@
+name: fe
+description: A physiotherapy application with pain monitoring and first aid tutorials.
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_native_splash: ^2.3.1
+
+  logger: ^2.0.2
+
+  # ✅ WebView for External Resources
+  youtube_player_flutter: ^9.1.1
+  flutter_inappwebview: ^6.1.5
+
+  # ✅ Date & Time Formatting
+  http: ^1.3.0 # Upgraded to fix dependency conflict
+  intl: ^0.20.2
+  flutter_dotenv: ^5.2.1
+  
+  # ✅ State Management & Data Persistence
+  provider: ^6.1.2
+  shared_preferences: ^2.5.2
+
+  # ✅ UI Enhancements & Animations
+  lottie: ^3.3.1 # Compatible with http ^1.0.0
+  flutter_animate: ^4.5.0 # Smooth UI transitions & effects
+  flare_flutter: ^3.0.2 # Alternative animation system
+  confetti: ^0.8.0 # 🎉 Confetti animation for rewards/milestones
+  vibration: ^3.1.3 # Haptic feedback when adjusting pain levels
+
+  # ✅ Multimedia & Notifications
+  flutter_local_notifications: ^19.0.0
+
+  # ✅ Gauges & Charts for Pain Tracking
+  syncfusion_flutter_gauges: ^29.1.33
+  syncfusion_flutter_charts: ^29.1.33
+
+  # ✅ App Styling & Fonts
+  google_fonts: ^6.1.0 # Google Fonts for modern typography
+  flutter_svg: ^2.0.9 # SVG support for icons and graphics
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0 # Moved to dev_dependencies (best practice)
+
+flutter:
+  uses-material-design: true
+
+  # ✅ Linking Assets (Fixed Paths)
+  assets:
+    # ✅ Animations
+    - lib/assets/animations/physio_animation.json
+    - lib/assets/animations/transition_effect.json
+    - lib/assets/animations/intro_loading.json
+    - lib/assets/animations/waves_background.json
+    - lib/assets/animations/glowing_effect.json
+    - lib/assets/animations/pulse_effect.json
+    - lib/assets/animations/pain_indicator.json
+    - lib/assets/animations/radar_scan.json
+
+    # ✅ Images & Icons
+    - lib/assets/images/app_logo.png
