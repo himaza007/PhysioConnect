@@ -1,0 +1,52 @@
+name: physio_connect
+
+description: A modern physiotherapy assistant app.
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  google_fonts: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/body_parts/head/muscles/1.avif
+    - assets/body_parts/head/muscles/2.avif
+    - assets/body_parts/head/muscles/3.avif
+    - assets/body_parts/head/muscles/4.avif
+    - assets/body_parts/head/muscles/5.avif
+    - assets/body_parts/head/muscles/6.avif
+    - assets/body_parts/head/muscles/7.avif
+    - assets/body_parts/head/muscles/8.avif
+    - assets/body_parts/head/muscles/9.avif
+    - assets/body_parts/head/muscles/10.avif
+    - assets/body_parts/head/muscles/11.avif
+    - assets/body_parts/head/muscles/12.avif
+    - assets/body_parts/head/muscles/13.avif
+    - assets/body_parts/head/muscles/14.avif
+    - assets/body_parts/head/muscles/15.avif
+    - assets/body_parts/head/muscles/16.avif
+    - assets/body_parts/head/muscles/17.avif
+    - assets/body_parts/head/muscles/18.avif
+    - assets/body_parts/head/muscles/19.avif
+    - assets/body_parts/head/muscles/20.avif
+    - assets/body_parts/head/muscles/21.avif
+    - assets/body_parts/head/muscles/22.avif
+    - assets/body_parts/head/muscles/23.avif
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
