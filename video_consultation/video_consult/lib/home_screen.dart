@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   // User login state
   bool _isLoggedIn = false;
-  String _userName = "John Doe";
+  String _userName = "Azeez";
 
   @override
   void initState() {
@@ -72,10 +72,6 @@ class _HomeScreenState extends State<HomeScreen>
                   child: child,
                 );
               },
-              child: Icon(
-                Icons.medical_services,
-                color: Colors.green.shade700,
-              ),
             ),
             SizedBox(width: 8),
             Text(
