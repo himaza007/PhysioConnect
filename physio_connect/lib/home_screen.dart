@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'therapist_selection_screen.dart';
 import 'video_consultation_screen.dart';
 import 'emergency_session_screen.dart';
-import 'messaging_screen.dart';
 import 'support_chat_screen.dart';
 
 class HomeScreen extends StatelessWidget {

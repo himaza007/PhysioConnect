@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme.dart';
 import '../widgets/custom_button.dart';
-import '../widgets/custom_text_field.dart';
 
 /// Treatment Plans screen for creating and managing patient treatments
 class TreatmentScreen extends StatefulWidget {

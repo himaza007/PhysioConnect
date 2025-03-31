@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme.dart';
 import '../widgets/custom_button.dart';
-import '../widgets/custom_text_field.dart';
 
 /// Login screen for user authentication
 class LoginScreen extends StatefulWidget {

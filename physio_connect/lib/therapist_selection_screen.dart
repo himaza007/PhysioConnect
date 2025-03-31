@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:video_consult/home_screen.dart';
-import 'package:video_consult/messaging_screen.dart';
+import 'messaging_screen.dart';
 import 'therapist.dart';
 import 'booking_screen.dart';
 import 'support_chat_screen.dart';

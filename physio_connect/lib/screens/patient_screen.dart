@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme.dart';
 //import '../widgets/custom_button.dart';
-import '../widgets/custom_text_field.dart';
 
 /// Patient screen showing list of patients and patient details
 class PatientScreen extends StatefulWidget {
