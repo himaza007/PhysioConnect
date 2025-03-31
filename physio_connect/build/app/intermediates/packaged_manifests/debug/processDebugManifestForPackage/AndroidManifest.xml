@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<<<<<<< HEAD
     package="com.example.physio_connect"
     android:versionCode="1"
     android:versionName="1.0.0" >
+=======
+    package="com.example.fe"
+    android:versionCode="1"
+    android:versionName="1.0" >
+>>>>>>> dev
 
     <uses-sdk
         android:minSdkVersion="21"
@@ -26,6 +32,7 @@
 
             <data android:mimeType="text/plain" />
         </intent>
+<<<<<<< HEAD
     </queries>
 
     <permission
@@ -33,6 +40,21 @@
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.example.physio_connect.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+=======
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
+        </intent>
+    </queries>
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <permission
+        android:name="com.example.fe.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.example.fe.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+>>>>>>> dev
 
     <application
         android:name="android.app.Application"
@@ -40,9 +62,15 @@
         android:debuggable="true"
         android:extractNativeLibs="true"
         android:icon="@mipmap/ic_launcher"
+<<<<<<< HEAD
         android:label="physio_connect" >
         <activity
             android:name="com.example.physio_connect.MainActivity"
+=======
+        android:label="fe" >
+        <activity
+            android:name="com.example.fe.MainActivity"
+>>>>>>> dev
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:exported="true"
             android:hardwareAccelerated="true"
@@ -75,6 +103,42 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
+<<<<<<< HEAD
+=======
+        <activity
+            android:name="com.pichillilorenzo.flutter_inappwebview_android.in_app_browser.InAppBrowserActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.pichillilorenzo.flutter_inappwebview_android.chrome_custom_tabs.ChromeCustomTabsActivity"
+            android:exported="false"
+            android:theme="@style/ThemeTransparent" />
+        <activity
+            android:name="com.pichillilorenzo.flutter_inappwebview_android.chrome_custom_tabs.TrustedWebActivity"
+            android:exported="false"
+            android:theme="@style/ThemeTransparent" />
+        <activity
+            android:name="com.pichillilorenzo.flutter_inappwebview_android.chrome_custom_tabs.ChromeCustomTabsActivitySingleInstance"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:theme="@style/ThemeTransparent" />
+        <activity
+            android:name="com.pichillilorenzo.flutter_inappwebview_android.chrome_custom_tabs.TrustedWebActivitySingleInstance"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:theme="@style/ThemeTransparent" />
+
+        <receiver
+            android:name="com.pichillilorenzo.flutter_inappwebview_android.chrome_custom_tabs.ActionBroadcastReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+        <meta-data
+            android:name="io.flutter.embedded_views_preview"
+            android:value="true" />
+
+>>>>>>> dev
         <uses-library
             android:name="androidx.window.extensions"
             android:required="false" />
@@ -84,9 +148,18 @@
 
         <provider
             android:name="androidx.startup.InitializationProvider"
+<<<<<<< HEAD
             android:authorities="com.example.physio_connect.androidx-startup"
             android:exported="false" >
             <meta-data
+=======
+            android:authorities="com.example.fe.androidx-startup"
+            android:exported="false" >
+            <meta-data
+                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+                android:value="androidx.startup" />
+            <meta-data
+>>>>>>> dev
                 android:name="androidx.lifecycle.ProcessLifecycleInitializer"
                 android:value="androidx.startup" />
             <meta-data

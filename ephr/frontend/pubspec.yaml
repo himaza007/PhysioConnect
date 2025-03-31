@@ -1,0 +1,47 @@
+name: physioconnect_ephr
+description: A modern healthcare application for managing patients and medical records.
+publish_to: 'none' # Prevents accidental publishing to pub.dev
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # For UI icons
+  cupertino_icons: ^1.0.5
+  # For state management
+  provider: ^6.0.5
+  # For formatting dates and times
+  intl: ^0.18.0
+  # For HTTP requests (future backend integration)
+  http: ^0.13.5
+  # For local storage
+  shared_preferences: ^2.1.1
+  # For PDF document generation
+  pdf: ^3.10.1
+  # For file management
+  path_provider: ^2.0.15
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.1
+
+flutter:
+  uses-material-design: true
+  
+  # Define assets
+  assets:
+    - assets/images/
+    - assets/icons/
+  
+  # Define fonts
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
