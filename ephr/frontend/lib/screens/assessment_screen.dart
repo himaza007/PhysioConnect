@@ -88,6 +88,7 @@ class _AssessmentScreenState extends State<AssessmentScreen> {
         });
 
         // Show success message
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Assessment saved successfully'),
