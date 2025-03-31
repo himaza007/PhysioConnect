@@ -26,6 +26,7 @@ class AppTheme {
       primary: midnightTeal,
       secondary: aliceBlue,
       surface: white,
+      // ignore: deprecated_member_use
       background: aliceBlue,
       error: errorRed,
     ),
