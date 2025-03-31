@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'support_chat_screen.dart';
-import 'mybookingpaceholder.dart';
-import 'homescreenplaceholder.dart';
 
 class BookingScreen extends StatefulWidget {
   final String therapistName;

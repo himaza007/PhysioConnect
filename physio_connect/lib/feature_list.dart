@@ -37,9 +37,11 @@ class FeatureList extends StatelessWidget {
             },
             child: Container(
               decoration: BoxDecoration(
+                // ignore: deprecated_member_use
                 color: Color(0xFF33724B).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(15),
                 border: Border.all(
+                  // ignore: deprecated_member_use
                   color: Color(0xFF33724B).withOpacity(0.2),
                   width: 1,
                 ),

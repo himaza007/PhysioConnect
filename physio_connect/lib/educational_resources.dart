@@ -103,6 +103,7 @@ class EducationalResourcesScreen extends StatelessWidget {
       required IconData icon,
       required Widget page}) {
     return Card(
+      // ignore: deprecated_member_use
       color: Colors.white.withOpacity(0.9),
       margin: const EdgeInsets.symmetric(vertical: 6),
       elevation: 2,

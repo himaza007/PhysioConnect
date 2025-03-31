@@ -64,7 +64,9 @@ class _UnderstandingMuscleStrainsScreenState
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
+                  // ignore: deprecated_member_use
                   Colors.white.withOpacity(0.1),
+                  // ignore: deprecated_member_use
                   Colors.white.withOpacity(0.05),
                 ],
               ),
@@ -117,6 +119,7 @@ class _UnderstandingMuscleStrainsScreenState
   Widget _buildStrainCard(
       {required String title, required String description}) {
     return Card(
+      // ignore: deprecated_member_use
       color: Colors.white.withOpacity(0.9),
       margin: const EdgeInsets.symmetric(vertical: 6),
       elevation: 2,

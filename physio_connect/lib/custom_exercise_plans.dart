@@ -70,7 +70,9 @@ class _CustomExercisePlansScreenState extends State<CustomExercisePlansScreen>
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
+                  // ignore: deprecated_member_use
                   Colors.white.withOpacity(0.1),
+                  // ignore: deprecated_member_use
                   Colors.white.withOpacity(0.05),
                 ],
               ),

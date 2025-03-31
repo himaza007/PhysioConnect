@@ -26,7 +26,6 @@ class AppTheme {
       primary: midnightTeal,
       secondary: aliceBlue,
       surface: white,
-      background: aliceBlue,
       error: errorRed,
     ),
 

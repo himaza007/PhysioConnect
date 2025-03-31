@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:camera/camera.dart';
 import 'dart:async';
 import 'support_chat_screen.dart';
-import 'call_control_button.dart';
 
 class VideoConsultationScreen extends StatefulWidget {
   const VideoConsultationScreen({Key? key}) : super(key: key);
