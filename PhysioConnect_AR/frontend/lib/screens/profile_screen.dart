@@ -1,7 +1,5 @@
-// File: lib/screens/profile_screen.dart
-// Description: User profile screen
-// Author: PhysioConnect Team
-// Date: April 9, 2025
+// lib/screens/profile_screen.dart
+// User profile screen
 
 import 'package:flutter/material.dart';
 import '../config/app_colors.dart';
@@ -9,7 +7,7 @@ import '../models/user_model.dart';
 
 /// ProfileScreen displays and allows editing of user profile information
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -19,7 +17,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   // Mock user data - in production, this would come from a service
   late User _user;
   bool _isEditing = false;
-  
+
   // Form controllers
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _firstNameController;
@@ -28,29 +26,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late TextEditingController _heightController;
   late TextEditingController _weightController;
   late TextEditingController _bioController;
-  
+
   @override
   void initState() {
     super.initState();
     _loadUserData();
     _initControllers();
   }
-  
+
   /// Load mock user data
   void _loadUserData() {
     _user = User(
-      id: 'user123',
-      email: 'user@example.com',
-      firstName: 'Alex',
-      lastName: 'Johnson',
+      id: 'Saaadmaz',
+      email: 'saad@physioconnect.online',
+      firstName: 'Saad',
+      lastName: 'Mazhar',
       profileImageUrl: null,
       dateJoined: DateTime(2024, 2, 15),
       profile: UserProfile(
         bio: 'Fitness enthusiast looking to improve posture.',
-        ageYears: 32,
-        heightCm: 175.0,
+        ageYears: 21,
+        heightCm: 170.0,
         weightKg: 70.0,
-        gender: 'Non-binary',
+        gender: 'Male',
         fitnessGoals: ['Improve posture', 'Reduce back pain', 'Build strength'],
         postureIssues: ['Forward head posture', 'Rounded shoulders'],
         medicalConditions: [],
@@ -71,17 +69,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-  
+
   /// Initialize text controllers with user data
   void _initControllers() {
     _firstNameController = TextEditingController(text: _user.firstName);
     _lastNameController = TextEditingController(text: _user.lastName);
-    _ageController = TextEditingController(text: _user.profile.ageYears?.toString() ?? '');
-    _heightController = TextEditingController(text: _user.profile.heightCm?.toString() ?? '');
-    _weightController = TextEditingController(text: _user.profile.weightKg?.toString() ?? '');
+    _ageController = TextEditingController(
+      text: _user.profile.ageYears?.toString() ?? '',
+    );
+    _heightController = TextEditingController(
+      text: _user.profile.heightCm?.toString() ?? '',
+    );
+    _weightController = TextEditingController(
+      text: _user.profile.weightKg?.toString() ?? '',
+    );
     _bioController = TextEditingController(text: _user.profile.bio ?? '');
   }
-  
+
   /// Toggle edit mode
   void _toggleEditMode() {
     setState(() {
@@ -92,7 +96,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     });
   }
-  
+
   /// Save user profile changes
   void _saveProfile() {
     if (_formKey.currentState!.validate()) {
@@ -109,7 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
         _isEditing = false;
       });
-      
+
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -119,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
     }
   }
-  
+
   @override
   void dispose() {
     _firstNameController.dispose();
@@ -130,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _bioController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -138,10 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         title: const Text(
           'Profile',
-          style: TextStyle(
-            color: AppColors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.midnightTeal,
         elevation: 0,
@@ -165,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-  
+
   /// Build the profile view (non-editing mode)
   Widget _buildProfileView() {
     return Column(
@@ -173,48 +174,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         _buildProfileHeader(),
         const SizedBox(height: 24),
-        _buildInfoSection(
-          'Personal Information',
-          [
-            _buildInfoItem('Age', '${_user.profile.ageYears ?? "Not specified"} years'),
-            _buildInfoItem('Height', '${_user.profile.heightCm ?? "Not specified"} cm'),
-            _buildInfoItem('Weight', '${_user.profile.weightKg ?? "Not specified"} kg'),
-            _buildInfoItem('Gender', _user.profile.gender ?? 'Not specified'),
-          ],
-        ),
+        _buildInfoSection('Personal Information', [
+          _buildInfoItem(
+            'Age',
+            '${_user.profile.ageYears ?? "Not specified"} years',
+          ),
+          _buildInfoItem(
+            'Height',
+            '${_user.profile.heightCm ?? "Not specified"} cm',
+          ),
+          _buildInfoItem(
+            'Weight',
+            '${_user.profile.weightKg ?? "Not specified"} kg',
+          ),
+          _buildInfoItem('Gender', _user.profile.gender ?? 'Not specified'),
+        ]),
         const SizedBox(height: 16),
         _buildInfoSection(
           'Fitness Goals',
-          _user.profile.fitnessGoals.map((goal) => _buildTagItem(goal)).toList(),
+          _user.profile.fitnessGoals
+              .map((goal) => _buildTagItem(goal))
+              .toList(),
         ),
         const SizedBox(height: 16),
         _buildInfoSection(
           'Posture Issues',
-          _user.profile.postureIssues.map((issue) => _buildTagItem(issue)).toList(),
+          _user.profile.postureIssues
+              .map((issue) => _buildTagItem(issue))
+              .toList(),
         ),
         const SizedBox(height: 16),
         if (_user.profile.medicalConditions.isNotEmpty)
           _buildInfoSection(
             'Medical Conditions',
-            _user.profile.medicalConditions.map((condition) => _buildTagItem(condition)).toList(),
+            _user.profile.medicalConditions
+                .map((condition) => _buildTagItem(condition))
+                .toList(),
           ),
         const SizedBox(height: 16),
-        _buildInfoSection(
-          'Account Information',
-          [
-            _buildInfoItem('Email', _user.email),
-            _buildInfoItem('Member Since', _formatDate(_user.dateJoined)),
-            _buildInfoItem('Last Posture Check', _user.profile.lastPostureCheck != null 
-                ? _formatDate(_user.profile.lastPostureCheck!) 
-                : 'Never'),
-          ],
-        ),
+        _buildInfoSection('Account Information', [
+          _buildInfoItem('Email', _user.email),
+          _buildInfoItem('Member Since', _formatDate(_user.dateJoined)),
+          _buildInfoItem(
+            'Last Posture Check',
+            _user.profile.lastPostureCheck != null
+                ? _formatDate(_user.profile.lastPostureCheck!)
+                : 'Never',
+          ),
+        ]),
         const SizedBox(height: 24),
         _buildLogoutButton(),
       ],
     );
   }
-  
+
   /// Build the edit form
   Widget _buildEditForm() {
     return Form(
@@ -331,7 +344,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-  
+
   /// Build profile header with avatar and name
   Widget _buildProfileHeader() {
     return Center(
@@ -363,7 +376,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-  
+
   /// Build avatar display
   Widget _buildAvatar() {
     return Container(
@@ -372,32 +385,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: AppColors.aliceBlue,
-        border: Border.all(
-          color: AppColors.midnightTeal,
-          width: 3,
-        ),
-        image: _user.profileImageUrl != null
-            ? DecorationImage(
-                image: NetworkImage(_user.profileImageUrl!),
-                fit: BoxFit.cover,
-              )
-            : null,
+        border: Border.all(color: AppColors.midnightTeal, width: 3),
+        image:
+            _user.profileImageUrl != null
+                ? DecorationImage(
+                  image: NetworkImage(_user.profileImageUrl!),
+                  fit: BoxFit.cover,
+                )
+                : null,
       ),
-      child: _user.profileImageUrl == null
-          ? Center(
-              child: Text(
-                _getInitials(_user.fullName),
-                style: const TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.midnightTeal,
+      child:
+          _user.profileImageUrl == null
+              ? Center(
+                child: Text(
+                  _getInitials(_user.fullName),
+                  style: const TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.midnightTeal,
+                  ),
                 ),
-              ),
-            )
-          : null,
+              )
+              : null,
     );
   }
-  
+
   /// Build avatar edit widget
   Widget _buildAvatarEdit() {
     return Center(
@@ -412,10 +424,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               decoration: BoxDecoration(
                 color: AppColors.midnightTeal,
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: AppColors.white,
-                  width: 2,
-                ),
+                border: Border.all(color: AppColors.white, width: 2),
               ),
               child: const Icon(
                 Icons.camera_alt,
@@ -428,7 +437,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-  
+
   /// Build an information section
   Widget _buildInfoSection(String title, List<Widget> items) {
     return Column(
@@ -447,7 +456,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ],
     );
   }
-  
+
   /// Build a single info item
   Widget _buildInfoItem(String label, String value) {
     return Padding(
@@ -479,32 +488,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-  
+
   /// Build a tag item for goals, issues, etc.
   Widget _buildTagItem(String text) {
     return Container(
       margin: const EdgeInsets.only(right: 8, bottom: 8),
-      padding: const EdgeInsets.symmetric(
-        horizontal: 12,
-        vertical: 6,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: AppColors.aliceBlue,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.midnightTeal.withOpacity(0.3),
-        ),
+        border: Border.all(color: AppColors.midnightTeal.withOpacity(0.3)),
       ),
       child: Text(
         text,
-        style: const TextStyle(
-          fontSize: 14,
-          color: AppColors.midnightTeal,
-        ),
+        style: const TextStyle(fontSize: 14, color: AppColors.midnightTeal),
       ),
     );
   }
-  
+
   /// Build a form section
   Widget _buildFormSection(String title, List<Widget> items) {
     return Column(
@@ -523,7 +524,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ],
     );
   }
-  
+
   /// Build a text field for the form
   Widget _buildTextField({
     required TextEditingController controller,
@@ -536,9 +537,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 12,
@@ -549,7 +548,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       validator: validator,
     );
   }
-  
+
   /// Build logout button
   Widget _buildLogoutButton() {
     return Center(
@@ -557,19 +556,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         onPressed: () {
           // Implement logout functionality
         },
-        style: TextButton.styleFrom(
-          foregroundColor: AppColors.error,
-        ),
-        child: const Text(
-          'Logout',
-          style: TextStyle(
-            fontSize: 16,
-          ),
-        ),
+        style: TextButton.styleFrom(foregroundColor: AppColors.error),
+        child: const Text('Logout', style: TextStyle(fontSize: 16)),
       ),
     );
   }
-  
+
   /// Get initials from name
   String _getInitials(String name) {
     final names = name.split(' ');
@@ -580,7 +572,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
     return '';
   }
-  
+
   /// Format date as string
   String _formatDate(DateTime date) {
     final day = date.day.toString().padLeft(2, '0');
