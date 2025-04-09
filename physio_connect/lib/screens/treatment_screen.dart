@@ -1063,21 +1063,25 @@ class _TreatmentScreenState extends State<TreatmentScreen> {
                     const SizedBox(height: 16),
 
                     // Diagnosis
-                    CustomTextField(
-                      label: 'Diagnosis',
-                      hint: 'Enter primary diagnosis',
+                    TextFormField(
                       controller: diagnosisController,
+                      decoration: InputDecoration(
+                        labelText: 'Diagnosis',
+                        hintText: 'Enter primary diagnosis',
+                      ),
                     ),
+
                     const SizedBox(height: 16),
 
                     // Duration
-                    CustomTextField(
-                      label: 'Duration',
-                      hint: 'e.g., 3 months, Ongoing',
+                    TextFormField(
                       controller: durationController,
+                      decoration: InputDecoration(
+                        labelText: 'Duration',
+                        hintText: 'e.g., 3 months, Ongoing',
+                      ),
                     ),
-                    const SizedBox(height: 16),
-
+                  
                     // Note about complete form
                     Container(
                       padding: const EdgeInsets.all(12),

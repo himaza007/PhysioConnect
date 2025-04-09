@@ -44,17 +44,18 @@ class _LoginPageState extends State<LoginPage> {
             content: Text(responseBody['message'] ?? 'Login successful'),
           ),
         );
-        // TODO: Navigate to home page or dashboard
-        // You can pass the user token or user details from responseBody
+
+        Navigator.pushReplacementNamed(context, '/home');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(responseBody['message'] ?? 'Login failed')),
         );
       }
+
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Network error: ${e.toString()}')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Network error: ${e.toString()}')),
+      );
     } finally {
       setState(() {
         _isLoading = false;
@@ -95,9 +96,9 @@ class _LoginPageState extends State<LoginPage> {
             _isLoading
                 ? CircularProgressIndicator()
                 : ElevatedButton(
-                  onPressed: () => _login(context),
-                  child: Text('Login', style: TextStyle(fontSize: 18)),
-                ),
+                    onPressed: () => _login(context),
+                    child: Text('Login', style: TextStyle(fontSize: 18)),
+                  ),
             SizedBox(height: 8),
             TextButton(
               onPressed: () {

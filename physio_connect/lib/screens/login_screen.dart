@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme.dart';
 import '../widgets/custom_button.dart';
+import '../widgets/custom_text_field.dart';
 
 /// Login screen for user authentication
 class LoginScreen extends StatefulWidget {
@@ -150,10 +151,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     prefixIcon: Icons.lock_outline,
                     errorText: _passwordError,
                     validator: _validatePassword,
-                    suffixIcon:
-                        _isPasswordVisible
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined,
+                  suffixIcon: _isPasswordVisible
+                      ? Icon(Icons.visibility_off_outlined)
+                      : Icon(Icons.visibility_outlined),
+
                     onSuffixIconPressed: () {
                       setState(() {
                         _isPasswordVisible = !_isPasswordVisible;

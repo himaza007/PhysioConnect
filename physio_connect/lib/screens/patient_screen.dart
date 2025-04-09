@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import '../theme.dart';
 //import '../widgets/custom_button.dart';
+import '../widgets/custom_text_field.dart';
+
 
 /// Patient screen showing list of patients and patient details
 class PatientScreen extends StatefulWidget {
@@ -178,6 +180,7 @@ class _PatientScreenState extends State<PatientScreen> {
                             });
                           },
                           backgroundColor: AppTheme.white,
+                          // ignore: duplicate_ignore
                           // ignore: deprecated_member_use
                           selectedColor: AppTheme.midnightTeal.withOpacity(0.2),
                           labelStyle: TextStyle(
@@ -452,7 +455,6 @@ class _PatientScreenState extends State<PatientScreen> {
                       controller: phoneController,
                       keyboardType: TextInputType.phone,
                     ),
-                    const SizedBox(height: 16),
                     CustomTextField(
                       label: 'Medical Condition',
                       hint: 'Enter primary condition',
