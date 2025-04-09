@@ -18,16 +18,16 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   // Mock settings data
   late UserSettings _settings;
-
+  
   // App info
   final String _appVersion = '1.0.0';
-
+  
   @override
   void initState() {
     super.initState();
     _loadSettings();
   }
-
+  
   /// Load mock settings data
   void _loadSettings() {
     _settings = UserSettings(
@@ -40,45 +40,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
       soundFeedbackEnabled: true,
       autoPostureCheckEnabled: true,
       shareActivityData: false,
-      featureToggles: {'experimental_features': false, 'data_sync': true},
+      featureToggles: {
+        'experimental_features': false,
+        'data_sync': true,
+      },
     );
   }
-
-  /// Update settings properly with immutable objects
-  void _updateSetting(Function(UserSettings) updateFunction) {
-    // Create a temporary mutable copy to work with
-    UserSettings tempSettings = _settings;
-
-    // Apply updates to the temporary copy
-    updateFunction(tempSettings);
-
-    // Create a new settings object with all updated values
-    setState(() {
-      _settings = UserSettings(
-        notificationsEnabled: tempSettings.notificationsEnabled,
-        notificationTypes: tempSettings.notificationTypes,
-        darkModeEnabled: tempSettings.darkModeEnabled,
-        preferredLanguage: tempSettings.preferredLanguage,
-        reminderIntervalMinutes: tempSettings.reminderIntervalMinutes,
-        hapticFeedbackEnabled: tempSettings.hapticFeedbackEnabled,
-        soundFeedbackEnabled: tempSettings.soundFeedbackEnabled,
-        autoPostureCheckEnabled: tempSettings.autoPostureCheckEnabled,
-        shareActivityData: tempSettings.shareActivityData,
-        featureToggles: tempSettings.featureToggles,
-      );
-    });
-
-    // Show confirmation snackbar
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Settings updated'),
-        duration: Duration(seconds: 1),
-      ),
-    );
-
-    // In a real app, you would save the settings to storage here
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,7 +54,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: AppBar(
         title: const Text(
           'Settings',
-          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: AppColors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         backgroundColor: AppColors.midnightTeal,
         elevation: 0,
@@ -95,222 +66,274 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            _buildSettingSection('Notifications', [
-              _buildSwitchTile(
-                title: 'Enable Notifications',
-                subtitle: 'Receive reminders and updates',
-                value: _settings.notificationsEnabled,
-                onChanged: (value) {
-                  // Create a new settings object with the updated value
-                  setState(() {
-                    _settings = UserSettings(
-                      notificationsEnabled: value,
-                      notificationTypes: _settings.notificationTypes,
-                      darkModeEnabled: _settings.darkModeEnabled,
-                      preferredLanguage: _settings.preferredLanguage,
-                      reminderIntervalMinutes:
-                          _settings.reminderIntervalMinutes,
-                      hapticFeedbackEnabled: _settings.hapticFeedbackEnabled,
-                      soundFeedbackEnabled: _settings.soundFeedbackEnabled,
-                      autoPostureCheckEnabled:
-                          _settings.autoPostureCheckEnabled,
-                      shareActivityData: _settings.shareActivityData,
-                      featureToggles: _settings.featureToggles,
+            _buildSettingSection(
+              'Notifications',
+              [
+                _buildSwitchTile(
+                  title: 'Enable Notifications',
+                  subtitle: 'Receive reminders and updates',
+                  value: _settings.notificationsEnabled,
+                  onChanged: (value) {
+                    // Create a new settings object with the updated value
+                    setState(() {
+                      _settings = UserSettings(
+                        notificationsEnabled: value,
+                        notificationTypes: _settings.notificationTypes,
+                        darkModeEnabled: _settings.darkModeEnabled,
+                        preferredLanguage: _settings.preferredLanguage,
+                        reminderIntervalMinutes: _settings.reminderIntervalMinutes,
+                        hapticFeedbackEnabled: _settings.hapticFeedbackEnabled,
+                        soundFeedbackEnabled: _settings.soundFeedbackEnabled,
+                        autoPostureCheckEnabled: _settings.autoPostureCheckEnabled,
+                        shareActivityData: _settings.shareActivityData,
+                        featureToggles: _settings.featureToggles,
+                      );
+                    });
+                    
+                    // Show snackbar feedback
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Settings updated'),
+                        duration: Duration(seconds: 1),
+                      ),
                     );
-                  });
-                },
-              ),
-              if (_settings.notificationsEnabled) ...[
-                _buildSettingTile(
-                  title: 'Reminder Frequency',
-                  subtitle: _getReminderIntervalText(),
-                  onTap: _showReminderIntervalDialog,
+                  },
                 ),
-                ..._settings.notificationTypes.map((type) {
-                  return _buildSwitchTile(
-                    title: '$type Notifications',
-                    subtitle: 'Receive notifications for $type',
-                    value: true, // In a real app, this would be dynamic
-                    onChanged: (value) {
-                      // In a real app, you would update the specific notification type
-                    },
-                  );
-                }).toList(),
+                if (_settings.notificationsEnabled) ...[
+                  _buildSettingTile(
+                    title: 'Reminder Frequency',
+                    subtitle: _getReminderIntervalText(),
+                    onTap: _showReminderIntervalDialog,
+                  ),
+                  ..._settings.notificationTypes.map((type) {
+                    return _buildSwitchTile(
+                      title: '$type Notifications',
+                      subtitle: 'Receive notifications for $type',
+                      value: true, // In a real app, this would be dynamic
+                      onChanged: (value) {
+                        // In a real app, you would update the specific notification type
+                      },
+                    );
+                  }).toList(),
+                ],
               ],
-            ]),
+            ),
             const SizedBox(height: 16),
-            _buildSettingSection('Appearance', [
-              _buildSwitchTile(
-                title: 'Dark Mode',
-                subtitle: 'Use dark color scheme',
-                value: _settings.darkModeEnabled,
-                onChanged: (value) {
-                  // Create a new settings object with the updated value
-                  setState(() {
-                    _settings = UserSettings(
-                      notificationsEnabled: _settings.notificationsEnabled,
-                      notificationTypes: _settings.notificationTypes,
-                      darkModeEnabled: value,
-                      preferredLanguage: _settings.preferredLanguage,
-                      reminderIntervalMinutes:
-                          _settings.reminderIntervalMinutes,
-                      hapticFeedbackEnabled: _settings.hapticFeedbackEnabled,
-                      soundFeedbackEnabled: _settings.soundFeedbackEnabled,
-                      autoPostureCheckEnabled:
-                          _settings.autoPostureCheckEnabled,
-                      shareActivityData: _settings.shareActivityData,
-                      featureToggles: _settings.featureToggles,
+            _buildSettingSection(
+              'Appearance',
+              [
+                _buildSwitchTile(
+                  title: 'Dark Mode',
+                  subtitle: 'Use dark color scheme',
+                  value: _settings.darkModeEnabled,
+                  onChanged: (value) {
+                    // Create a new settings object with the updated value
+                    setState(() {
+                      _settings = UserSettings(
+                        notificationsEnabled: _settings.notificationsEnabled,
+                        notificationTypes: _settings.notificationTypes,
+                        darkModeEnabled: value,
+                        preferredLanguage: _settings.preferredLanguage,
+                        reminderIntervalMinutes: _settings.reminderIntervalMinutes,
+                        hapticFeedbackEnabled: _settings.hapticFeedbackEnabled,
+                        soundFeedbackEnabled: _settings.soundFeedbackEnabled,
+                        autoPostureCheckEnabled: _settings.autoPostureCheckEnabled,
+                        shareActivityData: _settings.shareActivityData,
+                        featureToggles: _settings.featureToggles,
+                      );
+                    });
+                    
+                    // Show snackbar feedback
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Settings updated'),
+                        duration: Duration(seconds: 1),
+                      ),
                     );
-                  });
-                },
-              ),
-              _buildSettingTile(
-                title: 'Language',
-                subtitle: _settings.preferredLanguage,
-                onTap: _showLanguageDialog,
-              ),
-            ]),
+                  },
+                ),
+                _buildSettingTile(
+                  title: 'Language',
+                  subtitle: _settings.preferredLanguage,
+                  onTap: _showLanguageDialog,
+                ),
+              ],
+            ),
             const SizedBox(height: 16),
-            _buildSettingSection('Posture Detection', [
-              _buildSwitchTile(
-                title: 'Auto Posture Check',
-                subtitle: 'Automatically check posture in background',
-                value: _settings.autoPostureCheckEnabled,
-                onChanged: (value) {
-                  // Create a new settings object with the updated value
-                  setState(() {
-                    _settings = UserSettings(
-                      notificationsEnabled: _settings.notificationsEnabled,
-                      notificationTypes: _settings.notificationTypes,
-                      darkModeEnabled: _settings.darkModeEnabled,
-                      preferredLanguage: _settings.preferredLanguage,
-                      reminderIntervalMinutes:
-                          _settings.reminderIntervalMinutes,
-                      hapticFeedbackEnabled: _settings.hapticFeedbackEnabled,
-                      soundFeedbackEnabled: _settings.soundFeedbackEnabled,
-                      autoPostureCheckEnabled: value,
-                      shareActivityData: _settings.shareActivityData,
-                      featureToggles: _settings.featureToggles,
+            _buildSettingSection(
+              'Posture Detection',
+              [
+                _buildSwitchTile(
+                  title: 'Auto Posture Check',
+                  subtitle: 'Automatically check posture in background',
+                  value: _settings.autoPostureCheckEnabled,
+                  onChanged: (value) {
+                    // Create a new settings object with the updated value
+                    setState(() {
+                      _settings = UserSettings(
+                        notificationsEnabled: _settings.notificationsEnabled,
+                        notificationTypes: _settings.notificationTypes,
+                        darkModeEnabled: _settings.darkModeEnabled,
+                        preferredLanguage: _settings.preferredLanguage,
+                        reminderIntervalMinutes: _settings.reminderIntervalMinutes,
+                        hapticFeedbackEnabled: _settings.hapticFeedbackEnabled,
+                        soundFeedbackEnabled: _settings.soundFeedbackEnabled,
+                        autoPostureCheckEnabled: value,
+                        shareActivityData: _settings.shareActivityData,
+                        featureToggles: _settings.featureToggles,
+                      );
+                    });
+                    
+                    // Show snackbar feedback
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Settings updated'),
+                        duration: Duration(seconds: 1),
+                      ),
                     );
-                  });
-                },
-              ),
-              _buildSwitchTile(
-                title: 'Sound Feedback',
-                subtitle: 'Play sound alerts for posture issues',
-                value: _settings.soundFeedbackEnabled,
-                onChanged: (value) {
-                  // Create a new settings object with the updated value
-                  setState(() {
-                    _settings = UserSettings(
-                      notificationsEnabled: _settings.notificationsEnabled,
-                      notificationTypes: _settings.notificationTypes,
-                      darkModeEnabled: _settings.darkModeEnabled,
-                      preferredLanguage: _settings.preferredLanguage,
-                      reminderIntervalMinutes:
-                          _settings.reminderIntervalMinutes,
-                      hapticFeedbackEnabled: _settings.hapticFeedbackEnabled,
-                      soundFeedbackEnabled: value,
-                      autoPostureCheckEnabled:
-                          _settings.autoPostureCheckEnabled,
-                      shareActivityData: _settings.shareActivityData,
-                      featureToggles: _settings.featureToggles,
+                  },
+                ),
+                _buildSwitchTile(
+                  title: 'Sound Feedback',
+                  subtitle: 'Play sound alerts for posture issues',
+                  value: _settings.soundFeedbackEnabled,
+                  onChanged: (value) {
+                    // Create a new settings object with the updated value
+                    setState(() {
+                      _settings = UserSettings(
+                        notificationsEnabled: _settings.notificationsEnabled,
+                        notificationTypes: _settings.notificationTypes,
+                        darkModeEnabled: _settings.darkModeEnabled,
+                        preferredLanguage: _settings.preferredLanguage,
+                        reminderIntervalMinutes: _settings.reminderIntervalMinutes,
+                        hapticFeedbackEnabled: _settings.hapticFeedbackEnabled,
+                        soundFeedbackEnabled: value,
+                        autoPostureCheckEnabled: _settings.autoPostureCheckEnabled,
+                        shareActivityData: _settings.shareActivityData,
+                        featureToggles: _settings.featureToggles,
+                      );
+                    });
+                    
+                    // Show snackbar feedback
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Settings updated'),
+                        duration: Duration(seconds: 1),
+                      ),
                     );
-                  });
-                },
-              ),
-              _buildSwitchTile(
-                title: 'Haptic Feedback',
-                subtitle: 'Vibrate phone for posture issues',
-                value: _settings.hapticFeedbackEnabled,
-                onChanged: (value) {
-                  // Create a new settings object with the updated value
-                  setState(() {
-                    _settings = UserSettings(
-                      notificationsEnabled: _settings.notificationsEnabled,
-                      notificationTypes: _settings.notificationTypes,
-                      darkModeEnabled: _settings.darkModeEnabled,
-                      preferredLanguage: _settings.preferredLanguage,
-                      reminderIntervalMinutes:
-                          _settings.reminderIntervalMinutes,
-                      hapticFeedbackEnabled: value,
-                      soundFeedbackEnabled: _settings.soundFeedbackEnabled,
-                      autoPostureCheckEnabled:
-                          _settings.autoPostureCheckEnabled,
-                      shareActivityData: _settings.shareActivityData,
-                      featureToggles: _settings.featureToggles,
+                  },
+                ),
+                _buildSwitchTile(
+                  title: 'Haptic Feedback',
+                  subtitle: 'Vibrate phone for posture issues',
+                  value: _settings.hapticFeedbackEnabled,
+                  onChanged: (value) {
+                    // Create a new settings object with the updated value
+                    setState(() {
+                      _settings = UserSettings(
+                        notificationsEnabled: _settings.notificationsEnabled,
+                        notificationTypes: _settings.notificationTypes,
+                        darkModeEnabled: _settings.darkModeEnabled,
+                        preferredLanguage: _settings.preferredLanguage,
+                        reminderIntervalMinutes: _settings.reminderIntervalMinutes,
+                        hapticFeedbackEnabled: value,
+                        soundFeedbackEnabled: _settings.soundFeedbackEnabled,
+                        autoPostureCheckEnabled: _settings.autoPostureCheckEnabled,
+                        shareActivityData: _settings.shareActivityData,
+                        featureToggles: _settings.featureToggles,
+                      );
+                    });
+                    
+                    // Show snackbar feedback
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Settings updated'),
+                        duration: Duration(seconds: 1),
+                      ),
                     );
-                  });
-                },
-              ),
-            ]),
+                  },
+                ),
+              ],
+            ),
             const SizedBox(height: 16),
-            _buildSettingSection('Privacy', [
-              _buildSwitchTile(
-                title: 'Share Activity Data',
-                subtitle: 'Anonymously share data to improve the app',
-                value: _settings.shareActivityData,
-                onChanged: (value) {
-                  // Create a new settings object with the updated value
-                  setState(() {
-                    _settings = UserSettings(
-                      notificationsEnabled: _settings.notificationsEnabled,
-                      notificationTypes: _settings.notificationTypes,
-                      darkModeEnabled: _settings.darkModeEnabled,
-                      preferredLanguage: _settings.preferredLanguage,
-                      reminderIntervalMinutes:
-                          _settings.reminderIntervalMinutes,
-                      hapticFeedbackEnabled: _settings.hapticFeedbackEnabled,
-                      soundFeedbackEnabled: _settings.soundFeedbackEnabled,
-                      autoPostureCheckEnabled:
-                          _settings.autoPostureCheckEnabled,
-                      shareActivityData: value,
-                      featureToggles: _settings.featureToggles,
+            _buildSettingSection(
+              'Privacy',
+              [
+                _buildSwitchTile(
+                  title: 'Share Activity Data',
+                  subtitle: 'Anonymously share data to improve the app',
+                  value: _settings.shareActivityData,
+                  onChanged: (value) {
+                    // Create a new settings object with the updated value
+                    setState(() {
+                      _settings = UserSettings(
+                        notificationsEnabled: _settings.notificationsEnabled,
+                        notificationTypes: _settings.notificationTypes,
+                        darkModeEnabled: _settings.darkModeEnabled,
+                        preferredLanguage: _settings.preferredLanguage,
+                        reminderIntervalMinutes: _settings.reminderIntervalMinutes,
+                        hapticFeedbackEnabled: _settings.hapticFeedbackEnabled,
+                        soundFeedbackEnabled: _settings.soundFeedbackEnabled,
+                        autoPostureCheckEnabled: _settings.autoPostureCheckEnabled,
+                        shareActivityData: value,
+                        featureToggles: _settings.featureToggles,
+                      );
+                    });
+                    
+                    // Show snackbar feedback
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Settings updated'),
+                        duration: Duration(seconds: 1),
+                      ),
                     );
-                  });
-                },
-              ),
-              _buildSettingTile(
-                title: 'Clear App Data',
-                subtitle: 'Delete all local data and reset settings',
-                onTap: _showClearDataConfirmDialog,
-              ),
-              _buildSettingTile(
-                title: 'Privacy Policy',
-                subtitle: 'View our privacy policy',
-                onTap: () {
-                  // Navigate to privacy policy
-                },
-              ),
-            ]),
+                  },
+                ),
+                _buildSettingTile(
+                  title: 'Clear App Data',
+                  subtitle: 'Delete all local data and reset settings',
+                  onTap: _showClearDataConfirmDialog,
+                ),
+                _buildSettingTile(
+                  title: 'Privacy Policy',
+                  subtitle: 'View our privacy policy',
+                  onTap: () {
+                    // Navigate to privacy policy
+                  },
+                ),
+              ],
+            ),
             const SizedBox(height: 16),
-            _buildSettingSection('About', [
-              _buildSettingTile(
-                title: 'App Version',
-                subtitle: _appVersion,
-                onTap: null,
-              ),
-              _buildSettingTile(
-                title: 'Terms of Service',
-                subtitle: 'View our terms of service',
-                onTap: () {
-                  // Navigate to terms of service
-                },
-              ),
-              _buildSettingTile(
-                title: 'Contact Support',
-                subtitle: 'Get help with the app',
-                onTap: () {
-                  // Show contact dialog
-                },
-              ),
-            ]),
+            _buildSettingSection(
+              'About',
+              [
+                _buildSettingTile(
+                  title: 'App Version',
+                  subtitle: _appVersion,
+                  onTap: null,
+                ),
+                _buildSettingTile(
+                  title: 'Terms of Service',
+                  subtitle: 'View our terms of service',
+                  onTap: () {
+                    // Navigate to terms of service
+                  },
+                ),
+                _buildSettingTile(
+                  title: 'Contact Support',
+                  subtitle: 'Get help with the app',
+                  onTap: () {
+                    // Show contact dialog
+                  },
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
-
+  
   /// Build a settings section with title and items
   Widget _buildSettingSection(String title, List<Widget> items) {
     return Column(
@@ -337,12 +360,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ],
           ),
-          child: Column(children: items),
+          child: Column(
+            children: items,
+          ),
         ),
       ],
     );
   }
-
+  
   /// Build a switch setting tile
   Widget _buildSwitchTile({
     required String title,
@@ -361,15 +386,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       subtitle: Text(
         subtitle,
-        style: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
+        style: const TextStyle(
+          fontSize: 14,
+          color: AppColors.textSecondary,
+        ),
       ),
       value: value,
       onChanged: onChanged,
       activeColor: AppColors.midnightTeal,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 8,
+      ),
     );
   }
-
+  
   /// Build a tappable setting tile
   Widget _buildSettingTile({
     required String title,
@@ -387,21 +418,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       subtitle: Text(
         subtitle,
-        style: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
+        style: const TextStyle(
+          fontSize: 14,
+          color: AppColors.textSecondary,
+        ),
       ),
-      trailing:
-          onTap != null
-              ? const Icon(Icons.chevron_right, color: AppColors.textSecondary)
-              : null,
+      trailing: onTap != null ? const Icon(
+        Icons.chevron_right,
+        color: AppColors.textSecondary,
+      ) : null,
       onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 8,
+      ),
     );
   }
-
+  
   /// Show dialog to select reminder interval
   void _showReminderIntervalDialog() {
     final intervalOptions = [30, 60, 120, 240, 480];
-
+    
     showDialog(
       context: context,
       builder: (context) {
@@ -429,15 +466,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           darkModeEnabled: _settings.darkModeEnabled,
                           preferredLanguage: _settings.preferredLanguage,
                           reminderIntervalMinutes: value,
-                          hapticFeedbackEnabled:
-                              _settings.hapticFeedbackEnabled,
+                          hapticFeedbackEnabled: _settings.hapticFeedbackEnabled,
                           soundFeedbackEnabled: _settings.soundFeedbackEnabled,
-                          autoPostureCheckEnabled:
-                              _settings.autoPostureCheckEnabled,
+                          autoPostureCheckEnabled: _settings.autoPostureCheckEnabled,
                           shareActivityData: _settings.shareActivityData,
                           featureToggles: _settings.featureToggles,
                         );
                       });
+                      
+                      // Show snackbar feedback
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Settings updated'),
+                          duration: Duration(seconds: 1),
+                        ),
+                      );
                     }
                   },
                   activeColor: AppColors.midnightTeal,
@@ -455,17 +498,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       },
     );
   }
-
+  
   /// Show dialog to select language
   void _showLanguageDialog() {
-    final languageOptions = [
-      'English',
-      'Spanish',
-      'French',
-      'German',
-      'Chinese',
-    ];
-
+    final languageOptions = ['English', 'Spanish', 'French', 'German', 'Chinese'];
+    
     showDialog(
       context: context,
       builder: (context) {
@@ -492,17 +529,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           notificationTypes: _settings.notificationTypes,
                           darkModeEnabled: _settings.darkModeEnabled,
                           preferredLanguage: value,
-                          reminderIntervalMinutes:
-                              _settings.reminderIntervalMinutes,
-                          hapticFeedbackEnabled:
-                              _settings.hapticFeedbackEnabled,
+                          reminderIntervalMinutes: _settings.reminderIntervalMinutes,
+                          hapticFeedbackEnabled: _settings.hapticFeedbackEnabled,
                           soundFeedbackEnabled: _settings.soundFeedbackEnabled,
-                          autoPostureCheckEnabled:
-                              _settings.autoPostureCheckEnabled,
+                          autoPostureCheckEnabled: _settings.autoPostureCheckEnabled,
                           shareActivityData: _settings.shareActivityData,
                           featureToggles: _settings.featureToggles,
                         );
                       });
+                      
+                      // Show snackbar feedback
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Settings updated'),
+                          duration: Duration(seconds: 1),
+                        ),
+                      );
                     }
                   },
                   activeColor: AppColors.midnightTeal,
@@ -520,7 +562,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       },
     );
   }
-
+  
   /// Show confirmation dialog for clearing data
   void _showClearDataConfirmDialog() {
     showDialog(
@@ -540,9 +582,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-
+                
                 // In a real app, clear data here
-
+                
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('All data has been cleared'),
@@ -550,7 +592,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 );
               },
-              style: TextButton.styleFrom(foregroundColor: AppColors.error),
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.error,
+              ),
               child: const Text('Clear All Data'),
             ),
           ],
@@ -558,12 +602,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
       },
     );
   }
-
+  
   /// Get formatted text for reminder interval
   String _getReminderIntervalText() {
     return _getIntervalText(_settings.reminderIntervalMinutes);
   }
-
+  
   /// Format minutes into readable interval text
   String _getIntervalText(int minutes) {
     if (minutes < 60) {

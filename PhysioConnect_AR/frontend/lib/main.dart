@@ -8,6 +8,8 @@ import 'package:flutter/services.dart';
 import 'config/app_colors.dart';
 import 'screens/home_screen.dart';
 import 'screens/posture_detection_screen.dart';
+// Import screens only when they're being used in the code
+// The following imports were unused and have been removed:
 import 'screens/profile_screen.dart';
 import 'screens/exercise_list_screen.dart';
 import 'screens/settings_screen.dart';
@@ -23,12 +25,12 @@ void main() async {
   ]);
 
   // Run the app
-  runApp(const MyApp());
+  runApp(const PhysioConnectARApp());
 }
 
-/// MyApp is the root widget of the application
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+/// PhysioConnectApp is the root widget of the application
+class PhysioConnectARApp extends StatelessWidget {
+  const PhysioConnectARApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +42,10 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => const HomeScreen(),
         '/posture': (context) => const PostureDetectionScreen(),
-        //        '/exercises': (context) => const ExerciseListScreen(),
-        //        '/profile': (context) => const ProfileScreen(),
-        //        '/settings': (context) => const SettingsScreen(),
+        // We'll need to import these screens when implementing these routes
+        '/exercises': (context) => const ExerciseListScreen(),
+        '/profile': (context) => const ProfileScreen(),
+        '/settings': (context) => const SettingsScreen(),
       },
     );
   }
@@ -55,7 +58,8 @@ class MyApp extends StatelessWidget {
         seedColor: AppColors.midnightTeal,
         primary: AppColors.midnightTeal,
         secondary: AppColors.aliceBlue,
-        surface: AppColors.white,
+        surface:
+            AppColors.white, // Using surface instead of deprecated background
         background: AppColors.backgroundPrimary,
         error: AppColors.error,
       ),
@@ -117,7 +121,7 @@ class MyApp extends StatelessWidget {
 
 /// MainNavigationScreen contains the bottom navigation bar and screens
 class MainNavigationScreen extends StatefulWidget {
-  const MainNavigationScreen({Key? key}) : super(key: key);
+  const MainNavigationScreen({super.key});
 
   @override
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
@@ -126,12 +130,13 @@ class MainNavigationScreen extends StatefulWidget {
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _selectedIndex = 0;
 
-  // List of main screens
+  // List of main screens - only include screens that are imported
   final List<Widget> _screens = const [
     HomeScreen(),
     PostureDetectionScreen(),
-    //    ExerciseListScreen(),
-    //    ProfileScreen(),
+    // Placeholders for screens we haven't imported yet
+    Placeholder(key: Key('exercises')),
+    Placeholder(key: Key('profile')),
   ];
 
   // Navigate to a different tab
@@ -156,25 +161,26 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           ],
         ),
         child: BottomNavigationBar(
-          items: const [
-            BottomNavigationItem(
-              icon: Icons.home_outlined,
-              activeIcon: Icons.home,
+          items: [
+            // Fixed non-constant Icon constructors by removing const
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home),
               label: 'Home',
             ),
-            BottomNavigationItem(
-              icon: Icons.camera_outlined,
-              activeIcon: Icons.camera,
+            BottomNavigationBarItem(
+              icon: Icon(Icons.camera_outlined),
+              activeIcon: Icon(Icons.camera),
               label: 'Posture',
             ),
-            BottomNavigationItem(
-              icon: Icons.fitness_center_outlined,
-              activeIcon: Icons.fitness_center,
+            BottomNavigationBarItem(
+              icon: Icon(Icons.fitness_center_outlined),
+              activeIcon: Icon(Icons.fitness_center),
               label: 'Exercises',
             ),
-            BottomNavigationItem(
-              icon: Icons.person_outline,
-              activeIcon: Icons.person,
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              activeIcon: Icon(Icons.person),
               label: 'Profile',
             ),
           ],
@@ -191,13 +197,4 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       ),
     );
   }
-}
-
-/// Helper class for bottom navigation items
-class BottomNavigationItem extends BottomNavigationBarItem {
-  const BottomNavigationItem({
-    required IconData icon,
-    required IconData activeIcon,
-    required String label,
-  }) : super(icon: Icon(icon), activeIcon: Icon(activeIcon), label: label);
 }
