@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'feature_list.dart';
+import 'feature_list.dart'; // ✅ Make sure this file exists
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
               height: 300,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color.fromARGB(255, 0, 0, 0), Color.fromARGB(255, 0, 0, 0)],
+                  colors: [Colors.black, Colors.black],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -101,9 +101,7 @@ class _HomePageState extends State<HomePage> {
                               child: VideoPlayer(_controller),
                             ),
                           )
-                        : CircularProgressIndicator(
-                            color: Colors.white,
-                          ),
+                        : CircularProgressIndicator(color: Colors.white),
                   ),
                   Positioned(
                     right: 20,

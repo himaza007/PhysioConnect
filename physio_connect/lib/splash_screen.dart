@@ -42,7 +42,7 @@ class SplashScreenState extends State<SplashScreen>
     // 🚀 Navigate to Home After Delay
     Future.delayed(const Duration(seconds: 4), () {
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/home');
+        Navigator.of(context).pushReplacementNamed('/signup');
       }
     });
   }

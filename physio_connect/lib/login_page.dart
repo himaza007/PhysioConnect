@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'home_page.dart'; // ✅ Import your HomePage
 
 class LoginPage extends StatefulWidget {
   @override
@@ -40,12 +41,14 @@ class _LoginPageState extends State<LoginPage> {
 
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(responseBody['message'] ?? 'Login successful'),
-          ),
+          SnackBar(content: Text(responseBody['message'] ?? 'Login successful')),
         );
 
-        Navigator.pushReplacementNamed(context, '/home');
+        // ✅ Navigate directly to HomePage (no route name needed)
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(responseBody['message'] ?? 'Login failed')),
