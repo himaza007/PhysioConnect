@@ -1,15 +1,11 @@
-// File: lib/main.dart
-// Description: Entry point for the PhysioConnect AR application
-// Author: PhysioConnect Team
-// Date: April 9, 2025
+// lib/main.dart
+// Entry point for the PhysioConnect AR application
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'config/app_colors.dart';
 import 'screens/home_screen.dart';
 import 'screens/posture_detection_screen.dart';
-// Import screens only when they're being used in the code
-// The following imports were unused and have been removed:
 import 'screens/profile_screen.dart';
 import 'screens/exercise_list_screen.dart';
 import 'screens/settings_screen.dart';
@@ -42,7 +38,6 @@ class PhysioConnectARApp extends StatelessWidget {
       routes: {
         '/home': (context) => const HomeScreen(),
         '/posture': (context) => const PostureDetectionScreen(),
-        // We'll need to import these screens when implementing these routes
         '/exercises': (context) => const ExerciseListScreen(),
         '/profile': (context) => const ProfileScreen(),
         '/settings': (context) => const SettingsScreen(),
@@ -134,9 +129,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   final List<Widget> _screens = const [
     HomeScreen(),
     PostureDetectionScreen(),
-    // Placeholders for screens we haven't imported yet
-    Placeholder(key: Key('exercises')),
-    Placeholder(key: Key('profile')),
+    ExerciseListScreen(),
+    ProfileScreen(),
   ];
 
   // Navigate to a different tab
